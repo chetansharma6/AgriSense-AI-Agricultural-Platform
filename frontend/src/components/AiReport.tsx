@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { formatDisplayText } from "@/lib/format";
 import type { CropDetail } from "@/lib/types";
 
 interface Report {
@@ -52,7 +53,7 @@ export default function AiReport({ crop, verdictSlot }: { crop: CropDetail; verd
   }, [crop, attempt]);
 
   const verdict = result ? (
-    <p className="mt-3 truncate text-sm italic text-ink/80" title={result.report.verdict}>{result.report.verdict}</p>
+    <p className="mt-3 truncate text-sm italic text-ink/80" title={formatDisplayText(result.report.verdict)}>{formatDisplayText(result.report.verdict)}</p>
   ) : !error ? <Shimmer className="mt-3 h-5 w-full max-w-md" /> : null;
 
   return (
@@ -73,16 +74,16 @@ export default function AiReport({ crop, verdictSlot }: { crop: CropDetail; verd
           </div>
         ) : (
           <div aria-live="polite">
-            <p className="mt-4 leading-relaxed">{result.report.summary}</p>
+            <p className="mt-4 leading-relaxed">{formatDisplayText(result.report.summary)}</p>
             <div className="mt-6 grid gap-6 sm:grid-cols-2">
               {(["pros", "cons"] as const).map((kind) => (
                 <div key={kind}><h3 className="font-semibold">{kind === "pros" ? "Pros" : "Cons"}</h3>
-                  <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed">{result.report[kind].map((item, i) => <li key={i}>{item}</li>)}</ul>
+                  <ul className="mt-3 list-disc space-y-2 pl-5 text-sm leading-relaxed">{result.report[kind].map((item, i) => <li key={i}>{formatDisplayText(item)}</li>)}</ul>
                 </div>
               ))}
             </div>
             <h3 className="mt-6 font-semibold">First steps</h3>
-            <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed">{result.report.first_steps.map((step, i) => <li key={i}>{step}</li>)}</ol>
+            <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed">{result.report.first_steps.map((step, i) => <li key={i}>{formatDisplayText(step)}</li>)}</ol>
             {result.source === "fallback" && <p className="mt-5 text-sm text-soil">Summary generated from the scores (AI unavailable)</p>}
           </div>
         )}

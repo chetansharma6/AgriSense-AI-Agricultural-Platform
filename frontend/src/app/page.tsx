@@ -79,9 +79,9 @@ export default function Home() {
                         const selected = latitude === demo.lat.toFixed(4) && longitude === demo.lon.toFixed(4);
                         return (
                           <button key={demo.name} type="button" onClick={() => selectPoint(demo.lat, demo.lon)} aria-pressed={selected}
-                            className={`rounded-lg border p-3 min-h-11 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field ${selected ? "border-field bg-field text-white" : "border-field/20 bg-sand/50 hover:border-field hover:bg-leaf/15"}`}>
+                            className={`rounded-lg border p-3 min-h-11 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field ${selected ? "border-field bg-leaf/20 text-ink" : "border-field/20 bg-sand text-ink hover:border-field hover:bg-leaf/15"}`}>
                             <span className="block text-sm font-semibold">{demo.name}</span>
-                            <span className={`mt-1 block text-sm ${selected ? "text-white/85" : "text-ink"}`}>{demo.caption}</span>
+                            <span className="mt-1 block text-sm text-ink">{demo.caption}</span>
                           </button>
                         );
                       })}
@@ -105,7 +105,7 @@ export default function Home() {
                     <p id="location-message" aria-live="polite" className={`mt-3 text-sm ${complete && !valid ? 'font-semibold text-ink' : 'text-ink'}`}>
                       {complete && !valid ? 'Location must be in Florida: latitude 24.3–31.1, longitude −87.7–−79.9.' : 'Choose a location in Florida to analyze your land.'}
                     </p>
-                    <button type="submit" disabled={!valid} className="mt-5 min-h-11 w-full rounded-lg bg-field px-5 py-3 font-semibold text-white transition-colors hover:bg-field/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field disabled:cursor-not-allowed disabled:opacity-40">Analyze my land</button>
+                    <button type="submit" disabled={!valid} className="mt-5 min-h-11 w-full rounded-lg bg-field px-5 py-3 font-semibold text-white transition-colors enabled:hover:bg-field/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field disabled:cursor-not-allowed disabled:opacity-55">Analyze my land</button>
                   </form>
                 </div>
                 <section className="min-w-0" aria-label="Farm location map">
