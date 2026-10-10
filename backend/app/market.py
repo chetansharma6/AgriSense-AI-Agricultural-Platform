@@ -86,7 +86,7 @@ def price_range(market: Market, crop: Crop) -> dict[str, Any] | None:
     values = _recent_values(market.state_rows, crop.nass.price_desc)
     if not values:
         return None
-    return {"low": min(values), "high": max(values), "unit": _unit(crop.nass.price_desc)}
+    return {"low": round(min(values), 2), "high": round(max(values), 2), "unit": _unit(crop.nass.price_desc)}
 
 
 def _state_query(stat: str) -> list[dict[str, Any]]:
