@@ -12,6 +12,14 @@ CACHE_DIR = DATA_DIR / "cache"
 
 load_dotenv(BACKEND_DIR / ".env")
 
+# Comma-separated browser origins allowed to call the API. In Codespaces, add
+# the forwarded frontend URL (https://<name>-3000.app.github.dev).
+CORS_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+    if origin.strip()
+]
+
 FL_LAT_MIN, FL_LAT_MAX = 24.3, 31.1
 FL_LON_MIN, FL_LON_MAX = -87.7, -79.9
 

@@ -2,6 +2,8 @@
 
 import hashlib
 import json
+import os
+import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -24,7 +26,15 @@ def read_cache(namespace: str, params: dict[str, Any]) -> Any | None:
 
 
 def write_cache(namespace: str, params: dict[str, Any], data: Any) -> None:
-    """Store data for these params."""
+    """Store data for these params. Writes to a temp file and renames it into
+    place so a concurrent reader never sees a half-written file."""
     path = cache_path(namespace, params)
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data))
+    fd, tmp_name = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
+    try:
+        with os.fdopen(fd, "w") as tmp:
+            json.dump(data, tmp)
+        os.replace(tmp_name, path)
+    except BaseException:
+        os.unlink(tmp_name)
+        raise
