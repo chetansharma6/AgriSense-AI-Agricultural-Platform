@@ -11,7 +11,8 @@ REQUIRED_KEYS = {
     "ph_min", "ph_ideal_min", "ph_ideal_max", "ph_max", "drainage", "muck_suitable",
     "temp_min_c", "temp_ideal_min_c", "temp_ideal_max_c", "temp_max_c",
     "max_freeze_days", "rain_mm_per_month", "general_guidance", "extension_links",
-    "source_notes", "needs_review",
+    "source_notes", "needs_review", "min_practical_acres", "small_acres", "scale_note",
+    "n_lb_per_acre", "nutrient_source",
 }
 EXPECTED_IDS = {
     "peanut", "cotton", "field_corn", "soybean", "sugarcane", "tomato", "watermelon",
