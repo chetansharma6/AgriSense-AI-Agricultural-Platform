@@ -1,6 +1,8 @@
 # AgriSense — project brief for AI coding agents
 
 ## What we are building
+Target user: beginner and small-scale Florida farmers
+
 AgriSense helps small and mid-scale Florida farmers decide what to plant.
 The user picks a location in Florida (map click or lat/lon). The app returns
 a ranked list of 13 crops ordered by a 0-100 suitability score, and a report

@@ -1,6 +1,6 @@
 GET /api/health -> {"status": "ok"}
 
-GET /api/recommend?lat=<float>&lon=<float> ->
+GET /api/recommend?lat=<float>&lon=<float>[&acres=<float>] ->
 {
   "location": {"lat": 29.71, "lon": -81.50, "county": "St. Johns",
                "county_fips": "12109", "state": "FL"},
@@ -25,6 +25,8 @@ GET /api/recommend?lat=<float>&lon=<float> ->
        "local_history": {"value": "Grown in county", "ideal": "Grown locally"}},
      "avg_yield": {"value": 290, "unit": "CWT / ACRE", "level": "county"},
      "price": {"low": 14.5, "high": 22.0, "unit": "$ / CWT"},
+     "scale": {"fit": null, "min_practical_acres": 1, "note": null},
+     "est_gross_value": null,
      "limited_by": [],
      "flags": ["Likely needs irrigation (310 mm rain expected, 350 mm needed)"]}
   ],
@@ -50,6 +52,32 @@ GET /api/recommend?lat=<float>&lon=<float> ->
 Rules: crops sorted by score descending, then name ascending; every factor
 0-100; any value may be null if a source failed (and a message is added to
 warnings).
+Both crop endpoints accept optional `acres`, a finite float from 0.1 to
+10000 inclusive. Invalid values return 422 validation errors. When omitted,
+existing scores and behavior are preserved; the new fields are still present,
+with `scale.fit` and `scale.note` null and `est_gross_value` null.
+
+Every crop object includes:
+  "scale": {"fit": "good" | "small" | "too_small" | null,
+            "min_practical_acres": number,
+            "note": string | null},
+  "est_gross_value": {"low": number, "high": number,
+                      "label": "Rough gross value before costs"} | null
+`min_practical_acres` is the crop's documented practical acreage requirement;
+the value in the example above is illustrative. With acreage supplied, scale
+fit and its explanatory note are determined from crop requirements.
+`too_small` caps the final score at 40 and adds a flag explaining the acreage
+constraint. `small` adds an explanatory flag without capping the score.
+Existing critical-factor caps still apply; the lowest applicable cap wins.
+Sorting uses the final capped score. Acreage flags must be retained within the
+four-flag limit, with score-cap explanations first.
+
+`est_gross_value` is null when acreage, yield, or price data is missing.
+Otherwise its low and high values are estimated gross USD for the supplied
+acreage: acres times average yield per acre times the corresponding price,
+after normalizing compatible yield and price units. Incompatible units also
+produce null rather than an invented estimate. This is gross value before
+costs, not profit or a guaranteed return.
 Score: weighted average of the non-null factors (weights renormalized over
 the factors present). If any critical factor scores below critical_threshold,
 the score is capped at critical_cap and that factor's key is listed in
@@ -64,12 +92,22 @@ contains only its public name and rounded distance in kilometres; it is null
 when no station is used. `confidence` reports how many of the six scoring
 factors had data; it does not alter the suitability score.
 
-GET /api/crops/{crop_id}?lat=&lon= -> the same crop object plus:
+GET /api/crops/{crop_id}?lat=&lon=[&acres=<float>] -> the same crop object plus:
   "requirements": {raw fields from crops.json},
   "general_guidance": "string",
   "extension_links": [{"title": "string", "url": "string"}],
+  "nutrient_plan": {"n_lb_per_acre": number | null,
+                    "soil_test_first": true,
+                    "lime_note": string | null,
+                    "practices": [string, ...],
+                    "sources": [{"title": "string", "url": "string"}]},
   "conditions": {same as above}, "location": {same as above},
   "scoring": {same as above}
+`nutrient_plan` is included with or without acreage. Nitrogen is expressed in
+pounds per acre and may be null when no supported recommendation is available.
+Always recommend a soil test first. Lime guidance may be null; practices and
+source links provide crop-specific UF/IFAS Extension guidance. Nutrient values
+must come from documented recommendations, never invented by the LLM.
 404 {"detail": "Unknown crop"} for an unknown id.
 400 {"detail": "Location must be in Florida"} outside the bounding box.
 503 {"detail": "Data sources are slow right now. Try again in a moment, or pick a
