@@ -29,7 +29,7 @@ CORS_ORIGINS = [
     if origin.strip()
 ]
 # Vercel deployments (production and preview URLs).
-CORS_ORIGIN_REGEX = r"https://.*\.vercel\.app"
+CORS_ORIGIN_REGEX = r"^https://[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.vercel\.app$"
 
 FL_BBOX = (24.3, 31.1, -87.7, -79.9)  # lat_min, lat_max, lon_min, lon_max
 DEMO_FARMS = {  # name -> (lat, lon), as in AGENTS.md

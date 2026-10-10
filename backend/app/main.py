@@ -1,6 +1,7 @@
 """AgriSense FastAPI app."""
 
 import logging
+import math
 from typing import Any
 
 from fastapi import FastAPI, HTTPException, Query
@@ -61,5 +62,5 @@ def get_crop(crop_id: str, lat: float = Query(...), lon: float = Query(...)) -> 
 
 
 def _require_florida(lat: float, lon: float) -> None:
-    if not in_florida(lat, lon):
+    if not math.isfinite(lat) or not math.isfinite(lon) or not in_florida(lat, lon):
         raise HTTPException(status_code=400, detail=NOT_IN_FLORIDA)

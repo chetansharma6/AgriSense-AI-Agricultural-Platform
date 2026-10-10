@@ -2,6 +2,7 @@ from pathlib import Path
 from typing import Any
 
 import pytest
+import httpx
 
 from app.clients import nass
 from tests.fakes import FakeClient
@@ -55,3 +56,18 @@ def test_malformed_json_is_classified(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(nass, "http", lambda: Malformed({}))
     with pytest.raises(nass.NassError, match="malformed"):
         nass.query({"commodity_desc": "PEANUTS"})
+
+
+@pytest.mark.parametrize("error", [httpx.ReadTimeout("secret-key"), httpx.ConnectError("secret-key")])
+def test_transport_errors_do_not_expose_credentials(monkeypatch: pytest.MonkeyPatch, error: httpx.HTTPError) -> None:
+    monkeypatch.setattr(nass, "nass_api_key", lambda: "secret-key")
+
+    class BrokenClient:
+        def get(self, url: str, **kwargs: Any) -> Any:
+            raise error
+
+    monkeypatch.setattr(nass, "http", lambda: BrokenClient())
+    with pytest.raises(nass.NassError) as raised:
+        nass.query({"commodity_desc": "PEANUTS"})
+    assert "secret-key" not in str(raised.value)
+    assert "NASS" in str(raised.value)

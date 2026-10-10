@@ -7,6 +7,8 @@ name), so each distinct query hits NASS once.
 import re
 from typing import Any
 
+import httpx
+
 from app.cache import read_cache, write_cache
 from app.clients.http import TIMEOUT_S, http
 from app.config import nass_api_key
@@ -42,7 +44,16 @@ def query(params: dict[str, Any], invalid_means_empty: bool = False) -> list[dic
     if cached is not None:
         return cached
 
-    response = http().get(NASS_URL, params={**params, "key": nass_api_key(), "format": "JSON"}, timeout=TIMEOUT_S)
+    try:
+        response = http().get(
+            NASS_URL,
+            params={**params, "key": nass_api_key(), "format": "JSON"},
+            timeout=TIMEOUT_S,
+        )
+    except httpx.TimeoutException:
+        raise NassError("NASS request timed out") from None
+    except httpx.HTTPError:
+        raise NassError("NASS request failed") from None
     if response.status_code == 200:
         try:
             payload = response.json()
