@@ -59,6 +59,18 @@ test('city lookups coalesce, cache case-insensitively, and reject non-Florida/ou
   assert.equal(calls, 1);
 });
 
+test('Brandon town results are surfaced when Nominatim returns address.town', async () => {
+  const get = loadRoute(async () => Response.json([{
+    lat: '27.9378010', lon: '-82.2859247', addresstype: 'town', category: 'place',
+    address: { town: 'Brandon', county: 'Hillsborough County', state: 'Florida', 'ISO3166-2-lvl4': 'US-FL' },
+  }]));
+  const response = await get('Brandon');
+  assert.deepEqual((await response.json()).results, [{
+    label: 'Brandon, Hillsborough County, FL', lat: 27.937801, lon: -82.2859247,
+    county: 'Hillsborough County', state: 'FL',
+  }]);
+});
+
 test('different city requests start at least one second apart, and failures can retry', async () => {
   const starts = [];
   let active = 0;
