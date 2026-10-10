@@ -17,7 +17,7 @@ function mockDelay(): Promise<void> {
 
 async function request<T>(path: string, lat: number, lon: number): Promise<T> {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 20_000);
+  const timeout = setTimeout(() => controller.abort(), 90_000);
   const query = new URLSearchParams({ lat: String(lat), lon: String(lon) });
   const baseUrl = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
 

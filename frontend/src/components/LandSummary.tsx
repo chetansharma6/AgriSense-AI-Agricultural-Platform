@@ -1,11 +1,12 @@
 import { describePh, formatTemperature } from "@/lib/format";
 import type { RecommendResponse } from "@/lib/types";
 
-export function LandSummarySkeleton() {
+export function LandSummarySkeleton({ slow = false }: { slow?: boolean }) {
   return (
     <section className="rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" role="status" aria-label="Loading land conditions">
       <h2 className="text-2xl font-semibold">Your land at a glance</h2>
       <p className="mt-2 text-sm text-soil">Checking soil, climate and local harvest history…</p>
+      {slow && <p className="mt-3 rounded-lg border border-sun/50 bg-sun/15 p-3 text-sm" role="status">Waking up the server… the first request after a quiet spell can take up to a minute. Thanks for waiting.</p>}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" aria-hidden="true">
         {Array.from({ length: 6 }, (_, i) => (
           <div key={i} className="animate-pulse rounded-lg bg-sand p-4 motion-reduce:animate-none">
