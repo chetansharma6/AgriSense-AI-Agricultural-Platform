@@ -7,10 +7,10 @@
     "state": "FL"
   },
   "conditions": {
-    "soil_ph": 6.8,
+    "soil_ph": null,
     "organic_matter_pct": 65,
-    "sand_pct": 12,
-    "clay_pct": 8,
+    "sand_pct": null,
+    "clay_pct": null,
     "texture": "muck",
     "drainage": "Poorly drained",
     "annual_precip_mm": 1370,
@@ -27,7 +27,7 @@
       "score": 92,
       "season_label": "Long season: plant Sep-Nov, harvest Nov-Apr after 12-18 months",
       "factors": {
-        "soil_ph": 100,
+        "soil_ph": null,
         "drainage": 98,
         "season_temp": 100,
         "frost_risk": 100,
@@ -36,7 +36,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "5.5-7.5",
           "unit": "pH"
         },
@@ -82,7 +82,7 @@
       "score": 90,
       "season_label": "Cool season: plant Sep-Feb, harvest Nov-May",
       "factors": {
-        "soil_ph": 100,
+        "soil_ph": null,
         "drainage": 88,
         "season_temp": 100,
         "frost_risk": 100,
@@ -91,7 +91,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "6.0-7.0",
           "unit": "pH"
         },
@@ -139,7 +139,7 @@
       "score": 88,
       "season_label": "Cool season: plant Sep-Feb, harvest Nov-May",
       "factors": {
-        "soil_ph": 81,
+        "soil_ph": null,
         "drainage": 88,
         "season_temp": 100,
         "frost_risk": 100,
@@ -148,7 +148,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "6.0-6.5",
           "unit": "pH"
         },
@@ -194,7 +194,7 @@
       "score": 86,
       "season_label": "Cool season: plant Oct-Jan, harvest Jan-Apr",
       "factors": {
-        "soil_ph": 100,
+        "soil_ph": null,
         "drainage": 88,
         "season_temp": 100,
         "frost_risk": 100,
@@ -203,7 +203,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "6.0-7.5",
           "unit": "pH"
         },
@@ -251,7 +251,7 @@
       "score": 76,
       "season_label": "Cool season: plant Sep-Feb, harvest Nov-May",
       "factors": {
-        "soil_ph": 100,
+        "soil_ph": null,
         "drainage": 88,
         "season_temp": 100,
         "frost_risk": 100,
@@ -260,7 +260,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "6.0-6.8",
           "unit": "pH"
         },
@@ -308,7 +308,7 @@
       "score": 72,
       "season_label": "Cool season: plant Sep-Feb, harvest Nov-May",
       "factors": {
-        "soil_ph": 100,
+        "soil_ph": null,
         "drainage": 88,
         "season_temp": 100,
         "frost_risk": 100,
@@ -317,7 +317,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "6.0-6.8",
           "unit": "pH"
         },
@@ -365,7 +365,7 @@
       "score": 70,
       "season_label": "Warm season: plant Mar-Apr, harvest Jul-Aug",
       "factors": {
-        "soil_ph": 100,
+        "soil_ph": null,
         "drainage": 88,
         "season_temp": 100,
         "frost_risk": 100,
@@ -374,7 +374,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "5.8-7.0",
           "unit": "pH"
         },
@@ -420,7 +420,7 @@
       "score": 62,
       "season_label": "Spring: plant Feb-Mar, harvest May-Jun",
       "factors": {
-        "soil_ph": 100,
+        "soil_ph": null,
         "drainage": 88,
         "season_temp": 100,
         "frost_risk": 100,
@@ -429,7 +429,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "6.0-6.8",
           "unit": "pH"
         },
@@ -477,7 +477,7 @@
       "score": 59,
       "season_label": "Spring: plant Jan-Feb, harvest Apr-May",
       "factors": {
-        "soil_ph": 48,
+        "soil_ph": null,
         "drainage": 55,
         "season_temp": 100,
         "frost_risk": 100,
@@ -486,7 +486,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "5.0-6.0",
           "unit": "pH"
         },
@@ -535,7 +535,7 @@
       "score": 55,
       "season_label": "Winter: plant Oct-Nov, harvest Dec-Apr",
       "factors": {
-        "soil_ph": 81,
+        "soil_ph": null,
         "drainage": 88,
         "season_temp": 100,
         "frost_risk": 100,
@@ -544,7 +544,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "5.5-6.5",
           "unit": "pH"
         },
@@ -592,7 +592,7 @@
       "score": 42,
       "season_label": "Warm season: plant May-Jun, harvest Oct-Nov",
       "factors": {
-        "soil_ph": 100,
+        "soil_ph": null,
         "drainage": 88,
         "season_temp": 100,
         "frost_risk": 100,
@@ -601,7 +601,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "6.0-7.0",
           "unit": "pH"
         },
@@ -647,7 +647,7 @@
       "score": 23,
       "season_label": "Warm season: plant Apr-May, harvest Sep-Oct",
       "factors": {
-        "soil_ph": 81,
+        "soil_ph": null,
         "drainage": 25,
         "season_temp": 100,
         "frost_risk": 100,
@@ -656,7 +656,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "5.8-6.5",
           "unit": "pH"
         },
@@ -705,7 +705,7 @@
       "score": 20,
       "season_label": "Warm season: plant Apr-May, harvest Sep-Nov",
       "factors": {
-        "soil_ph": 81,
+        "soil_ph": null,
         "drainage": 25,
         "season_temp": 100,
         "frost_risk": 100,
@@ -714,7 +714,7 @@
       },
       "factor_details": {
         "soil_ph": {
-          "value": 6.8,
+          "value": null,
           "ideal": "5.8-6.5",
           "unit": "pH"
         },
@@ -742,11 +742,7 @@
           "ideal": "Grown locally"
         }
       },
-      "avg_yield": {
-        "value": 867.0,
-        "unit": "LB / ACRE",
-        "level": "state"
-      },
+      "avg_yield": null,
       "price": {
         "low": 0.65,
         "high": 0.85,
@@ -758,5 +754,8 @@
       ]
     }
   ],
-  "warnings": []
+  "warnings": [
+    "Mock fixture: soil pH, sand and clay data are unavailable for this muck soil; soil pH factors could not be scored.",
+    "Mock fixture: cotton yield is unavailable."
+  ]
 }

@@ -56,3 +56,16 @@ export function formatTemperature(c: number | null): string {
   if (c === null) return "No data";
   return `${c.toFixed(1)}°C / ${Math.round(celsiusToF(c))}°F`;
 }
+
+/** Null frost dates do not imply zero freeze risk. */
+export function formatFrostDate(date: string | null): string {
+  return date ?? "No data";
+}
+
+export function formatPercent(value: number | null): string {
+  return value === null ? "No data" : `${numberFormat.format(value)}%`;
+}
+
+export function formatScore(score: number | null): string {
+  return score === null ? "No data" : `${numberFormat.format(score)} / 100`;
+}

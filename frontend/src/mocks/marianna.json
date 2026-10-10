@@ -738,7 +738,11 @@
           "ideal": "Grown locally"
         }
       },
-      "avg_yield": null,
+      "avg_yield": {
+        "value": 37.8,
+        "unit": "TONS / ACRE",
+        "level": "state"
+      },
       "price": {
         "low": 32,
         "high": 45,
@@ -750,7 +754,5 @@
       ]
     }
   ],
-  "warnings": [
-    "Mock fixture: sugarcane yield is unavailable to demonstrate missing data."
-  ]
+  "warnings": []
 }
