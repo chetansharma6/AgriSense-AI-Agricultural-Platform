@@ -341,8 +341,8 @@
         "url": "https://edis.ifas.ufl.edu/publication/SS163"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. Season temperature is the 12-month mean. max_freeze_days 2 is a judgement call: a 0 C night browns leaves and terminal buds; multi-night freezes cause losses (LSU AgCenter, SASRI, USDA NASS FL 2010).",
-    "needs_review": true
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. Season temperature is the 12-month mean. max_freeze_days 2 (weighted; light freezes count half): nights of 28-32 F kill terminal buds and brown leaves without souring (LSU AgCenter); killing cold is very infrequent near Lake Okeechobee (UF/IFAS SC032); damaging EAA freezes are multi-night events (USDA NASS FL 2010, 2026). No commercial production in the Panhandle since the 1950s (UF/IFAS). NASA POWER's grid minimum understates EAA freezes.",
+    "needs_review": false
   },
   {
     "id": "tomato",
@@ -545,7 +545,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/CV134"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 3: plants survive, flowers and fruit are damaged near 30 F and are protected with overhead irrigation (FAWN, UF/IFAS CV201, HS403).",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 3 (weighted): crowns survive to about 20 F and flowers and fruit are protected with overhead irrigation from about 31 F (FAWN, UF/IFAS CV201, HS403); freeze events are typically 1-2 nights (SWFWMD). At Plant City only the worst 10-15% of seasons (e.g. 2010) exceed 3. Still to verify: protection nights per season, and North Florida suitability.",
     "needs_review": true
   },
   {
@@ -612,7 +612,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/CV131"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 2: UF/IFAS HS183 says potato cannot handle temperatures below 32 F. pH upper limit 7.0 (common scab) is not confirmed by UF/IFAS.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 2 (weighted): potato cannot handle temperatures below 32 F (UF/IFAS HS183), but young plants rebound and growers cover them with soil before a freeze (UF/IFAS Putnam County 2022). Still to verify: yield loss per freeze; NASA POWER misses Hastings freezes (Jan 2022). pH upper limit 7.0 (common scab) is not confirmed by UF/IFAS.",
     "needs_review": true
   },
   {

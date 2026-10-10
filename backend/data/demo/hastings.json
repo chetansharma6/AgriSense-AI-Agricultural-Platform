@@ -1582,7 +1582,7 @@
           90.0,
           130.0
         ],
-        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 2: UF/IFAS HS183 says potato cannot handle temperatures below 32 F. pH upper limit 7.0 (common scab) is not confirmed by UF/IFAS.",
+        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 2 (weighted): potato cannot handle temperatures below 32 F (UF/IFAS HS183), but young plants rebound and growers cover them with soil before a freeze (UF/IFAS Putnam County 2022). Still to verify: yield loss per freeze; NASA POWER misses Hastings freezes (Jan 2022). pH upper limit 7.0 (common scab) is not confirmed by UF/IFAS.",
         "needs_review": true
       },
       "general_guidance": "Florida potatoes are a winter-spring crop, centered on the Hastings area in the northeast and on South Florida farms. Use certified seed pieces, plant in raised beds, and manage the water table or irrigation carefully, since both drought and waterlogging hurt yield and quality. A slightly acidic soil helps limit common scab.",
@@ -1736,7 +1736,7 @@
           40.0,
           110.0
         ],
-        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 3: plants survive, flowers and fruit are damaged near 30 F and are protected with overhead irrigation (FAWN, UF/IFAS CV201, HS403).",
+        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 3 (weighted): crowns survive to about 20 F and flowers and fruit are protected with overhead irrigation from about 31 F (FAWN, UF/IFAS CV201, HS403); freeze events are typically 1-2 nights (SWFWMD). At Plant City only the worst 10-15% of seasons (e.g. 2010) exceed 3. Still to verify: protection nights per season, and North Florida suitability.",
         "needs_review": true
       },
       "general_guidance": "Florida strawberries are planted as bare-root or plug transplants in October on plastic-mulched beds and picked from December to March, centered on the Plant City area. Overhead irrigation is used to establish transplants and to protect blooms and fruit on freezing nights. Picking is hand labor several times a week, so plan labor and market access early.",
@@ -2406,8 +2406,8 @@
           110.0,
           160.0
         ],
-        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. Season temperature is the 12-month mean. max_freeze_days 2 is a judgement call: a 0 C night browns leaves and terminal buds; multi-night freezes cause losses (LSU AgCenter, SASRI, USDA NASS FL 2010).",
-        "needs_review": true
+        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. Season temperature is the 12-month mean. max_freeze_days 2 (weighted; light freezes count half): nights of 28-32 F kill terminal buds and brown leaves without souring (LSU AgCenter); killing cold is very infrequent near Lake Okeechobee (UF/IFAS SC032); damaging EAA freezes are multi-night events (USDA NASS FL 2010, 2026). No commercial production in the Panhandle since the 1950s (UF/IFAS). NASA POWER's grid minimum understates EAA freezes.",
+        "needs_review": false
       },
       "general_guidance": "Florida sugarcane is concentrated on the organic muck soils south of Lake Okeechobee, with some acreage on nearby sands. It is a multi-year crop: one planting is usually harvested for several seasons. Growers manage the water table to supply water and slow muck subsidence, and fertilizer needs on muck differ from sandy soils, so follow soil tests. A sugar mill within hauling distance is essential.",
       "extension_links": [
