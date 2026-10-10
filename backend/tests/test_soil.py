@@ -46,12 +46,12 @@ def test_get_soil_and_cache(monkeypatch: pytest.MonkeyPatch) -> None:
     assert client.calls == 2
 
 
-def test_no_map_unit_raises_and_is_cached(monkeypatch: pytest.MonkeyPatch) -> None:
-    client = use(monkeypatch, ScriptedClient(FakeResponse({})))
+def test_no_map_unit_raises_and_is_not_cached(monkeypatch: pytest.MonkeyPatch) -> None:
+    client = use(monkeypatch, ScriptedClient(FakeResponse({}), FakeResponse({})))
     for _ in range(2):
         with pytest.raises(soil.SoilNotFound):
             soil.get_soil(25.0, -80.0)
-    assert client.calls == 1
+    assert client.calls == 2
 
 
 def test_retries_once_on_timeout_and_5xx(monkeypatch: pytest.MonkeyPatch) -> None:

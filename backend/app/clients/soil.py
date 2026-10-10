@@ -97,16 +97,11 @@ def get_soil(lat: float, lon: float) -> Soil:
     """Top-30-cm soil properties at a point. Raises SoilNotFound."""
     params = {"lat": round(lat, 4), "lon": round(lon, 4)}
     cached = read_cache("soil", params)
-    if cached == {}:
-        raise SoilNotFound("No soil map unit at this point (water or urban area?)")
-    if cached is not None:
+    if cached:
         return cached
 
-    try:
-        mukey = get_mukey(params["lat"], params["lon"])
-    except SoilNotFound:
-        write_cache("soil", params, {})
-        raise
+    # SoilNotFound is not cached, so a point is never stuck as "no soil".
+    mukey = get_mukey(params["lat"], params["lon"])
     rows = [_to_numbers(row) for row in sda_query(_HORIZON_SQL.format(mukey=mukey))]
     soil = summarize_soil(rows, mukey)
     write_cache("soil", params, soil)
@@ -208,12 +203,17 @@ def _round(value: float | None) -> float | None:
 
 
 if __name__ == "__main__":
+    import time
+
     DEMO_FARMS = {
         "marianna": (30.80, -85.25),
         "hastings": (29.71, -81.50),
         "plant_city": (28.03, -82.15),
         "belle_glade": (26.68, -80.68),
     }
+    started = time.perf_counter()
     for name, (lat, lon) in DEMO_FARMS.items():
-        print(f"{name}: mukey {get_mukey(lat, lon)}")
-        print(f"  {get_soil(lat, lon)}")
+        soil = get_soil(lat, lon)
+        print(f"{name}: mukey {soil['mukey']}")
+        print(f"  {soil}")
+    print(f"elapsed: {time.perf_counter() - started:.2f} s")
