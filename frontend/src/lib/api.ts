@@ -11,6 +11,25 @@ export class ApiError extends Error {
 
 const connectionMessage =
   "Can't reach the AgriSense server. Check your connection and try again.";
+const fallbackWarning =
+  "Live data is temporarily unavailable. Showing the nearest saved Florida demo response.";
+
+function backendUnavailable(error: unknown): boolean {
+  return error instanceof ApiError && (error.status === 0 || error.status >= 500);
+}
+
+function fallbackRecommendations(lat: number, lon: number, acres?: number): RecommendResponse {
+  let response: RecommendResponse;
+  try {
+    response = getMockRecommend(lat, lon, acres);
+  } catch {
+    // Saved acreage variants are intentionally limited. A connection outage
+    // should still provide useful crop data rather than another error screen.
+    response = getMockRecommend(lat, lon);
+  }
+  response.warnings = [fallbackWarning, ...(response.warnings ?? [])];
+  return response;
+}
 
 function mockDelay(): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, 500));
@@ -58,7 +77,12 @@ export async function getRecommendations(lat: number, lon: number, acres?: numbe
       throw new ApiError(error instanceof Error ? error.message : "Mock data is unavailable.", 0);
     }
   }
-  return request<RecommendResponse>("recommend", lat, lon, acres);
+  try {
+    return await request<RecommendResponse>("recommend", lat, lon, acres);
+  } catch (error) {
+    if (backendUnavailable(error)) return fallbackRecommendations(lat, lon, acres);
+    throw error;
+  }
 }
 
 export async function getCropDetail(id: string, lat: number, lon: number, acres?: number): Promise<CropDetail> {
@@ -73,7 +97,18 @@ export async function getCropDetail(id: string, lat: number, lon: number, acres?
       throw new ApiError(error instanceof Error ? error.message : "Mock data is unavailable.", 0);
     }
   }
-  return request<CropDetail>(`crops/${encodeURIComponent(id)}`, lat, lon, acres);
+  try {
+    return await request<CropDetail>(`crops/${encodeURIComponent(id)}`, lat, lon, acres);
+  } catch (error) {
+    if (backendUnavailable(error)) {
+      try {
+        return getMockCropDetail(id, lat, lon, acres);
+      } catch {
+        return getMockCropDetail(id, lat, lon);
+      }
+    }
+    throw error;
+  }
 }
 
 export async function searchLocation(q: string): Promise<LocationResult[]> {
