@@ -25,17 +25,32 @@ GET /api/recommend?lat=<float>&lon=<float> ->
        "local_history": {"value": "Grown in county", "ideal": "Grown locally"}},
      "avg_yield": {"value": 290, "unit": "CWT / ACRE", "level": "county"},
      "price": {"low": 14.5, "high": 22.0, "unit": "$ / CWT"},
-     "flags": ["May need supplemental irrigation"]}
+     "limited_by": [],
+     "flags": ["Likely needs irrigation (310 mm rain expected, 350 mm needed)"]}
   ],
-  "warnings": []
+  "warnings": [],
+  "scoring": {
+    "weights": {"soil_ph": 0.20, "drainage": 0.15, "season_temp": 0.20,
+                "frost_risk": 0.15, "rainfall": 0.10, "local_history": 0.20},
+    "critical_factors": ["soil_ph", "drainage", "season_temp", "frost_risk"],
+    "critical_threshold": 25,
+    "critical_cap": 45}
 }
-Rules: crops sorted by score descending; every factor 0-100; any value may be
-null if a source failed (and a message is added to warnings).
+Rules: crops sorted by score descending, then name ascending; every factor
+0-100; any value may be null if a source failed (and a message is added to
+warnings).
+Score: weighted average of the non-null factors (weights renormalized over
+the factors present). If any critical factor scores below critical_threshold,
+the score is capped at critical_cap and that factor's key is listed in
+limited_by (in critical_factors order), with a "Limited by <factor>" flag.
+flags: at most 4, deduplicated, most critical first ("Limited by" flags, then
+flags of the lowest-scoring factors).
 
 GET /api/crops/{crop_id}?lat=&lon= -> the same crop object plus:
   "requirements": {raw fields from crops.json},
   "general_guidance": "string",
   "extension_links": [{"title": "string", "url": "string"}],
-  "conditions": {same as above}, "location": {same as above}
+  "conditions": {same as above}, "location": {same as above},
+  "scoring": {same as above}
 404 {"detail": "Unknown crop"} for an unknown id.
 400 {"detail": "Location must be in Florida"} outside the bounding box.
