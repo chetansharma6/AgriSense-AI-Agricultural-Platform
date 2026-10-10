@@ -98,7 +98,8 @@ npm run dev
 ```
 
 Open http://localhost:3000. The example environment points to the backend at
-http://localhost:8000 and enables mock mode for future API integration.
+http://localhost:8000 with mock mode disabled. Start the backend before
+using the frontend; set `NEXT_PUBLIC_USE_MOCKS=true` only for an offline UI demo.
 Keep `ANTHROPIC_API_KEY` in `.env.local` and use it only on the server.
 
 To check the frontend:
