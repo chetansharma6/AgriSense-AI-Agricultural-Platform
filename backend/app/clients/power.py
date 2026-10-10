@@ -64,6 +64,8 @@ def _fetch(params: dict) -> dict[str, dict[str, float]]:
                 raise
             time.sleep(0.05)
             continue
+        except httpx.HTTPError:
+            raise PowerError("NASA POWER request failed") from None
         if response.status_code >= 500 and attempt == 1:
             time.sleep(0.05)
             continue
