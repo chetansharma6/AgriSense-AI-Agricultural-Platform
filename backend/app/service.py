@@ -46,10 +46,12 @@ def recommend(lat: float, lon: float) -> dict[str, Any]:
         weather_job = pool.submit(_attempt, lambda: get_daily_weather(lat, lon), "Weather data (NASA POWER)", warnings)
         county, soil, weather = county_job.result(), soil_job.result(), weather_job.result()
 
+    fcc_failed = any("FCC" in warning for warning in warnings)
+    # FCC answered but found no county: open water beyond Florida's county lines.
+    if county is None and not fcc_failed:
+        raise OutsideFlorida
     if county is not None and county["state"] != "FL":
         raise OutsideFlorida
-    if county is None and not any("FCC" in w for w in warnings):
-        warnings.append("No county found at this point (offshore or water?); local history is null")
     if soil is not None and soil["soil_ph"] is None:
         warnings.append("Soil survey reports no pH for this soil; the pH factor is skipped")
 
