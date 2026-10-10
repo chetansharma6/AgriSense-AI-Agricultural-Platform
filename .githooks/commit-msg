@@ -1,0 +1,6 @@
+#!/bin/sh
+# Remove AI co-author and attribution lines from commit messages.
+sed -i.bak -E \
+  -e '/^[Cc]o-[Aa]uthored-[Bb]y:.*([Cc]laude|[Aa]nthropic|[Cc]odex|[Oo]pen[Aa][Ii]|[Cc]hat[Gg][Pp][Tt]|[Cc]opilot|noreply@anthropic\.com)/d' \
+  -e '/[Gg]enerated (with|by) .*([Cc]laude|[Cc]odex|[Cc]hat[Gg][Pp][Tt]|AI)/d' \
+  "$1" && rm -f "$1.bak"
