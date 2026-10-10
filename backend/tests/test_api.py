@@ -84,6 +84,21 @@ def test_failed_source_becomes_warning(sources: dict[str, Any], monkeypatch: pyt
     assert body["provenance"]["fawn_station"] is None
 
 
+def test_degraded_live_response_preserves_integrity(sources: dict[str, Any], monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(service, "get_soil", lambda lat, lon: (_ for _ in ()).throw(TimeoutError()))
+    monkeypatch.setattr(service, "get_daily_weather", lambda lat, lon: (_ for _ in ()).throw(TimeoutError()))
+    response = client.get("/api/recommend", params={"lat": 29.71, "lon": -81.50})
+    assert response.status_code == 200
+    body = response.json()
+    assert len(body["crops"]) == 13
+    assert len({crop["id"] for crop in body["crops"]}) == 13
+    assert all(crop["score"] is None or 0 <= crop["score"] <= 100 for crop in body["crops"])
+    assert [(-(crop["score"] if crop["score"] is not None else -1), crop["name"]) for crop in body["crops"]] == sorted(
+        (-(crop["score"] if crop["score"] is not None else -1), crop["name"]) for crop in body["crops"])
+    assert body["provenance"]["mode"] == "live"
+    assert all(source["status"] in {"live", "failed", "no data"} for source in body["provenance"]["sources"])
+
+
 def test_point_in_another_state_is_rejected(sources: dict[str, Any]) -> None:
     sources["county"] = {"county": "Thomas", "county_fips": "13275", "state": "GA"}
     response = client.get("/api/recommend", params={"lat": 30.9, "lon": -84.0})
