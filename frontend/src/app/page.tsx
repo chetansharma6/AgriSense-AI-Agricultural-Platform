@@ -1,11 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { stats } from "@/content/stats";
 import styles from "./home.module.css";
 import { useRouter } from "next/navigation";
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import LocationSearch from "@/components/LocationSearch";
 import MapLoader from "@/components/MapLoader";
 
@@ -18,6 +17,7 @@ const demos = [
 
 export default function Home() {
   const router = useRouter();
+  useEffect(() => { document.title = "AgriSense · Find the crops your Florida land is built for"; }, []);
   const [photoReady, setPhotoReady] = useState(false);
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
@@ -46,12 +46,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen">
-      <header className="border-b border-field/15">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
-          <Link href="/" className="inline-flex min-h-11 items-center text-2xl font-bold tracking-tight text-field">AgriSense</Link>
-          <Link href="/about" className="inline-flex min-h-11 items-center text-sm font-medium underline decoration-field/30 underline-offset-4 hover:text-field">About the data</Link>
-        </div>
-      </header>
+
       <main className="mb-8">
         <section className={styles.hero} aria-labelledby="hero-title">
           <Image src="/hero-farm.jpg" fill sizes="100vw" priority
@@ -64,7 +59,7 @@ export default function Home() {
               <div className="grid min-w-0 items-center gap-8 lg:grid-cols-2 lg:gap-10">
                 <div className="min-w-0">
                   <p className="mb-3 text-sm font-semibold uppercase tracking-widest">Florida land. Local possibilities.</p>
-                  <h1 id="hero-title" className="text-4xl leading-tight font-semibold tracking-tight sm:text-5xl">Know what your Florida land is built to grow.</h1>
+                  <h1 id="hero-title" className="page-title">Know what your Florida land is built to grow.</h1>
                   <p className="mt-5 text-base leading-relaxed sm:text-lg">Pick a spot on the map. We check soil, climate and local harvest history, then rank 13 Florida crops by how well they fit.</p>
                   <div className="mt-6">
                     <LocationSearch selectedLabel={place} onSelect={(result) => {
@@ -120,7 +115,7 @@ export default function Home() {
               {stats.map((stat) => (
                 <article key={stat.value} className={`${styles.glass} flex min-w-0 flex-col rounded-2xl p-5 sm:p-6`}>
                   <p className="text-4xl font-bold tracking-tight">{stat.value}</p>
-                  <h2 className="mt-2 text-base font-medium leading-relaxed">{stat.label}</h2>
+                  <p className="mt-2 text-base font-medium leading-relaxed">{stat.label}</p>
                   <a href={stat.sourceUrl} target="_blank" rel="noopener"
                     className="mt-3 inline-flex min-h-11 items-center text-xs leading-relaxed underline underline-offset-4 hover:decoration-2">
                     {stat.source}
@@ -132,7 +127,7 @@ export default function Home() {
           </div>
         </section>
       </main>
-      <footer className="mx-auto w-full max-w-6xl px-5 pb-8 text-sm leading-relaxed text-soil sm:px-8">Data: USDA NRCS, NASA POWER, USDA NASS. General guidance only.</footer>
+
     </div>
   );
 }

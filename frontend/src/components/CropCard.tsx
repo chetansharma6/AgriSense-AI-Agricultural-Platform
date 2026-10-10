@@ -8,6 +8,7 @@ interface CropCardProps {
   lat: number;
   lon: number;
   compact?: boolean;
+  place?: string;
 }
 
 const factorKeys: FactorKey[] = ["soil_ph", "drainage", "season_temp", "frost_risk", "rainfall", "local_history"];
@@ -17,7 +18,7 @@ const tones = {
   weak: { label: "Weak fit", badge: "bg-clay text-white", bar: "bg-clay" },
 };
 
-export default function CropCard({ crop, rank, lat, lon, compact = false }: CropCardProps) {
+export default function CropCard({ crop, rank, lat, lon, place, compact = false }: CropCardProps) {
   const tone = scoreTone(crop.score);
   const factors = factorKeys.map((key) => ({ key, score: crop.factors?.[key] ?? null }))
     .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
@@ -26,7 +27,7 @@ export default function CropCard({ crop, rank, lat, lon, compact = false }: Crop
     .sort((a, b) => (a.score ?? 0) - (b.score ?? 0));
   const visibleFactors = [...top, ...low].slice(0, 4);
   const content = (
-    <article className={`h-full rounded-xl border border-field/20 bg-white/60 ${compact ? "p-4 sm:p-5" : "p-5 sm:p-6"}`}>
+    <article className={`card h-full rounded-xl border border-field/20 bg-white/60 ${compact ? "p-4 sm:p-5" : "p-5 sm:p-6"}`}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-sm font-semibold text-soil">#{rank}</p>
@@ -62,9 +63,12 @@ export default function CropCard({ crop, rank, lat, lon, compact = false }: Crop
     </article>
   );
   if (!crop.id) return content;
+  const query = new URLSearchParams({ lat: lat.toFixed(4), lon: lon.toFixed(4) });
+  if (place) query.set("place", place);
+  if (crop.name) query.set("crop", crop.name);
   return (
-    <Link href={`/crops/${encodeURIComponent(crop.id)}?lat=${lat.toFixed(4)}&lon=${lon.toFixed(4)}`}
-      className="block min-w-0 rounded-xl transition-shadow hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-field">
+    <Link href={`/crops/${encodeURIComponent(crop.id)}?${query}`}
+      className="crop-card-link block min-w-0 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-field">
       {content}
     </Link>
   );

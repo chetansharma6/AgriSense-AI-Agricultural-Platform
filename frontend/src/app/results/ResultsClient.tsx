@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import CropCard from "@/components/CropCard";
-import LandSummary, { LandSummarySkeleton } from "@/components/LandSummary";
+import LandSummary from "@/components/LandSummary";
 import { ApiError, getRecommendations } from "@/lib/api";
+import ResultsSkeleton from "@/components/ResultsSkeleton";
+import { placeLabel, resultsSummary } from "@/lib/presentation";
 import type { RecommendResponse } from "@/lib/types";
 
 type RequestState = {
@@ -51,15 +53,22 @@ export default function ResultsClient() {
     return () => { active = false; clearTimeout(slowTimer); };
   }, [lat, lon, valid, key, attempt]);
 
-  if (!valid) return (
+  const current = state?.key === key && state.attempt === attempt ? state.data : undefined;
+  const place = placeLabel(params.get("place"), current?.location?.county);
+  useEffect(() => { document.title = `${place} results · AgriSense`; }, [place]);
+  function withTitle(content: ReactNode) {
+    return <><h1 className="page-title mb-6">{place}</h1>{content}</>;
+  }
+
+  if (!valid) return withTitle(
     <section className="rounded-xl border border-clay/25 bg-white/50 p-5 sm:p-6">
       <h2 className="text-xl font-semibold">Choose a valid Florida location</h2>
       <p className="mt-3">The link needs latitude 24.3–31.1 and longitude −87.7–−79.9.</p>
       <Link href="/" className="mt-2 inline-flex min-h-11 items-center text-field underline underline-offset-4">Back home to pick a spot</Link>
     </section>
   );
-  if (state?.key !== key || state.attempt !== attempt) return <LandSummarySkeleton slow={slow} />;
-  if (state.error) return (
+  if (state?.key !== key || state.attempt !== attempt) return withTitle(<ResultsSkeleton slow={slow} />);
+  if (state.error) return withTitle(
     <section className="rounded-xl border border-clay/25 bg-white/50 p-5 sm:p-6" role="alert">
       <h2 className="text-xl font-semibold">We couldn’t check your land</h2>
       <p className="mt-3">{state.error}</p>
@@ -69,7 +78,7 @@ export default function ResultsClient() {
       </div>
     </section>
   );
-  if (!state.data) return <LandSummarySkeleton slow={slow} />;
+  if (!state.data) return withTitle(<ResultsSkeleton slow={slow} />);
   const crops = [...(state.data.crops ?? [])].sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
   const ranked = crops.map((crop, i) => ({ crop, rank: i + 1 }));
   const matching = ranked.filter(({ crop }) => {
@@ -84,16 +93,23 @@ export default function ResultsClient() {
   });
   const bestFits = matching.filter(({ rank }) => rank <= 3);
   const otherCrops = matching.filter(({ rank }) => rank > 3);
-  return (
+  return withTitle(
     <div>
+      <p className="mb-5 text-lg leading-relaxed">{resultsSummary(crops)}</p>
       <LandSummary response={state.data} place={params.get("place")?.trim() || undefined} />
-      <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter crops">
+      <p className="mt-3 text-xs leading-relaxed text-soil">Climate: NASA POWER 2016–2025 · Soil: USDA NRCS SSURGO · Harvests: USDA NASS</p>
+      <div className="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="Filter crops">
         {filters.map((label) => (
           <button key={label} type="button" aria-pressed={filter === label} onClick={() => setFilter(label)}
             className={`min-h-11 rounded-full border px-4 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field ${filter === label ? "border-field bg-field text-white" : "border-field/25 bg-white/60 hover:bg-leaf/15"}`}>
             {label}
           </button>
         ))}
+        <p className="flex flex-wrap gap-2 text-xs" aria-label="Score legend">
+          <span className="rounded-full bg-field px-3 py-2 text-white">75+ strong</span><span aria-hidden="true">·</span>
+          <span className="rounded-full bg-sun px-3 py-2 text-ink">50–74 fair</span><span aria-hidden="true">·</span>
+          <span className="rounded-full bg-clay px-3 py-2 text-white">under 50 weak</span>
+        </p>
       </div>
       {matching.length === 0 ? (
         <p className="mt-8 text-soil">No crops match this filter</p>
@@ -102,14 +118,14 @@ export default function ResultsClient() {
           {bestFits.length > 0 && <section className="mt-10" aria-labelledby="best-fits-title">
             <h2 id="best-fits-title" className="mb-5 text-2xl font-semibold">Best fits for this spot</h2>
             <div className="grid gap-4 lg:grid-cols-3">
-              {bestFits.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} />)}
+              {bestFits.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} place={place} />)}
             </div>
           </section>}
           {otherCrops.length > 0 && (
             <section className="mt-10" aria-labelledby="other-crops-title">
               <h2 id="other-crops-title" className="mb-5 text-2xl font-semibold">Other crops</h2>
               <div className="space-y-3">
-                {otherCrops.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} compact />)}
+                {otherCrops.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} place={place} compact />)}
               </div>
             </section>
           )}

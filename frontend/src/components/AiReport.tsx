@@ -59,8 +59,8 @@ export default function AiReport({ crop, verdictSlot }: { crop: CropDetail; verd
   return (
     <>
       {verdictSlot && createPortal(verdict, verdictSlot)}
-      <section className="rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="ai-summary-title" aria-busy={!result && !error}>
-        <h2 id="ai-summary-title" className="text-2xl font-semibold">AI summary of the data above</h2>
+      <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="ai-summary-title" aria-busy={!result && !error}>
+        <h2 id="ai-summary-title" className="section-title">AI summary of the data above</h2>
         {error ? (
           <div role="alert" className="mt-4">
             <p className="text-sm text-soil">{error}</p>

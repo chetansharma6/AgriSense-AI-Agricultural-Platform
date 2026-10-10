@@ -26,8 +26,9 @@ export default function FactorChart({ factors, details, weights, explanation }: 
     detail: formatFactorDetail(key, details?.[key]), weight: weights[key],
   })).sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
   return (
-    <section id="factor-chart" className="rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="factor-chart-title">
-      <h2 id="factor-chart-title" className="mb-5 text-2xl font-semibold">Why it ranked here</h2>
+    <section id="factor-chart" className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="factor-chart-title">
+      <h2 id="factor-chart-title" className="section-title mb-5">Why it ranked here</h2>
+      <div className="screen-only">
       <div className="space-y-4 lg:hidden">
         {data.map((row) => (
           <div key={row.key}>
@@ -61,6 +62,13 @@ export default function FactorChart({ factors, details, weights, explanation }: 
         <div className="grid grid-rows-6 pt-1 pb-[26px]">
           {data.map((row) => <p key={row.key} className="flex items-center text-sm leading-relaxed text-soil">{row.score === null ? `${row.label}: No data · ` : ""}{row.detail}</p>)}
         </div>
+      </div>
+      </div>
+      <div className="print-only print-factors">
+        {data.map((row) => <div key={row.key} className="print-factor-row">
+          <div><strong>{row.label}: {formatWhole(row.score)}</strong><div className="print-bar-track"><div style={{ width: `${row.score ?? 0}%`, background: color(row.score) }} /></div></div>
+          <p>{row.detail}</p>
+        </div>)}
       </div>
       <p className="mt-5 text-sm leading-relaxed text-soil">{formatDisplayText(explanation)}</p>
     </section>
