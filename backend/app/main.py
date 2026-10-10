@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import CORS_ORIGIN_REGEX, CORS_ORIGINS, in_florida
 from app.crops import load_crops
 from app.schemas import CropDetail, RecommendResponse
-from app.service import OutsideFlorida, crop_detail, recommend
+from app.service import OutsideFlorida, SourcesTooSlow, crop_detail, recommend
 
 # Per-source timings from app.service show up next to uvicorn's access log.
 logging.basicConfig(level=logging.INFO, format="%(levelname)s:     %(name)s: %(message)s")
@@ -25,6 +25,7 @@ app.add_middleware(
 )
 
 NOT_IN_FLORIDA = "Location must be in Florida"
+TOO_SLOW = "Data sources are slow right now. Try again in a moment, or pick a demo farm."
 
 
 @app.get("/api/health")
@@ -40,6 +41,8 @@ def get_recommend(lat: float = Query(...), lon: float = Query(...)) -> dict[str,
         return recommend(lat, lon)
     except OutsideFlorida:
         raise HTTPException(status_code=400, detail=NOT_IN_FLORIDA) from None
+    except SourcesTooSlow:
+        raise HTTPException(status_code=503, detail=TOO_SLOW) from None
 
 
 @app.get("/api/crops/{crop_id}", response_model=CropDetail, response_model_exclude_unset=True)
@@ -51,6 +54,8 @@ def get_crop(crop_id: str, lat: float = Query(...), lon: float = Query(...)) -> 
         detail = crop_detail(crop_id, lat, lon)
     except OutsideFlorida:
         raise HTTPException(status_code=400, detail=NOT_IN_FLORIDA) from None
+    except SourcesTooSlow:
+        raise HTTPException(status_code=503, detail=TOO_SLOW) from None
     assert detail is not None
     return detail
 
