@@ -7,7 +7,7 @@ import { explanationFor, weightsFor } from "@/lib/weights";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ApiError, getCropDetail } from "@/lib/api";
-import { formatPrice, limitedText, formatYield, scoreTone } from "@/lib/format";
+import { formatPrice, limitedText, formatYield, scoreTone, formatWhole, formatDisplayText, formatGuideTitle } from "@/lib/format";
 import type { CropDetail } from "@/lib/types";
 
 export function CropDetailSkeleton() {
@@ -93,8 +93,12 @@ export default function CropDetailClient() {
   const tone = scoreTone(crop.score);
   const requirements = record(crop.requirements);
   const history = record(record(crop).history ?? requirements.history);
-  const rawAcres = history.county_acres ?? requirements.county_acres;
+  const historyValue = crop.factor_details?.local_history?.value;
+  const acreageMatch = typeof historyValue === "string" ? /^([\d,.]+) acres in county\b/i.exec(historyValue) : null;
+  const rawAcres = history.county_acres ?? requirements.county_acres
+    ?? (acreageMatch ? Number(acreageMatch[1].replace(/,/g, "")) : undefined);
   const acres = typeof rawAcres === "number" ? rawAcres : record(rawAcres).value ?? record(rawAcres).acres;
+  const hasAcres = typeof acres === "number" && Number.isFinite(acres);
   // The current backend price_range uses Florida state prices.
   const priceLevel = record(crop.price).level ?? history.price_level ?? requirements.price_level
     ?? (crop.price ? "state" : null);
@@ -109,7 +113,7 @@ export default function CropDetailClient() {
             <p className="mt-2 text-sm">{crop.season_label ?? "Season: No data"}</p>
           </div>
           <div className={`shrink-0 rounded-lg px-3 py-2 text-center ${tone ? badges[tone].style : "bg-sand text-soil"}`}>
-            <p className="text-3xl font-bold">{crop.score ?? "—"}</p>
+            <p className="text-3xl font-bold">{crop.score === null ? "—" : formatWhole(crop.score)}</p>
             <p className="text-sm font-semibold">{tone ? badges[tone].label : "No data"}</p>
           </div>
         </div>
@@ -120,22 +124,22 @@ export default function CropDetailClient() {
       <AiReport key={key} crop={crop} verdictSlot={verdictSlot} />
       <section aria-labelledby="track-record">
         <h2 id="track-record" className="mb-5 text-2xl font-semibold">Local track record</h2>
-        <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">Average yield</dt><dd className="mt-2 text-xl font-semibold">{formatYield(crop.avg_yield)}</dd><dd className="mt-2 text-sm text-soil">{levelLabel(crop.avg_yield?.level)}</dd></div>
-          <div className="rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">Price range</dt><dd className="mt-2 text-xl font-semibold">{formatPrice(crop.price)}</dd><dd className="mt-2 text-sm text-soil">{levelLabel(priceLevel)}</dd></div>
-          {typeof acres === "number" && Number.isFinite(acres) && <div className="rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">County acres</dt><dd className="mt-2 text-xl font-semibold">{acres.toLocaleString("en-US")} acres</dd><dd className="mt-2 text-sm text-soil">Reported area in this county</dd></div>}
+        <dl className={`grid gap-4 ${hasAcres ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
+          <div className="min-w-0 rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">Average yield</dt><dd className="mt-2 break-words text-xl font-semibold">{formatYield(crop.avg_yield)}</dd><dd className="mt-2 text-sm text-soil">{levelLabel(crop.avg_yield?.level)}</dd></div>
+          <div className="min-w-0 rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">Price range</dt><dd className="mt-2 break-words text-xl font-semibold">{formatPrice(crop.price)}</dd><dd className="mt-2 text-sm text-soil">{levelLabel(priceLevel)}</dd></div>
+          {hasAcres && <div className="min-w-0 rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">County acres</dt><dd className="mt-2 break-words text-xl font-semibold">{formatWhole(acres as number)} acres</dd><dd className="mt-2 text-sm text-soil">Reported area in this county</dd></div>}
         </dl>
       </section>
       {!!crop.flags?.length && <section className="rounded-xl border border-sun/40 bg-sun/15 p-5" aria-labelledby="watch-out">
         <h2 id="watch-out" className="text-2xl font-semibold">Watch out for</h2>
-        <ul className="mt-3 list-disc space-y-2 pl-5">{crop.flags.map((flag, i) => <li key={i}>{flag}</li>)}</ul>
+        <ul className="mt-3 list-disc space-y-2 pl-5">{crop.flags.map((flag, i) => <li key={i}>{formatDisplayText(flag)}</li>)}</ul>
       </section>}
       <section aria-labelledby="growing-it">
         <h2 id="growing-it" className="text-2xl font-semibold">Growing it</h2>
-        <p className="mt-4 whitespace-pre-line leading-relaxed">{crop.general_guidance ?? "Growing guidance is unavailable."}</p>
+        <p className="mt-4 whitespace-pre-line leading-relaxed">{formatDisplayText(crop.general_guidance ?? "Growing guidance is unavailable.")}</p>
         <div className="mt-5 flex flex-wrap gap-3">{crop.extension_links?.map((link, i) => {
           const url = extensionUrl(link.url);
-          return url ? <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-field px-4 py-3 text-sm font-semibold text-field hover:bg-leaf/15">{link.title ?? "UF/IFAS Extension resource"} ↗</a> : null;
+          return url ? <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-field px-4 py-3 text-sm font-semibold text-field hover:bg-leaf/15">{formatGuideTitle(link.title)}</a> : null;
         })}</div>
       </section>
       <aside className="rounded-xl border border-soil/25 bg-sand p-5 text-sm leading-relaxed">General guidance only. Confirm fertilizer and pesticide decisions with your county UF/IFAS Extension office and always follow product labels.</aside>
