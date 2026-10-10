@@ -20,18 +20,34 @@ Record the live app at https://agrisense-ai-cyan.vercel.app in a desktop window 
 - If the report says AI is unavailable, show that label and describe the local fallback honestly, or record again when AI is available.
 - Show the actual ranking: sugarcane need not rank first in Belle Glade.
 - Demo locations represent growing regions, not verified individual farm records.
-## Judge-proof walkthrough
+## Judge walkthrough
 
-1. Choose Plant City and show the ranked crops.
-2. Open strawberry and point out the six factor scores, growing window, local
+1. Start with `/api/health` or the loaded app so the judge sees the service is
+   reachable.
+2. Choose Plant City and show the 13 ranked crops.
+3. Open strawberry and point out the six factor scores, growing window, local
    history, and UF/IFAS links.
-3. Explain that the ranking is deterministic and that the AI only writes the
+4. Explain that the ranking is deterministic and that the AI only writes the
    bounded explanation.
-4. Choose Belle Glade and point out the muck-soil behavior and different crop
-   fit.
-5. Show the provenance and confidence metadata or the methodology page.
-6. If the AI provider is unavailable, show that the local report still gives
+5. Choose Belle Glade and point out the muck-soil behavior and changed crop
+   fit. This is the clearest contrast between locations.
+6. Show provenance, source status, warnings, and confidence. If a provider is
+   unavailable, show the missing factor and warning rather than hiding it.
+7. If the AI provider is unavailable, show that the local report still gives
    useful next steps.
+
+## Questions to answer plainly
+
+- The score is a reproducible suitability index, not a probability, yield
+  forecast, or profit estimate.
+- Missing sources produce null factors and warnings; they are not fabricated
+  as zeroes. The available factors are renormalized.
+- Exact official demo locations use committed demo responses in `DEMO_MODE`;
+  that path is intentionally deterministic and should not be described as a
+  fresh live fetch.
+- The project has tests for formulas, provider failures, contracts, demo
+  responses, and response integrity. It does not claim field validation,
+  production uptime, or load-test results.
 
 Closing line: “The model writes the explanation, but the recommendation is
 calculated from traceable data and deterministic rules.”

@@ -6,6 +6,18 @@
 
 AgriSense helps small and mid-scale Florida farmers decide what to plant by ranking 13 crops for a selected location. Each crop report includes an explainable suitability score, local yield and price history, growing guidance, and UF/IFAS Extension links.
 
+## Judge summary
+
+AgriSense turns a Florida map point into a ranked, explainable crop shortlist by combining public soil, climate, county-history, and price data with a deterministic scoring engine. The language model writes a bounded explanation after the score is calculated; it is not the source of the score.
+
+The difficult-to-fake work is the end-to-end data path: provider-specific parsing and caches, Florida growing-window calculations, freeze weighting, muck-soil rules, county/state fallbacks, source provenance, and degraded responses when providers fail. The repository includes mocked provider tests, contract checks, deterministic demo fixtures, and a backend judging smoke test.
+
+The scores are trustworthy as reproducible suitability indices, not as probabilities or guarantees: the formulas, weights, crop requirements, and missing-data rules are inspectable in [the methodology](docs/methodology.md), and responses expose warnings, source status, available-factor count, and confidence. They have not been validated against farm outcomes.
+
+For the strongest live demo, show Plant City first, inspect strawberry's factors and report, then switch to Belle Glade and show how muck-soil rules change the conditions and ranking. Finish by showing provenance/confidence and the local fallback behavior, rather than claiming that a saved demo response is a fresh provider fetch.
+
+Questions a skeptical judge should ask include how missing data changes a score, whether rankings are empirically validated, how fresh county records are, what happens when a provider or AI service fails, and whether the deployed API has been load-tested. The code supports the missing-data, provider-failure, provenance, and AI-fallback answers; it does not support claims of agronomic validation, comprehensive profit prediction, production uptime, or load-test capacity.
+
 ## Features
 
 - Pick a Florida location on the map or enter latitude and longitude.
