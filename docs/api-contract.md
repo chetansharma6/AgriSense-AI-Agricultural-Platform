@@ -54,3 +54,7 @@ GET /api/crops/{crop_id}?lat=&lon= -> the same crop object plus:
   "scoring": {same as above}
 404 {"detail": "Unknown crop"} for an unknown id.
 400 {"detail": "Location must be in Florida"} outside the bounding box.
+503 {"detail": "Data sources are slow right now. Try again in a moment, or pick a
+demo farm."} only in DEMO_MODE, when live data misses the 6 s deadline and no
+demo farm is within 25 km. Near a demo farm the saved response is returned
+instead, with "Showing cached data for <farm> (<reason>)" as the first warning.
