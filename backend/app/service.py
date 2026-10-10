@@ -118,7 +118,7 @@ def recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, A
         if hit is not None and now - hit[0] < RESPONSE_CACHE_TTL_S:
             _response_cache.move_to_end(key)
             log.info("recommend %s: memory cache hit", key)
-        return _with_location(_apply_acres(copy.deepcopy(hit[1]), acres), lat, lon)
+            return _with_location(_apply_acres(copy.deepcopy(hit[1]), acres), lat, lon)
 
     started = time.perf_counter()
     if config.DEMO_MODE:
