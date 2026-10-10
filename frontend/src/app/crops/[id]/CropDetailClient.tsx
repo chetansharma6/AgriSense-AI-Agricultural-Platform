@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import FactorChart from "@/components/FactorChart";
+import { FACTOR_WEIGHTS, SCORE_EXPLANATION } from "@/lib/weights";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ApiError, getCropDetail } from "@/lib/api";
@@ -111,7 +113,7 @@ export default function CropDetailClient() {
         </div>
         <div id="ai-verdict" />
       </header>
-      <div id="factor-chart" className="min-h-40 rounded-xl border border-field/15 bg-white/30" aria-label="Factor chart placeholder" />
+      <FactorChart factors={crop.factors} details={crop.factor_details} weights={FACTOR_WEIGHTS} explanation={SCORE_EXPLANATION} />
       <section aria-labelledby="track-record">
         <h2 id="track-record" className="mb-4 text-2xl font-semibold">Local track record</h2>
         <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
