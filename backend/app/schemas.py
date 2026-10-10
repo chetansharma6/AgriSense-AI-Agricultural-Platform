@@ -134,6 +134,11 @@ class Confidence(Strict):
     level: str
     available_factors: int
     total_factors: int
+    available_factor_names: list[str]
+    missing_factor_names: list[str]
+    data_status: str
+    county_history_status: str
+    partial: bool
     notes: list[str]
 
 
