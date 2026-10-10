@@ -22,6 +22,29 @@ def _assert_finite(value: object, path: str = "response") -> None:
             _assert_finite(child, f"{path}[{index}]")
 
 
+def _assert_response_invariants(response: dict) -> None:
+    crops = response["crops"]
+    assert len(crops) == 13
+    assert len({crop["id"] for crop in crops}) == len(crops)
+    assert all(crop["score"] is None or 0 <= crop["score"] <= 100 for crop in crops)
+    assert [(-(crop["score"] if crop["score"] is not None else -1), crop["name"]) for crop in crops] == sorted(
+        (-(crop["score"] if crop["score"] is not None else -1), crop["name"]) for crop in crops)
+    for crop in crops:
+        assert list(crop["factors"]) == ["soil_ph", "drainage", "season_temp", "frost_risk", "rainfall", "local_history"]
+        assert all(value is None or isinstance(value, int) and 0 <= value <= 100 for value in crop["factors"].values())
+        assert crop["avg_yield"] is None or "/ ACRE" in (crop["avg_yield"]["unit"] or "")
+        assert crop["price"] is None or (crop["price"]["unit"] or "").startswith("$ / ")
+    provenance = response.get("provenance")
+    if provenance is not None:
+        assert provenance["mode"] in {"live", "demo"}
+        assert all(source["status"] in {"live", "saved", "failed", "no data"}
+                   and (source["detail"] is None or isinstance(source["detail"], str))
+                   for source in provenance["sources"])
+        if provenance["fawn_station"] is not None:
+            assert provenance["fawn_station"]["name"]
+            assert math.isfinite(provenance["fawn_station"]["distance_km"])
+
+
 @pytest.mark.parametrize("farm", DEMO_FARMS)
 def test_demo_sample_matches_contract(farm: str) -> None:
     sample = json.loads((DATA_DIR / "demo" / f"{farm}.json").read_text())
@@ -46,7 +69,14 @@ def test_demo_recommendation_integrity(farm: str) -> None:
     scores = [crop["score"] for crop in crops]
 
     _assert_finite(response)
-    assert len(crops) == 13
-    assert len({crop["id"] for crop in crops}) == len(crops)
+    _assert_response_invariants(response)
     assert all(isinstance(crop["score"], int) and 0 <= crop["score"] <= 100 for crop in crops)
     assert scores == sorted(scores, reverse=True)
+
+
+@pytest.mark.parametrize("farm", DEMO_FARMS)
+def test_demo_detail_links_and_nutrient_sources_are_https(farm: str) -> None:
+    sample = json.loads((DATA_DIR / "demo" / f"{farm}.json").read_text())
+    for detail in sample["crops"].values():
+        links = detail["extension_links"] + detail.get("nutrient_plan", {}).get("sources", [])
+        assert all(urlparse(link["url"]).scheme == "https" and urlparse(link["url"]).netloc for link in links)
