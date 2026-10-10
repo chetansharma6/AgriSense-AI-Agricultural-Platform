@@ -10,7 +10,7 @@ from typing import Any, Callable, TypeVar
 from app.climate import summarize
 from app.clients.fcc import lookup_county
 from app.clients.power import get_daily_weather
-from app.clients.soil import get_soil
+from app.clients.soil import SoilNotFound, get_soil
 from app.crops import load_crops
 from app.market import load_market
 from app.scoring import score_crop
@@ -29,6 +29,9 @@ class OutsideFlorida(ValueError):
 def _attempt(fetch: Callable[[], T], source: str, warnings: list[str]) -> T | None:
     try:
         return fetch()
+    except SoilNotFound as error:
+        warnings.append(f"{error}; soil values are null")
+        return None
     except Exception as error:  # any source failure becomes a warning
         warnings.append(f"{source} unavailable ({type(error).__name__}); related values are null")
         return None
@@ -47,9 +50,7 @@ def recommend(lat: float, lon: float) -> dict[str, Any]:
         raise OutsideFlorida
     if county is None and not any("FCC" in w for w in warnings):
         warnings.append("No county found at this point (offshore or water?); local history is null")
-    if soil is None and not any("SSURGO" in w for w in warnings):
-        warnings.append("No soil survey data at this point; soil values are null")
-    elif soil is not None and soil["soil_ph"] is None:
+    if soil is not None and soil["soil_ph"] is None:
         warnings.append("Soil survey reports no pH for this soil; the pH factor is skipped")
 
     market = _attempt(lambda: load_market(county["county_fips"] if county else None),
