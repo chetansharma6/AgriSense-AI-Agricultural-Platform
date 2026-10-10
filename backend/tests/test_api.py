@@ -1,6 +1,9 @@
 """Endpoint tests with every data source faked."""
 
 from typing import Any
+from concurrent.futures import ThreadPoolExecutor
+import threading
+import time
 
 import pandas as pd
 import pytest
@@ -111,6 +114,56 @@ def test_outside_bounding_box() -> None:
     response = client.get("/api/recommend", params={"lat": 40.0, "lon": -74.0})
     assert response.status_code == 400
     assert response.json() == {"detail": "Location must be in Florida"}
+
+
+@pytest.mark.parametrize("path", ["/api/recommend", "/api/crops/potato"])
+@pytest.mark.parametrize("lat,lon", [(24.299999, -81.5), (31.100001, -81.5), (28.0, -87.700001), (28.0, -79.899999)])
+def test_coordinates_outside_strict_bbox_are_rejected(path: str, lat: float, lon: float) -> None:
+    response = client.get(path, params={"lat": lat, "lon": lon})
+    assert response.status_code == 400
+
+
+def test_oversized_crop_path_is_rejected() -> None:
+    response = client.get("/api/crops/" + "x" * 65, params={"lat": 28.0, "lon": -81.5})
+    assert response.status_code == 404
+
+
+def test_unique_coordinates_do_not_grow_response_cache(sources: dict[str, Any]) -> None:
+    service.clear_response_cache()
+    for index in range(service.RESPONSE_CACHE_SIZE + 20):
+        service.recommend(28.0 + index / 100000, -81.5)
+    assert len(service._response_cache) == service.RESPONSE_CACHE_SIZE
+
+
+def test_concurrent_recommendations_are_bounded(monkeypatch: pytest.MonkeyPatch) -> None:
+    entered = 0
+    peak = 0
+    lock = threading.Lock()
+
+    def slow_build(lat: float, lon: float, acres: float | None = None) -> tuple[dict[str, Any], bool]:
+        nonlocal entered, peak
+        with lock:
+            entered += 1
+            peak = max(peak, entered)
+        time.sleep(0.02)
+        with lock:
+            entered -= 1
+        return {"location": {"lat": lat, "lon": lon}}, True
+
+    monkeypatch.setattr(service, "_build_recommendation", slow_build)
+    service.clear_response_cache()
+    with ThreadPoolExecutor(max_workers=service.MAX_CONCURRENT_RECOMMENDATIONS + 4) as pool:
+        results = list(pool.map(_recommend_for_test, range(service.MAX_CONCURRENT_RECOMMENDATIONS + 4)))
+    assert peak <= service.MAX_CONCURRENT_RECOMMENDATIONS
+    assert "busy" in results
+
+
+def _recommend_for_test(index: int) -> str:
+    try:
+        service.recommend(28.0 + index / 1000, -81.5)
+    except service.SourcesTooSlow:
+        return "busy"
+    return "ok"
 
 
 @pytest.mark.parametrize("lat,lon", [(float("nan"), -81.5), (28.0, float("inf")), (24.2, -81.5)])

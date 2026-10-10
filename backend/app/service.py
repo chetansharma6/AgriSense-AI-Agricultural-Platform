@@ -35,9 +35,11 @@ log = logging.getLogger(__name__)
 
 RESPONSE_CACHE_SIZE = 256
 RESPONSE_CACHE_TTL_S = 3600.0
+MAX_CONCURRENT_RECOMMENDATIONS = 8
 FACTOR_COUNT = 6
 _response_cache: OrderedDict[tuple[float, float], tuple[float, dict[str, Any]]] = OrderedDict()
 _response_cache_lock = threading.Lock()
+_recommendation_slots = threading.BoundedSemaphore(MAX_CONCURRENT_RECOMMENDATIONS)
 
 
 class _DaemonThreadPoolExecutor(ThreadPoolExecutor):
@@ -106,6 +108,16 @@ def clear_response_cache() -> None:
 
 
 def recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, Any]:
+    """Build a recommendation while bounding expensive concurrent work."""
+    if not _recommendation_slots.acquire(blocking=False):
+        raise SourcesTooSlow("Too many recommendation requests are in progress")
+    try:
+        return _recommend(lat, lon, acres)
+    finally:
+        _recommendation_slots.release()
+
+
+def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, Any]:
     """Full /api/recommend response for a Florida point, from memory when possible."""
     if config.DEMO_MODE:
         exact = _exact_demo_response(lat, lon)
