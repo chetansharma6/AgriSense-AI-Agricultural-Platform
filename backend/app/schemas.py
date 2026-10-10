@@ -156,6 +156,7 @@ class CropResult(Strict):
     limited_by: list[str]
     flags: list[str]
     action_plan: ActionPlan
+    risk_notes: list[str]
 
 
 class RecommendResponse(Strict):

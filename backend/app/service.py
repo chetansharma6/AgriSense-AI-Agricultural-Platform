@@ -26,7 +26,7 @@ from app.clients.power import get_daily_weather
 from app.clients.soil import SoilNotFound, get_soil
 from app.crops import load_crops
 from app.market import load_market
-from app.scoring import estimated_gross_value, rank_crops, scale_info, score_crop, scoring_rules
+from app.scoring import climate_risk_notes, estimated_gross_value, rank_crops, scale_info, score_crop, scoring_rules
 from app.utils import haversine_km
 
 T = TypeVar("T")
@@ -141,6 +141,10 @@ def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, 
         result, complete = _build_with_deadline(lat, lon, acres)
     else:
         result, complete = _build_recommendation(lat, lon, acres)
+    # Normalize live and partial responses through the same response decoration
+    # used by saved/demo data, without changing any score calculation.
+    result = _apply_acres(result, acres)
+    result["confidence"] = _confidence(result, "live")
     log.info("recommend %s: answered in %.0f ms%s", key, (time.perf_counter() - started) * 1000,
              "" if complete else " (incomplete; not cached)")
     if complete:  # never pin a degraded answer: the next request retries the failed source
@@ -484,6 +488,7 @@ def _apply_acres(response: dict[str, Any], acres: float | None) -> dict[str, Any
         crop.setdefault("scale", {"fit": None, "min_practical_acres": 0, "note": None})
         crop.setdefault("est_gross_value", None)
         crop["action_plan"] = _action_plan(crops[crop["id"]], response.get("conditions", {}), crop)
+        crop["risk_notes"] = climate_risk_notes(crop.get("flags", []))
     return response
 
 
