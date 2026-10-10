@@ -97,6 +97,10 @@ cp .env.local.example .env.local
 npm run dev
 ```
 
+Open http://localhost:3000. The example environment points to the live backend
+at http://localhost:8000 and sets `NEXT_PUBLIC_USE_MOCKS=false`, so the browser
+uses the API described above. Set it to `true` only when intentionally running
+the frontend without a backend.
 Open http://localhost:3000. The example environment points to the backend at
 http://localhost:8000 with mock mode disabled. Start the backend before
 using the frontend; set `NEXT_PUBLIC_USE_MOCKS=true` only for an offline UI demo.
