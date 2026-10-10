@@ -21,6 +21,10 @@ MISSING = -999.0
 class PowerError(RuntimeError):
     """NASA POWER returned an HTTP, empty, or malformed response."""
 
+
+def _valid_series(value: object) -> bool:
+    return isinstance(value, dict) and all(isinstance(series, dict) for series in value.values())
+
 # POWER parameter -> DataFrame column
 PARAMETERS = {
     "T2M": "t_mean_c",
@@ -34,7 +38,7 @@ def get_daily_weather(lat: float, lon: float) -> pd.DataFrame:
     """Return daily weather indexed by date, one column per PARAMETERS value.
     Missing values are NaN."""
     params = {"lat": round(lat, 1), "lon": round(lon, 1), "start": START, "end": END}
-    series = read_cache("power", params)
+    series = read_cache("power", params, _valid_series)
     if series is None:
         series = _fetch(params)
         write_cache("power", params, series)

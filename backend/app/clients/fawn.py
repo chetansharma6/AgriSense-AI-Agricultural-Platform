@@ -53,6 +53,10 @@ class FawnTimeout(FawnError):
     """FAWN exceeded its finite request timeout."""
 
 
+def _valid_fawn(value: object) -> bool:
+    return isinstance(value, dict) and isinstance(value.get("start"), str) and isinstance(value.get("min_c"), list)
+
+
 @lru_cache(maxsize=1)
 def load_stations() -> tuple[Station, ...]:
     """Stations with a usable record (scripts/fetch_fawn.py writes the file)."""
@@ -74,7 +78,7 @@ def nearest_station(lat: float, lon: float) -> tuple[Station, float] | None:
 def daily_min_c(station_id: str) -> pd.Series:
     """Daily 2 m minimum temperature (C) for complete days in START-END, indexed by date."""
     params = {"station": station_id, "start": START, "end": END}
-    cached = read_cache("fawn", params)
+    cached = read_cache("fawn", params, _valid_fawn)
     if cached is None:
         cached = _encode(_download(station_id))
         write_cache("fawn", params, cached)

@@ -10,12 +10,15 @@ import json
 import logging
 import os
 import tempfile
+import time
 from pathlib import Path
 from typing import Any
 
 from app.config import CACHE_DIR
 
 log = logging.getLogger(__name__)
+CACHE_VERSION = 1
+DEFAULT_MAX_AGE_S = 7 * 24 * 60 * 60
 
 
 def cache_path(namespace: str, params: dict[str, Any]) -> Path:
@@ -25,14 +28,27 @@ def cache_path(namespace: str, params: dict[str, Any]) -> Path:
     return CACHE_DIR / namespace / f"{digest}.json"
 
 
-def read_cache(namespace: str, params: dict[str, Any]) -> Any | None:
+def _key(namespace: str, params: dict[str, Any]) -> str:
+    return hashlib.sha256(f"{namespace}:".encode() + json.dumps(params, sort_keys=True, default=str).encode()).hexdigest()
+
+
+def read_cache(namespace: str, params: dict[str, Any], validator: Any = None,
+               max_age_s: float = DEFAULT_MAX_AGE_S) -> Any | None:
     """Return cached data, or None if there is no cache entry."""
     path = cache_path(namespace, params)
     if not path.exists():
         return None
     try:
-        return json.loads(path.read_text())
-    except (OSError, ValueError) as error:  # unreadable or corrupt: fetch again
+        if time.time() - path.stat().st_mtime > max_age_s:
+            return None
+        payload = json.loads(path.read_text())
+        if not isinstance(payload, dict) or payload.get("version") != CACHE_VERSION or payload.get("key") != _key(namespace, params):
+            return None
+        data = payload.get("data")
+        if validator is not None and not validator(data):
+            return None
+        return data
+    except (OSError, ValueError, TypeError) as error:  # unreadable or corrupt: fetch again
         log.warning("cache read failed for %s: %s", path.relative_to(CACHE_DIR.parent), error)
         return None
 
@@ -49,14 +65,15 @@ def write_cache(namespace: str, params: dict[str, Any], data: Any) -> None:
         return
     try:
         with os.fdopen(fd, "w") as tmp:
-            json.dump(data, tmp)
+            json.dump({"version": CACHE_VERSION, "key": _key(namespace, params),
+                       "written_at": time.time(), "data": data}, tmp)
         os.replace(tmp_name, path)
     except (OSError, TypeError, ValueError) as error:  # cache is optional; keep serving on write failure
         _remove(tmp_name)
         log.warning("cache write skipped for %s: %s", namespace, error)
-    except BaseException:
+    except BaseException as error:
         _remove(tmp_name)
-        raise
+        log.warning("cache write skipped for %s: %s", namespace, error)
 
 
 def _remove(path: str) -> None:
