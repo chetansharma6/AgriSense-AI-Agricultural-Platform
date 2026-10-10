@@ -358,10 +358,11 @@
     },
     "fl_windows": [
       {
-        "label": "Fall: plant Aug-Sep, harvest Nov-Dec",
-        "start": "08-20",
+        "label": "Fall: plant Jul-Sep, harvest Oct-Dec",
+        "start": "07-20",
         "end": "12-15",
         "months": [
+          7,
           8,
           9,
           10,
@@ -370,7 +371,7 @@
         ]
       },
       {
-        "label": "Winter: plant Oct-Nov, harvest Jan-Mar",
+        "label": "Winter (South FL): plant Oct-Nov, harvest Jan-Mar",
         "start": "10-20",
         "end": "03-15",
         "months": [
@@ -383,9 +384,9 @@
         ]
       },
       {
-        "label": "Spring: plant Feb-Mar, harvest May-Jun",
+        "label": "Spring: plant Feb-Apr, harvest May-Jun",
         "start": "02-15",
-        "end": "06-10",
+        "end": "06-30",
         "months": [
           2,
           3,
@@ -437,26 +438,16 @@
     },
     "fl_windows": [
       {
-        "label": "Spring: plant Feb-Mar, harvest May-Jun",
+        "label": "Spring: plant Feb-Apr, harvest May-Jul",
         "start": "02-20",
-        "end": "06-15",
+        "end": "07-15",
         "months": [
           2,
           3,
           4,
           5,
-          6
-        ]
-      },
-      {
-        "label": "Fall: plant Aug-Sep, harvest Nov",
-        "start": "08-15",
-        "end": "11-30",
-        "months": [
-          8,
-          9,
-          10,
-          11
+          6,
+          7
         ]
       },
       {
@@ -515,10 +506,11 @@
     },
     "fl_windows": [
       {
-        "label": "Winter: plant Oct, harvest Dec-Mar",
-        "start": "10-01",
+        "label": "Winter: plant late Sep-Oct, harvest Dec-Mar",
+        "start": "09-25",
         "end": "03-31",
         "months": [
+          9,
           10,
           11,
           12,
@@ -582,15 +574,16 @@
         ]
       },
       {
-        "label": "Winter: plant Oct-Nov, harvest Jan-Mar",
-        "start": "10-25",
-        "end": "02-28",
+        "label": "Winter (Central/South FL): plant Oct-Dec, harvest Jan-Mar",
+        "start": "10-15",
+        "end": "03-31",
         "months": [
           10,
           11,
           12,
           1,
-          2
+          2,
+          3
         ]
       }
     ],
@@ -636,9 +629,9 @@
     },
     "fl_windows": [
       {
-        "label": "Spring: plant Feb-Mar, harvest May-Jun",
+        "label": "Spring: plant Feb-Apr, harvest May-Jun",
         "start": "02-15",
-        "end": "06-01",
+        "end": "06-30",
         "months": [
           2,
           3,
@@ -648,26 +641,27 @@
         ]
       },
       {
-        "label": "Fall: plant Aug-Sep, harvest Nov",
-        "start": "08-20",
-        "end": "11-30",
+        "label": "Fall (South FL): plant Sep-Oct, harvest Nov-Dec",
+        "start": "09-01",
+        "end": "12-31",
         "months": [
-          8,
           9,
           10,
-          11
+          11,
+          12
         ]
       },
       {
-        "label": "Winter: plant Oct-Dec, harvest Jan-Mar",
+        "label": "Winter (South FL): plant Nov-Jan, harvest Feb-Apr",
         "start": "11-01",
-        "end": "03-15",
+        "end": "04-15",
         "months": [
           11,
           12,
           1,
           2,
-          3
+          3,
+          4
         ]
       }
     ],
@@ -713,18 +707,18 @@
     },
     "fl_windows": [
       {
-        "label": "Fall: plant Sep-Oct, harvest Nov-Dec",
-        "start": "09-15",
-        "end": "12-10",
+        "label": "Fall: plant Aug-Sep, harvest Oct-Nov",
+        "start": "08-20",
+        "end": "11-30",
         "months": [
+          8,
           9,
           10,
-          11,
-          12
+          11
         ]
       },
       {
-        "label": "Winter: plant Nov-Dec, harvest Jan-Feb",
+        "label": "Winter (South FL): plant Nov-Dec, harvest Jan-Feb",
         "start": "11-15",
         "end": "02-28",
         "months": [
@@ -735,14 +729,15 @@
         ]
       },
       {
-        "label": "Spring: plant Feb-Mar, harvest Apr-May",
+        "label": "Spring: plant Feb-Apr, harvest Apr-Jun",
         "start": "02-20",
-        "end": "05-15",
+        "end": "06-15",
         "months": [
           2,
           3,
           4,
-          5
+          5,
+          6
         ]
       }
     ],
@@ -788,8 +783,8 @@
     },
     "fl_windows": [
       {
-        "label": "Fall: plant Aug-Sep, harvest Nov-Dec",
-        "start": "08-15",
+        "label": "Fall: plant Jul-Sep, harvest Oct-Dec",
+        "start": "08-01",
         "end": "12-20",
         "months": [
           8,
@@ -800,9 +795,9 @@
         ]
       },
       {
-        "label": "Spring: plant Jan-Feb, harvest Apr-Jun",
+        "label": "Spring: plant Jan-Mar, harvest Apr-Jun",
         "start": "01-20",
-        "end": "06-10",
+        "end": "06-30",
         "months": [
           1,
           2,
@@ -868,16 +863,18 @@
     },
     "fl_windows": [
       {
-        "label": "Winter: plant Oct-Dec, harvest Jan-Apr",
-        "start": "10-15",
-        "end": "03-31",
+        "label": "Fall-winter: plant Sep-Jan, harvest Dec-Apr",
+        "start": "09-15",
+        "end": "04-30",
         "months": [
+          9,
           10,
           11,
           12,
           1,
           2,
-          3
+          3,
+          4
         ]
       }
     ],
