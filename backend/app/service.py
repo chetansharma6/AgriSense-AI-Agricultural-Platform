@@ -429,11 +429,11 @@ def _apply_acres(response: dict[str, Any], acres: float | None) -> dict[str, Any
         crop_result["scale"] = scale
         crop_result["est_gross_value"] = estimated_gross_value(crop_result.get("avg_yield"),
                                                                  crop_result.get("price"), acres)
+        note = scale["note"]
         if scale["fit"] == "too_small" and crop_result["score"] is not None:
             crop_result["score"] = min(crop_result["score"], 40)
-            note = scale["note"]
-            if note and note not in crop_result["flags"]:
-                crop_result["flags"] = [note, *crop_result["flags"]][:4]
+        if scale["fit"] in {"small", "too_small"} and note and note not in crop_result["flags"]:
+            crop_result["flags"] = [note, *crop_result["flags"]][:4]
     response["crops"] = rank_crops(response.get("crops", []))
     for crop in response["crops"]:
         crop.setdefault("scale", {"fit": None, "min_practical_acres": 0, "note": None})

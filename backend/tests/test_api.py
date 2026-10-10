@@ -146,6 +146,22 @@ def test_unknown_crop() -> None:
     assert response.json() == {"detail": "Unknown crop"}
 
 
+@pytest.mark.parametrize("path", ["/api/recommend", "/api/crops/potato"])
+def test_acreage_below_minimum_is_rejected(path: str) -> None:
+    params = {"lat": 29.71, "lon": -81.50, "acres": 0.09}
+    response = client.get(path, params=params)
+    assert response.status_code == 422
+
+
+def test_cached_response_adds_small_scale_flag() -> None:
+    response = {"crops": [{"id": "tomato", "name": "Tomato", "score": 90, "flags": []}]}
+    updated = service._apply_acres(response, 2)
+    tomato = updated["crops"][0]
+    assert tomato["scale"]["fit"] == "small"
+    assert tomato["score"] == 90
+    assert tomato["flags"][0].startswith("Small planting of 2 acres")
+
+
 def test_responses_validate_against_contract_models(sources: dict[str, Any]) -> None:
     RecommendResponse.model_validate(client.get("/api/recommend", params={"lat": 29.71, "lon": -81.50}).json())
     CropDetail.model_validate(client.get("/api/crops/potato", params={"lat": 29.71, "lon": -81.50}).json())
