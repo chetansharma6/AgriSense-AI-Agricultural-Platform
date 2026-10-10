@@ -86,16 +86,16 @@ async function findCity(q: string): Promise<LocationResult[]> {
     const response = await upstream(url.toString());
     if (!response.ok) throw new Error("City lookup failed");
     const data = await response.json() as CityResult[];
-    return data.filter((place) => place.addresstype !== "road" && place.category !== "highway").map((place): LocationResult => {
-      const address = place.address;
+    return data.filter((place) => place.addresstype !== "road" && place.category !== "highway").map((place): LocationResult | null => {
+      const address = place.address ?? {};
       const state = address["ISO3166-2-lvl4"] === "US-FL" || address.state === "Florida" ? "FL" : "";
       const name = address.city ?? address.town ?? address.village ?? address.hamlet ?? place.name;
-      if (!name) throw new Error("Missing place name");
+      if (!name || !Number.isFinite(Number(place.lat)) || !Number.isFinite(Number(place.lon))) return null;
       return {
         label: [name, address.county, state].filter(Boolean).join(", "),
         lat: Number(place.lat), lon: Number(place.lon), county: address.county ?? null, state,
       };
-    }).filter(inFlorida);
+    }).filter((result): result is LocationResult => result !== null && inFlorida(result));
   });
   cityQueue = task.then(() => undefined, () => undefined);
   return task;
