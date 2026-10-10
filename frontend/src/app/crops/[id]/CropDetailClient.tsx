@@ -3,7 +3,7 @@
 import Link from "next/link";
 import AiReport from "@/components/AiReport";
 import FactorChart from "@/components/FactorChart";
-import { FACTOR_WEIGHTS, SCORE_EXPLANATION } from "@/lib/weights";
+import { explanationFor, weightsFor } from "@/lib/weights";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ApiError, getCropDetail } from "@/lib/api";
@@ -115,7 +115,7 @@ export default function CropDetailClient() {
         </div>
         <div id="ai-verdict" ref={setVerdictSlot} />
       </header>
-      <FactorChart factors={crop.factors} details={crop.factor_details} weights={FACTOR_WEIGHTS} explanation={SCORE_EXPLANATION} />
+      <FactorChart factors={crop.factors} details={crop.factor_details} weights={weightsFor(crop.scoring)} explanation={explanationFor(crop.scoring)} />
       <AiReport key={key} crop={crop} verdictSlot={verdictSlot} />
       <section aria-labelledby="track-record">
         <h2 id="track-record" className="mb-4 text-2xl font-semibold">Local track record</h2>

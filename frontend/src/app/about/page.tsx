@@ -76,7 +76,7 @@ export default function About() {
 
       <section aria-labelledby="factors-heading" className="mt-12">
         <h2 id="factors-heading" className="text-2xl font-semibold">The six factors</h2>
-        <p className="mt-3 leading-relaxed text-ink/75">Each factor scores from 0 to 100. Missing factors are excluded and the remaining weights are normalized; climate factors are evaluated for each Florida growing window, and the best window wins.</p>
+        <p className="mt-3 leading-relaxed text-ink/75">Each factor scores from 0 to 100. Missing factors are excluded and the remaining weights are normalized; climate factors are evaluated for each Florida growing window, and the best window wins. If soil pH, drainage, season temperature or frost risk scores below 25, the total is capped at 45.</p>
         <div className="mt-5 overflow-x-auto rounded-xl border border-field/20">
           <table className="w-full text-left text-sm">
             <caption className="sr-only">Suitability factors, their default weights and what they measure</caption>

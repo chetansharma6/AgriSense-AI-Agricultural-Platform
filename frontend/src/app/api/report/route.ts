@@ -75,8 +75,7 @@ async function generate(crop: InputCrop): Promise<Result> {
     const client = new Anthropic();
     const message = await client.messages.create({
       model: process.env.ANTHROPIC_MODEL ?? "claude-haiku-5-5",
-      max_tokens: 800,
-      temperature: 0.3,
+      max_tokens: 2000,
       system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: `${JSON.stringify(crop)}\n\n${INSTRUCTION}` }],
     }, { timeout: 20_000, maxRetries: 0 });
