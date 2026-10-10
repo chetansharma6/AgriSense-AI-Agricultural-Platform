@@ -122,7 +122,9 @@ def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, 
     if config.DEMO_MODE:
         exact = _exact_demo_response(lat, lon)
         if exact is not None:
-            return _apply_acres(exact, acres)
+            exact = _apply_acres(exact, acres)
+            exact["confidence"] = _confidence(exact, "demo")
+            return exact
     key = _cache_key(lat, lon)
     now = time.monotonic()
     with _response_cache_lock:
@@ -130,7 +132,9 @@ def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, 
         if hit is not None and now - hit[0] < RESPONSE_CACHE_TTL_S:
             _response_cache.move_to_end(key)
             log.info("recommend %s: memory cache hit", key)
-            return _with_location(_apply_acres(copy.deepcopy(hit[1]), acres), lat, lon)
+            cached = _with_location(_apply_acres(copy.deepcopy(hit[1]), acres), lat, lon)
+            cached["confidence"] = _confidence(cached, "cached")
+            return cached
 
     started = time.perf_counter()
     if config.DEMO_MODE:
@@ -156,7 +160,9 @@ def _build_with_deadline(lat: float, lon: float, acres: float | None = None) -> 
     """Use saved data nearby; otherwise return bounded live/partial data."""
     fallback = _demo_fallback(lat, lon, "DEMO_MODE uses the saved demo response")
     if fallback is not None:
-        return _apply_acres(fallback, acres), False
+        fallback = _apply_acres(fallback, acres)
+        fallback["confidence"] = _confidence(fallback, "demo")
+        return fallback, False
     return _build_recommendation_bounded(lat, lon, config.DEMO_DEADLINE_S, acres)
 
 
@@ -281,14 +287,39 @@ def _provenance(mode: str, detail: str | None = None, failed: list[str] | None =
                               if station is not None else None)}
 
 
-def _confidence(response: dict[str, Any]) -> dict[str, Any]:
-    factors = [factor for crop in response.get("crops", []) for factor in crop.get("factors", {}).values()]
+def _confidence(response: dict[str, Any], data_status: str | None = None) -> dict[str, Any]:
+    factor_names = ("soil_ph", "drainage", "season_temp", "frost_risk", "rainfall", "local_history")
+    crops = response.get("crops", [])
+    factors = [factor for crop in crops for factor in crop.get("factors", {}).values()]
     available = round(sum(value is not None for value in factors) / max(len(factors), 1) * FACTOR_COUNT)
     level = "high" if available >= 5 else "medium" if available >= 3 else "low"
-    notes = []
+    available_names = [name for name in factor_names
+                       if any(crop.get("factors", {}).get(name) is not None for crop in crops)]
+    missing_names = [name for name in factor_names if name not in available_names]
+    history_values = [crop.get("factor_details", {}).get("local_history", {}).get("value") for crop in crops]
+    history_text = " ".join(str(value).lower() for value in history_values if value is not None)
+    if "withheld" in history_text:
+        county_history = "withheld"
+    elif history_values and any(value is not None for value in history_values):
+        county_history = "available"
+    else:
+        county_history = "absent"
+    status = data_status or (response.get("provenance") or {}).get("mode", "live")
+    partial = bool(response.get("warnings")) or bool(missing_names)
+    notes = [f"Available factors: {', '.join(available_names) or 'none'}.",
+             f"Missing factors: {', '.join(missing_names) or 'none'}.",
+             f"Data is {status}.",
+             f"County history is {county_history}."]
     if response.get("warnings"):
-        notes.append("One or more data sources reported a warning")
-    return {"level": level, "available_factors": available, "total_factors": FACTOR_COUNT, "notes": notes}
+        notes.append("Result is partial because one or more data sources reported a warning.")
+    elif partial:
+        notes.append("Result is partial because one or more factors are missing.")
+    else:
+        notes.append("Result is complete.")
+    return {"level": level, "available_factors": available, "total_factors": FACTOR_COUNT,
+            "available_factor_names": available_names, "missing_factor_names": missing_names,
+            "data_status": status, "county_history_status": county_history,
+            "partial": partial, "notes": notes}
 
 
 @lru_cache(maxsize=None)
