@@ -55,6 +55,7 @@ export default function Home() {
             onLoad={() => setPhotoReady(true)} onError={() => setPhotoReady(false)} />
           <div className={styles.overlay} aria-hidden="true" />
           <div className="relative mx-auto max-w-6xl px-4 py-8 sm:px-8 sm:py-10 lg:py-14">
+            <p className={`${styles.glass} mb-5 rounded-2xl px-5 py-4 text-base leading-relaxed sm:px-8`}>AgriSense helps small farms pick crops that fit their soil, season and local market.</p>
             <div className={`${styles.glass} rounded-2xl p-5 sm:p-8`}>
               <div className="grid min-w-0 items-center gap-8 lg:grid-cols-2 lg:gap-10">
                 <div className="min-w-0">
@@ -123,7 +124,6 @@ export default function Home() {
                 </article>
               ))}
             </div>
-            <p className={`${styles.glass} mt-5 rounded-2xl px-5 py-4 text-base leading-relaxed sm:px-8`}>AgriSense helps small farms pick crops that fit their soil, season and local market.</p>
           </div>
         </section>
       </main>
