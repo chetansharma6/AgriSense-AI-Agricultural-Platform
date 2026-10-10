@@ -1,3 +1,4 @@
+import { locationSearchUnavailable, type LocationResult } from "./location";
 import { getMockCropDetail, getMockRecommend } from "../mocks";
 import type { CropDetail, RecommendResponse } from "./types";
 
@@ -68,4 +69,18 @@ export async function getCropDetail(id: string, lat: number, lon: number): Promi
     }
   }
   return request<CropDetail>(`crops/${encodeURIComponent(id)}`, lat, lon);
+}
+
+export async function searchLocation(q: string): Promise<LocationResult[]> {
+  try {
+    const response = await fetch(`/api/geocode?${new URLSearchParams({ q })}`);
+    const body = await response.json();
+    if (!response.ok) {
+      throw new ApiError(typeof body.detail === "string" ? body.detail : locationSearchUnavailable, response.status);
+    }
+    return body.results as LocationResult[];
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    throw new ApiError(locationSearchUnavailable, 0);
+  }
 }
