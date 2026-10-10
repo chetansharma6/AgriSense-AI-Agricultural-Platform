@@ -9,10 +9,12 @@ for the same spot skip all I/O and scoring.
 import copy
 import json
 import logging
+import weakref
 import threading
 import time
 from collections import OrderedDict
 from concurrent.futures import Future, ThreadPoolExecutor, wait
+from concurrent.futures.thread import _threads_queues, _worker
 from functools import lru_cache
 from typing import Any, Callable, TypeVar
 
@@ -36,6 +38,30 @@ RESPONSE_CACHE_TTL_S = 3600.0
 FACTOR_COUNT = 6
 _response_cache: OrderedDict[tuple[float, float], tuple[float, dict[str, Any]]] = OrderedDict()
 _response_cache_lock = threading.Lock()
+
+
+class _DaemonThreadPoolExecutor(ThreadPoolExecutor):
+    """Executor whose abandoned deadline workers cannot hold up process exit."""
+
+    def _adjust_thread_count(self) -> None:
+        if self._idle_semaphore.acquire(timeout=0):
+            return
+
+        def weakref_cb(_, queue=self._work_queue) -> None:
+            queue.put(None)
+
+        if len(self._threads) < self._max_workers:
+            name = f"{self._thread_name_prefix or self}_{len(self._threads)}"
+            thread = threading.Thread(
+                name=name,
+                target=_worker,
+                args=(weakref.ref(self, weakref_cb), self._work_queue,
+                      self._initializer, self._initargs),
+                daemon=True,
+            )
+            thread.start()
+            self._threads.add(thread)
+            _threads_queues[thread] = self._work_queue
 
 SOIL_FIELDS = ("soil_ph", "organic_matter_pct", "sand_pct", "clay_pct", "texture", "drainage")
 CLIMATE_FIELDS = ("annual_precip_mm", "frost_free_days", "last_spring_frost", "first_fall_frost",
@@ -125,7 +151,7 @@ def _build_with_deadline(lat: float, lon: float) -> tuple[dict[str, Any], bool]:
 def _bounded_fetches(fetches: dict[str, Callable[[], Any]], timeout_s: float,
                     warnings: list[str], failed: list[str]) -> dict[str, Any | None]:
     """Fetch independent providers without letting one occupy the request."""
-    pool = ThreadPoolExecutor(max_workers=len(fetches), thread_name_prefix="bounded_source")
+    pool = _DaemonThreadPoolExecutor(max_workers=len(fetches), thread_name_prefix="bounded_source")
     futures: dict[str, Future[Any]] = {
         name: pool.submit(_attempt, fetch, name, warnings, failed)
         for name, fetch in fetches.items()
