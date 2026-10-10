@@ -24,6 +24,11 @@ ORDER BY c.comppct_r DESC, ch.hzdept_r ASC
 """
 
 
+class SoilServiceDown(RuntimeError):
+    """SDA answered with a web page instead of JSON (it has a daily
+    maintenance window, 12:30-12:45 AM US Central)."""
+
+
 class Soil(TypedDict):
     soil_ph: float | None
     organic_matter_pct: float | None
@@ -44,6 +49,8 @@ def get_soil(lat: float, lon: float) -> Soil | None:
     sql = _QUERY.format(lat=params["lat"], lon=params["lon"])
     response = http().post(SDA_URL, json={"query": sql, "format": "JSON+COLUMNNAME"})
     response.raise_for_status()
+    if response.text.lstrip().startswith("<"):
+        raise SoilServiceDown(response.text[:200])
     soil = _parse(response.json())
     write_cache("soil", params, soil or {})
     return soil

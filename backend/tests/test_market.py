@@ -40,3 +40,23 @@ def test_county_acreage_latest_census() -> None:
 
     assert county_acreage(Market(None, [], []), POTATO) is None
     assert not county_acreage(Market([], [], []), POTATO).grown
+
+
+def test_load_market_runs_all_queries(monkeypatch) -> None:
+    from app import market as market_module
+
+    seen = []
+
+    def fake_query(params: dict, invalid_means_empty: bool = False) -> list[dict]:
+        seen.append((params.get("county_ansi"), params["statisticcat_desc"]))
+        return [row(POTATO.nass.acres_descs[0], 2022, "10")] if params.get("county_ansi") else []
+
+    monkeypatch.setattr(market_module.nass, "query", fake_query)
+    market = market_module.load_market("12109")
+    assert sorted(seen, key=str) == sorted([
+        (None, "YIELD"), (None, "PRICE RECEIVED"),
+        ("109", "AREA HARVESTED"), ("109", "AREA BEARING"), ("109", "YIELD"),
+    ], key=str)
+    assert len(market.county_rows) == 2
+
+    assert market_module.load_market(None).county_rows is None
