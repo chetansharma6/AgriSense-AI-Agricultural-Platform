@@ -67,7 +67,7 @@ numbers. The LLM never invents scores, yields, prices or product names.
 ## Crops (id: NASS commodity_desc / class_desc)
 peanut: PEANUTS | cotton: COTTON | field_corn: CORN (grain) |
 soybean: SOYBEANS | sugarcane: SUGARCANE | tomato: TOMATOES |
-watermelon: WATERMELONS | strawberry: STRAWBERRIES | potato: POTATOES |
+watermelon: MELONS / WATERMELON | strawberry: STRAWBERRIES | potato: POTATOES |
 sweet_corn: SWEET CORN | snap_bean: BEANS / SNAP | bell_pepper: PEPPERS / BELL |
 cabbage: CABBAGE
 
