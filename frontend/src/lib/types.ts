@@ -68,6 +68,29 @@ export interface NutrientPlan {
   sources: { title: string; url: string }[];
 }
 
+export interface ActionPlan {
+  check_before_planting: string;
+  first_test: string;
+  planting_window: string;
+  major_risk: string;
+  uf_ifas_follow_up: ExtensionLink;
+}
+
+export interface WaterPlan {
+  ideal_monthly_low_mm: number;
+  ideal_monthly_high_mm: number;
+  season_status: string;
+  irrigation_sensitivity: string;
+  note: string;
+  source: ExtensionLink;
+}
+
+export interface ManagementGuidance {
+  soil_health_practices: string[];
+  rotation_guidance: string;
+  source: ExtensionLink;
+}
+
 export interface CropResult {
   id: string | null;
   name: string | null;
@@ -81,6 +104,8 @@ export interface CropResult {
   est_gross_value: GrossValue | null;
   limited_by: string[] | null;
   flags: string[] | null;
+  action_plan?: ActionPlan | null;
+  risk_notes?: string[] | null;
 }
 
 export interface ScoringRules {
@@ -94,6 +119,11 @@ export interface SourceStatus {
   name: string;
   status: string;
   detail: string | null;
+  url?: string;
+  data_period?: string;
+  data_status?: string;
+  geographic_level?: string;
+  limitations?: string[];
 }
 
 export interface Provenance {
@@ -111,6 +141,11 @@ export interface Confidence {
   level: string;
   available_factors: number;
   total_factors: number;
+  available_factor_names?: string[];
+  missing_factor_names?: string[];
+  data_status?: string;
+  county_history_status?: string;
+  partial?: boolean;
   notes: string[];
 }
 
@@ -136,6 +171,8 @@ type JsonValue = string | number | boolean | null | JsonValue[] | {
 
 export interface CropDetail extends CropResult {
   nutrient_plan: NutrientPlan;
+  water_plan?: WaterPlan | null;
+  management_guidance?: ManagementGuidance | null;
   requirements: Record<string, JsonValue> | null;
   general_guidance: string | null;
   extension_links: ExtensionLink[] | null;
