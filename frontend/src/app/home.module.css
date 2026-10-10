@@ -1,0 +1,41 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+  background: #2f6b3a;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
+
+.glass {
+  background: rgba(244, 236, 216, 0.95);
+  color: #1f2a1f;
+  border: 1px solid rgba(244, 236, 216, 0.6);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+@supports ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
+  .glass {
+    background: rgba(244, 236, 216, 0.78);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+}
+
+/* Keep secondary search text readable even over the darkest part of a photo. */
+.glass :global(.text-soil) {
+  color: #1f2a1f;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero *,
+  .hero *::before,
+  .hero *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
