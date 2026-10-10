@@ -48,6 +48,26 @@ export interface PriceRange {
   unit: string | null;
 }
 
+export interface CropScale {
+  fit: "good" | "small" | "too_small" | null;
+  min_practical_acres: number;
+  note: string | null;
+}
+
+export interface GrossValue {
+  low: number;
+  high: number;
+  label: "Rough gross value before costs";
+}
+
+export interface NutrientPlan {
+  n_lb_per_acre: number | null;
+  soil_test_first: true;
+  lime_note: string | null;
+  practices: string[];
+  sources: { title: string; url: string }[];
+}
+
 export interface CropResult {
   id: string | null;
   name: string | null;
@@ -57,6 +77,8 @@ export interface CropResult {
   factor_details: Record<FactorKey, FactorDetail | null> | null;
   avg_yield: Yield | null;
   price: PriceRange | null;
+  scale: CropScale;
+  est_gross_value: GrossValue | null;
   limited_by: string[] | null;
   flags: string[] | null;
 }
@@ -113,6 +135,7 @@ type JsonValue = string | number | boolean | null | JsonValue[] | {
 };
 
 export interface CropDetail extends CropResult {
+  nutrient_plan: NutrientPlan;
   requirements: Record<string, JsonValue> | null;
   general_guidance: string | null;
   extension_links: ExtensionLink[] | null;

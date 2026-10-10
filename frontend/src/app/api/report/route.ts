@@ -5,7 +5,7 @@ import type { FactorKey } from "@/lib/types";
 
 export const runtime = "nodejs";
 
-const SYSTEM_PROMPT = "You write short crop reports for small-farm owners in Florida. Use ONLY the numbers and facts in the JSON you are given. Never invent scores, yields, prices, dates, chemical or product names. If data is missing, say so plainly. Write at an 8th-grade reading level. Mention UF/IFAS Extension when advice depends on local conditions. Respond with JSON only, no markdown.";
+const SYSTEM_PROMPT = "You write short crop reports for small-farm owners in Florida. Use ONLY the numbers and facts in the JSON you are given. Never invent scores, yields, prices, dates, nutrient rates, chemical or product names. Mention soil testing and the lower-impact practices in nutrient_plan. Use only provided numbers; omit nitrogen rates when n_lb_per_acre is null or missing. Treat the supplied acres as context for land size, never calculate or invent a rate. If data is missing, say so plainly. Write at an 8th-grade reading level. Mention UF/IFAS Extension when advice depends on local conditions. Respond with JSON only, no markdown.";
 const INSTRUCTION = "Return JSON with keys: verdict (one sentence, max 25 words, starting with the crop name), summary (2-3 sentences explaining the score using the factor values), pros (exactly 3 short strings), cons (exactly 3 short strings, use the flags), first_steps (3-4 practical next steps a farmer would take before planting, e.g. soil test, talk to county extension agent).";
 const keys: FactorKey[] = ["soil_ph", "drainage", "season_temp", "frost_risk", "rainfall", "local_history"];
 
@@ -59,16 +59,19 @@ function fallback(crop: InputCrop): Report {
   while (pros.length < 3) pros.push("More factor data is needed to identify another advantage.");
   const cons = Array.isArray(crop.flags) ? crop.flags.filter((flag): flag is string => typeof flag === "string" && !!flag.trim()).slice(0, 3) : [];
   while (cons.length < 3) cons.push("No additional crop flag was provided; check local conditions with UF/IFAS Extension.");
+  const plan = object(crop.nutrient_plan);
+  const practices = Array.isArray(plan?.practices) ? plan.practices : [];
+  const lowerImpact = practices.find((practice): practice is string => typeof practice === "string" && /cover crops|compost|controlled-release|drip/i.test(practice));
   const missing = keys.filter((key) => crop.factors?.[key] == null);
   return {
     verdict: crop.score === null ? `${crop.name} has no suitability score available.` : `${crop.name} is ${label} with a suitability score of ${crop.score}/100.`,
     summary: `${crop.score === null ? "The suitability score is missing" : `The supplied suitability score is ${crop.score}/100`}. ${factors.length ? `The highest available factor is ${factorLabel(factors[0].key)} at ${factors[0].value}/100` : "All factor scores are missing"}.${missing.length ? ` Missing factor data: ${missing.map(factorLabel).join(", ")}.` : " Review the factor values alongside local conditions before planting."}`,
     pros, cons,
-    first_steps: ["Get a soil test before deciding what to plant.", "Talk with your county UF/IFAS Extension agent about local conditions.", "Check water access, drainage and the recommended planting window.", "Confirm expected costs and a market for the crop before planting."],
+    first_steps: ["Get a soil test before deciding what to plant.", "Talk with your county UF/IFAS Extension agent about local conditions.", lowerImpact ?? "Check water access, drainage and the recommended planting window.", "Confirm expected costs and a market for the crop before planting."],
   };
 }
 
-async function generate(crop: InputCrop): Promise<Result> {
+async function generate(crop: InputCrop, acres?: number): Promise<Result> {
   const local: Result = { report: fallback(crop), source: "fallback" };
   if (!process.env.ANTHROPIC_API_KEY?.trim()) return local;
   try {
@@ -77,7 +80,7 @@ async function generate(crop: InputCrop): Promise<Result> {
       model: process.env.ANTHROPIC_MODEL ?? "claude-haiku-5-5",
       max_tokens: 2000,
       system: SYSTEM_PROMPT,
-      messages: [{ role: "user", content: `${JSON.stringify(crop)}\n\n${INSTRUCTION}` }],
+      messages: [{ role: "user", content: `${JSON.stringify({ crop, nutrient_plan: crop.nutrient_plan ?? null, acres: acres ?? null })}\n\n${INSTRUCTION}` }],
     }, { timeout: 20_000, maxRetries: 0 });
     const text = message.content.filter((block) => block.type === "text").map((block) => block.text).join("\n").trim();
     const parsed: unknown = JSON.parse(text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, ""));
@@ -93,9 +96,13 @@ export async function POST(request: Request): Promise<Response> {
   try { body = await request.json(); } catch { return Response.json({ detail: "Invalid JSON body" }, { status: 400 }); }
   const crop = object(body)?.crop;
   if (!validCrop(crop)) return Response.json({ detail: "crop must include id, name, score and all six factors (values may be null)" }, { status: 400 });
+  const acres = object(body)?.acres;
+  if (acres !== undefined && (typeof acres !== "number" || !Number.isFinite(acres) || acres < 0.1 || acres > 10000)) {
+    return Response.json({ detail: "acres must be between 0.1 and 10000" }, { status: 400 });
+  }
   const location = object(crop.location);
-  const key = `${crop.id}:${location?.lat ?? "unknown"}:${location?.lon ?? "unknown"}`;
+  const key = JSON.stringify({ id: crop.id, lat: location?.lat, lon: location?.lon, crop, acres });
   let pending = cache.get(key);
-  if (!pending) { pending = generate(crop); cache.set(key, pending); }
+  if (!pending) { pending = generate(crop, acres); cache.set(key, pending); }
   return Response.json(await pending);
 }

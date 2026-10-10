@@ -1,5 +1,6 @@
 "use client";
 
+import { parseAcres } from "@/lib/acreage";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
@@ -20,19 +21,20 @@ type RequestState = {
 // Render free-plan servers can take about a minute to wake after being idle.
 const SLOW_AFTER_MS = 5_000;
 
-const filters = ["All", "Strong fit (75+)", "Summer crops", "Fall/Winter crops", "Needs irrigation"] as const;
+const filters = ["All", "Strong fit (75+)", "Summer crops", "Fall/Winter crops", "Needs irrigation", "Fits my land size"] as const;
 type CropFilter = typeof filters[number];
 
 export default function ResultsClient() {
   const params = useSearchParams();
+  const acres = parseAcres(params.get("acres"));
   const rawLat = params.get("lat");
   const rawLon = params.get("lon");
   const lat = Number(rawLat);
   const lon = Number(rawLon);
-  const valid = rawLat !== null && rawLon !== null && rawLat.trim() !== "" && rawLon.trim() !== ""
+  const valid = (acres === undefined || Number.isFinite(acres)) && rawLat !== null && rawLon !== null && rawLat.trim() !== "" && rawLon.trim() !== ""
     && Number.isFinite(lat) && Number.isFinite(lon)
     && lat >= 24.3 && lat <= 31.1 && lon >= -87.7 && lon <= -79.9;
-  const key = `${lat},${lon}`;
+  const key = `${lat},${lon}:${acres ?? ""}`;
   const [filter, setFilter] = useState<CropFilter>("All");
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<RequestState | null>(null);
@@ -43,7 +45,7 @@ export default function ResultsClient() {
     if (!valid) return;
     let active = true;
     const slowTimer = setTimeout(() => setSlowFor(`${key}:${attempt}`), SLOW_AFTER_MS);
-    getRecommendations(lat, lon).then(
+    getRecommendations(lat, lon, acres).then(
       (data) => { if (active) setState({ key, attempt, data }); },
       (error: unknown) => {
         if (active) setState({ key, attempt, error: error instanceof ApiError
@@ -51,19 +53,20 @@ export default function ResultsClient() {
       },
     );
     return () => { active = false; clearTimeout(slowTimer); };
-  }, [lat, lon, valid, key, attempt]);
+  }, [lat, lon, acres, valid, key, attempt]);
 
   const current = state?.key === key && state.attempt === attempt ? state.data : undefined;
   const place = placeLabel(params.get("place"), current?.location?.county);
-  useEffect(() => { document.title = `${place} results · AgriSense`; }, [place]);
+  const title = `${place}${acres !== undefined && Number.isFinite(acres) ? ` for ${acres.toLocaleString("en-US")} acres` : ""}`;
+  useEffect(() => { document.title = `${title} results · AgriSense`; }, [title]);
   function withTitle(content: ReactNode) {
-    return <><h1 className="page-title mb-6">{place}</h1>{content}</>;
+    return <><h1 className="page-title mb-6">{title}</h1>{content}</>;
   }
 
   if (!valid) return withTitle(
     <section className="rounded-xl border border-clay/25 bg-white/50 p-5 sm:p-6">
       <h2 className="text-xl font-semibold">Choose a valid Florida location</h2>
-      <p className="mt-3">The link needs latitude 24.3–31.1 and longitude −87.7–−79.9.</p>
+      <p className="mt-3">The link needs latitude 24.3–31.1 and longitude −87.7–−79.9, and optional acreage from 0.1 to 10,000.</p>
       <Link href="/" className="mt-2 inline-flex min-h-11 items-center text-field underline underline-offset-4">Back home to pick a spot</Link>
     </section>
   );
@@ -79,11 +82,12 @@ export default function ResultsClient() {
     </section>
   );
   if (!state.data) return withTitle(<ResultsSkeleton slow={slow} />);
-  const crops = [...(state.data.crops ?? [])].sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
+  const crops = [...(state.data.crops ?? [])].sort((a, b) => (b.score ?? -1) - (a.score ?? -1) || (a.name ?? "").localeCompare(b.name ?? ""));
   const ranked = crops.map((crop, i) => ({ crop, rank: i + 1 }));
   const matching = ranked.filter(({ crop }) => {
     const coolSeason = /fall|winter|spring/i.test(crop.season_label ?? "");
     switch (filter) {
+      case "Fits my land size": return crop.scale?.fit === "good";
       case "Strong fit (75+)": return crop.score !== null && crop.score >= 75;
       case "Summer crops": return crop.season_label !== null && !coolSeason;
       case "Fall/Winter crops": return coolSeason;
@@ -100,8 +104,8 @@ export default function ResultsClient() {
       <p className="mt-3 text-xs leading-relaxed text-soil">Climate: NASA POWER 2016–2025 · Soil: USDA NRCS SSURGO · Harvests: USDA NASS</p>
       <div className="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="Filter crops">
         {filters.map((label) => (
-          <button key={label} type="button" aria-pressed={filter === label} onClick={() => setFilter(label)}
-            className={`min-h-11 rounded-full border px-4 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field ${filter === label ? "border-field bg-field text-white" : "border-field/25 bg-white/60 hover:bg-leaf/15"}`}>
+          <button key={label} type="button" aria-pressed={filter === label} disabled={label === "Fits my land size" && acres === undefined} onClick={() => setFilter(label)}
+            className={`disabled:cursor-not-allowed disabled:opacity-50 min-h-11 rounded-full border px-4 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field ${filter === label ? "border-field bg-field text-white" : "border-field/25 bg-white/60 hover:bg-leaf/15"}`}>
             {label}
           </button>
         ))}
@@ -118,14 +122,14 @@ export default function ResultsClient() {
           {bestFits.length > 0 && <section className="mt-10" aria-labelledby="best-fits-title">
             <h2 id="best-fits-title" className="mb-5 text-2xl font-semibold">Best fits for this spot</h2>
             <div className="grid gap-4 lg:grid-cols-3">
-              {bestFits.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} place={place} />)}
+              {bestFits.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} place={place} acres={acres} />)}
             </div>
           </section>}
           {otherCrops.length > 0 && (
             <section className="mt-10" aria-labelledby="other-crops-title">
               <h2 id="other-crops-title" className="mb-5 text-2xl font-semibold">Other crops</h2>
               <div className="space-y-3">
-                {otherCrops.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} place={place} compact />)}
+                {otherCrops.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} place={place} acres={acres} compact />)}
               </div>
             </section>
           )}

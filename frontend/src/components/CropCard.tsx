@@ -7,6 +7,7 @@ interface CropCardProps {
   rank: number;
   lat: number;
   lon: number;
+  acres?: number;
   compact?: boolean;
   place?: string;
 }
@@ -18,7 +19,7 @@ const tones = {
   weak: { label: "Weak fit", badge: "bg-clay text-white", bar: "bg-clay" },
 };
 
-export default function CropCard({ crop, rank, lat, lon, place, compact = false }: CropCardProps) {
+export default function CropCard({ crop, rank, lat, lon, place, acres, compact = false }: CropCardProps) {
   const tone = scoreTone(crop.score);
   const factors = factorKeys.map((key) => ({ key, score: crop.factors?.[key] ?? null }))
     .sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
@@ -39,6 +40,8 @@ export default function CropCard({ crop, rank, lat, lon, place, compact = false 
           <p className="text-sm font-semibold">{tone ? tones[tone].label : "No data"}</p>
         </div>
       </div>
+      {crop.scale?.fit && <p className="mt-3 inline-block rounded-full bg-leaf/20 px-3 py-1 text-xs font-semibold" title={crop.scale.note ?? undefined}>{ { good: "Fits your size", small: "Tight for your size", too_small: "Needs more land" }[crop.scale.fit]}</p>}
+      {crop.est_gross_value && <p className="mt-3 text-sm">Rough gross value: ${formatWhole(crop.est_gross_value.low)}–${formatWhole(crop.est_gross_value.high)} before costs</p>}
       <div className={`mt-5 grid gap-2 ${compact ? "sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3" : ""}`}>
         {visibleFactors.map(({ key, score }) => {
           const factorTone = scoreTone(score);
@@ -64,6 +67,7 @@ export default function CropCard({ crop, rank, lat, lon, place, compact = false 
   );
   if (!crop.id) return content;
   const query = new URLSearchParams({ lat: lat.toFixed(4), lon: lon.toFixed(4) });
+  if (acres !== undefined) query.set("acres", String(acres));
   if (place) query.set("place", place);
   if (crop.name) query.set("crop", crop.name);
   return (
