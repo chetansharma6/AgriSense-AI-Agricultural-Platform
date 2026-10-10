@@ -61,7 +61,7 @@ export interface CropResult {
   flags: string[] | null;
 }
 
-export interface Scoring {
+export interface ScoringRules {
   weights: Record<FactorKey, number>;
   critical_factors: string[];
   critical_threshold: number;
@@ -73,7 +73,7 @@ export interface RecommendResponse {
   conditions: Conditions | null;
   crops: CropResult[] | null;
   warnings: string[] | null;
-  scoring: Scoring | null;
+  scoring: ScoringRules | null;
 }
 
 export interface ExtensionLink {
@@ -92,5 +92,5 @@ export interface CropDetail extends CropResult {
   extension_links: ExtensionLink[] | null;
   conditions: Conditions | null;
   location: Location | null;
-  scoring: Scoring | null;
+  scoring: ScoringRules | null;
 }
