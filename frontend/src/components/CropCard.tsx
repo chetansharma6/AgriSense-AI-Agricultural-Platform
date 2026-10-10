@@ -35,7 +35,7 @@ export default function CropCard({ crop, rank, lat, lon, place, acres, compact =
           <h3 className="mt-1 text-xl font-semibold">{crop.name ?? "Unnamed crop"}</h3>
           <p className="mt-2 text-sm leading-relaxed text-soil">{crop.season_label ?? "Season: No data"}</p>
         </div>
-        <div className={`shrink-0 rounded-lg px-3 py-2 text-center ${tone ? tones[tone].badge : "bg-sand text-soil"}`}>
+        <div className={`shrink-0 rounded-2xl px-3 py-3 text-center ${tone ? tones[tone].badge : "bg-sand text-soil"}`}>
           <p className="text-3xl font-bold">{crop.score === null ? "—" : formatWhole(crop.score)}</p>
           <p className="text-sm font-semibold">{tone ? tones[tone].label : "No data"}</p>
         </div>

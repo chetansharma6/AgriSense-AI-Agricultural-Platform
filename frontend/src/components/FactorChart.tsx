@@ -7,10 +7,10 @@ import type { CropResult, FactorKey } from "@/lib/types";
 const keys: FactorKey[] = ["soil_ph", "drainage", "season_temp", "frost_risk", "rainfall", "local_history"];
 
 function color(score: number | null): string {
-  if (score === null) return "#7a5c3e";
-  if (score < 50) return "#a8432b";
-  if (score < 75) return "#e9a23b";
-  return "#2f6b3a";
+  if (score === null) return "#5f705f";
+  if (score < 50) return "#99503b";
+  if (score < 75) return "#dfc785";
+  return "#244b3c";
 }
 
 interface FactorChartProps {

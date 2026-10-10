@@ -72,7 +72,7 @@ export default function FloridaMap({ value, onChange, demoPins }: FloridaMapProp
           center={[pin.lat, pin.lon]}
           radius={9}
           bubblingMouseEvents={false}
-          pathOptions={{ color: "#2f6b3a", fillColor: "#7fb069", fillOpacity: 1, weight: 2 }}
+          pathOptions={{ color: "#244b3c", fillColor: "#8faf91", fillOpacity: 1, weight: 2 }}
           eventHandlers={{ click: () => onChange(pin.lat, pin.lon) }}
         >
           <Tooltip>{pin.name}</Tooltip>
@@ -83,7 +83,7 @@ export default function FloridaMap({ value, onChange, demoPins }: FloridaMapProp
           center={[value.lat, value.lon]}
           radius={9}
           interactive={false}
-          pathOptions={{ color: "#ffffff", fillColor: "#e9a23b", fillOpacity: 1, weight: 3 }}
+          pathOptions={{ color: "#ffffff", fillColor: "#dfc785", fillOpacity: 1, weight: 3 }}
         />
       )}
     </MapContainer>

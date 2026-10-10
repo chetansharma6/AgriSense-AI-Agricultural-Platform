@@ -53,18 +53,29 @@ export default function Home() {
 
       <main className="mb-8">
         <section className={styles.hero} aria-labelledby="hero-title">
-          <Image src="/hero-farm.jpg" fill sizes="100vw" priority
-            alt="Rows of crops on a Florida farm" className="object-cover"
-            style={{ opacity: photoReady ? 1 : 0 }}
-            onLoad={() => setPhotoReady(true)} onError={() => setPhotoReady(false)} />
-          <div className={styles.overlay} aria-hidden="true" />
+          <div className={styles.meadow} aria-hidden="true" />
           <div className="relative mx-auto max-w-6xl px-4 py-8 sm:px-8 sm:py-10 lg:py-14">
-            <p className={`${styles.glass} mb-5 rounded-2xl px-5 py-4 text-base leading-relaxed sm:px-8`}>AgriSense helps small farms pick crops that fit their soil, season and local market.</p>
-            <div className={`${styles.glass} rounded-2xl p-5 sm:p-8`}>
+            <div className={styles.intro}>
+              <div className={styles.heroCopy}>
+                <p className={styles.eyebrow}><span aria-hidden="true">✳</span> Florida land. Local possibilities.</p>
+                <h1 id="hero-title" className={styles.headline}>Know what your Florida land is built to <em>grow.</em></h1>
+                <p className={styles.description}>AgriSense helps small farms pick crops that fit their soil, season and local market.</p>
+                <a href="#land-analysis" className={styles.cta}>Explore your land <span aria-hidden="true">↗</span></a>
+                <p className={styles.heroNote}>Florida focused · 13 crops · Explainable scores</p>
+              </div>
+              <div className={styles.farmVisual}>
+                <Image src="/hero-farm.jpg" fill sizes="(max-width: 1024px) 90vw, 480px" priority
+                  alt="Rows of crops on a Florida farm" className="object-cover"
+                  style={{ opacity: photoReady ? 1 : 0 }}
+                  onLoad={() => setPhotoReady(true)} onError={() => setPhotoReady(false)} />
+                <div className={styles.photoCaption}><span aria-hidden="true">↗</span><div>Rooted in your location<small>Soil, climate & local harvest history</small></div></div>
+              </div>
+            </div>
+            <section id="land-analysis" aria-labelledby="analysis-title" className={`${styles.analysis} rounded-2xl p-5 sm:p-8`}>
               <div className="grid min-w-0 items-center gap-8 lg:grid-cols-2 lg:gap-10">
                 <div className="min-w-0">
-                  <p className="mb-3 text-sm font-semibold uppercase tracking-widest">Florida land. Local possibilities.</p>
-                  <h1 id="hero-title" className="page-title">Know what your Florida land is built to grow.</h1>
+                  <p className={styles.eyebrow}>A little local knowledge goes a long way</p>
+                  <h2 id="analysis-title" className={styles.analysisTitle}>Start with your land.</h2>
                   <p className="mt-5 text-base leading-relaxed sm:text-lg">Pick a spot on the map. We check soil, climate and local harvest history, then rank 13 Florida crops by how well they fit.</p>
                   <div className="mt-6 grid min-w-0 gap-4 sm:grid-cols-2">
                     <LocationSearch selectedLabel={place} onSelect={(result) => {
@@ -121,17 +132,19 @@ export default function Home() {
                     <button type="submit" disabled={!valid || !validAcres} className="mt-5 min-h-11 w-full rounded-lg bg-field px-5 py-3 font-semibold text-white transition-colors enabled:hover:bg-field/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field disabled:cursor-not-allowed disabled:opacity-55">Analyze my land</button>
                   </form>
                 </div>
-                <section className="min-w-0" aria-label="Farm location map">
+                <section className={`${styles.mapPanel} min-w-0`} aria-label="Farm location map">
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><h3 className="text-field">Your Florida starting point</h3><span className={styles.mapBadge}>Select a spot</span></div>
                   <div className="overflow-hidden rounded-xl border border-field/20">
                     <MapLoader value={value} onChange={selectPoint} demoPins={demos} />
                   </div>
                   <p className="mt-3 text-sm">Click the map or choose a demo farm to get started.</p>
                 </section>
               </div>
-            </div>
+            </section>
+            <div className={styles.statsIntro}><p className={styles.eyebrow}>A state of possibility</p><h2>Small farms. A growing future.</h2></div>
             <div className="mt-5 grid gap-4 md:grid-cols-3" aria-label="Florida farm statistics">
               {stats.map((stat) => (
-                <article key={stat.value} className={`${styles.glass} flex min-w-0 flex-col rounded-2xl p-5 sm:p-6`}>
+                <article key={stat.value} className={`${styles.statCard} flex min-w-0 flex-col rounded-2xl p-5 sm:p-6`}>
                   <p className="text-4xl font-bold tracking-tight">{stat.value}</p>
                   <p className="mt-2 text-base font-medium leading-relaxed">{stat.label}</p>
                   <a href={stat.sourceUrl} target="_blank" rel="noopener"

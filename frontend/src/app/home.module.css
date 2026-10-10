@@ -1,41 +1,31 @@
-.hero {
-  position: relative;
-  isolation: isolate;
-  background: #2f6b3a;
-}
-
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  pointer-events: none;
-}
-
-.glass {
-  background: rgba(244, 236, 216, 0.95);
-  color: #1f2a1f;
-  border: 1px solid rgba(244, 236, 216, 0.6);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
-}
-
-@supports ((backdrop-filter: blur(12px)) or (-webkit-backdrop-filter: blur(12px))) {
-  .glass {
-    background: rgba(244, 236, 216, 0.78);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-  }
-}
-
-/* Keep secondary search text readable even over the darkest part of a photo. */
-.glass :global(.text-soil) {
-  color: #1f2a1f;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .hero *,
-  .hero *::before,
-  .hero *::after {
-    animation: none !important;
-    transition: none !important;
-  }
-}
+.hero { position: relative; isolation: isolate; overflow: clip; }
+.meadow { position: absolute; inset: 0; z-index: -1; pointer-events: none; background: radial-gradient(ellipse at 85% 15%, #dce8d4 0, transparent 45%), radial-gradient(ellipse at 0% 55%, #eaf2e6 0, transparent 40%); }
+.intro { display: grid; align-items: center; gap: 3rem; padding: 2rem 0 5rem; }
+.heroCopy { min-width: 0; }
+.eyebrow { color: var(--color-field); font-size: .72rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; margin-bottom: 1rem; }
+.eyebrow span { margin-right: .4rem; font-size: 1.1rem; }
+.headline { font-family: var(--font-editorial); font-size: clamp(3rem, 6.2vw, 5.2rem); font-weight: 400; line-height: 1.04; letter-spacing: -.045em; text-wrap: balance; }
+.headline em { color: #496e49; }
+.description { margin-top: 1.5rem; color: var(--color-soil); font-size: 1.1rem; line-height: 1.8; max-width: 36ch; }
+.cta { display: inline-flex; align-items: center; gap: 2rem; background: var(--color-field); color: white; padding: .9rem 1.5rem; border-radius: 999px; margin-top: 1.8rem; font-weight: 500; transition: background 180ms, transform 180ms; }
+.cta:hover { background: #35644d; transform: translateY(-2px); }
+.heroNote { margin-top: 1rem; font-size: .75rem; color: var(--color-soil); }
+.farmVisual { position: relative; min-height: 330px; aspect-ratio: 1.1; border-radius: 45% 45% 2rem 2rem; overflow: hidden; background: #8faf91; box-shadow: 0 20px 70px #244b3c15; }
+.farmVisual::after { content: ''; position: absolute; inset: 0; background: linear-gradient(transparent 55%, #203b3055); pointer-events: none; }
+.photoCaption { position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem; z-index: 1; display: flex; align-items: center; gap: 1rem; border: 1px solid #ffffff70; background: #faf9f3ed; border-radius: 1rem; padding: 1rem; color: var(--color-field); font-size: .9rem; font-weight: 600; }
+.photoCaption > span { display: grid; place-items: center; border-radius: 50%; background: #eaf2e6; width: 2.5rem; height: 2.5rem; font-size: 1.5rem; flex-shrink: 0; }
+.photoCaption small { display: block; font-size: .7rem; margin-top: .25rem; font-weight: 400; color: var(--color-soil); }
+.analysis { background: #fffffff2; border: 1px solid var(--color-border); box-shadow: 0 18px 60px #244b3c08; scroll-margin-top: 2rem; }
+.analysis .analysisTitle { font-family: var(--font-editorial); font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 400; letter-spacing: -.03em; }
+.mapPanel { background: var(--color-mint); border-radius: 1.5rem; padding: 1rem; }
+.mapPanel h3 { font-size: 1rem; }
+.mapBadge { border: 1px solid var(--color-border); background: var(--color-sand); border-radius: 999px; font-size: .7rem; padding: .4rem .7rem; }
+.statsIntro { text-align: center; margin-top: 4rem; }
+.statsIntro h2 { font-family: var(--font-editorial); font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; letter-spacing: -.03em; }
+.statCard { border: 1px solid var(--color-border); background: #eaf2e699; color: var(--color-field); transition: transform 180ms, background 180ms; }
+.statCard:hover { background: #eaf2e6; transform: translateY(-3px); }
+.statCard > p:first-child { font-family: var(--font-editorial); font-weight: 400; font-size: 3rem; }
+.statCard a { color: var(--color-soil); }
+@media (min-width: 1024px) { .intro { grid-template-columns: 1.15fr 1fr; gap: 4rem; } .farmVisual { min-height: 450px; } .mapPanel { padding: 1.25rem; } }
+@media (max-width: 639px) { .intro { padding: 1rem 0 2.5rem; gap: 2rem; } .farmVisual { min-height: 280px; max-height: 360px; } .analysis { padding: 1.25rem; } .mapPanel { padding: .75rem; } .photoCaption { left: 1rem; right: 1rem; bottom: 1rem; } }
+@media (prefers-reduced-motion: reduce) { .hero *, .hero *::before, .hero *::after { animation: none !important; transition: none !important; } .cta:hover, .statCard:hover { transform: none; } }
