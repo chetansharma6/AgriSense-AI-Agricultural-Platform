@@ -88,12 +88,18 @@ sources take over 6 s or fail, a point within 25 km of a demo farm gets that
 farm's saved response (backend/data/demo) and other points get a quick 503.
 More detail: [backend/README.md](backend/README.md).
 
-For a running API, verify the four judge paths with:
+For a running API, run the backend-only judge smoke test. It checks health, all
+four demo recommendations, crop details, validation errors, response time,
+crop count, score ordering/ranges, and non-finite numbers:
 
 ```bash
 cd backend
 python -m scripts.smoke_test http://localhost:8000
 ```
+
+The URL may instead be supplied without a command-line argument through
+`SMOKE_API_URL` or `RENDER_API_URL`. The command prints each check and exits
+with status 1 if any check fails.
 
 ## Run the frontend
 
