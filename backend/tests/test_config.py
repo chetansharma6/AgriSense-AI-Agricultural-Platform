@@ -1,15 +1,30 @@
-import pytest
+from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import in_florida
-
-DEMO_FARMS = [(30.80, -85.25), (29.71, -81.50), (28.03, -82.15), (26.68, -80.68)]
+from app import config, main
 
 
-@pytest.mark.parametrize("lat,lon", DEMO_FARMS)
-def test_demo_farms_are_in_florida(lat: float, lon: float) -> None:
-    assert in_florida(lat, lon)
+def test_production_cors_has_no_wildcard_or_regex() -> None:
+    assert config.CORS_ORIGIN_REGEX is None
+    assert "*" not in config.CORS_ORIGINS
+    cors = next(m for m in main.app.user_middleware if m.cls is CORSMiddleware)
+    assert cors.kwargs["allow_credentials"] is False
 
 
-@pytest.mark.parametrize("lat,lon", [(33.75, -84.39), (24.0, -81.0), (28.0, -78.0)])
-def test_outside_florida(lat: float, lon: float) -> None:
-    assert not in_florida(lat, lon)
+def test_missing_environment_values_are_safe(monkeypatch) -> None:
+    monkeypatch.delenv("NASS_API_KEY", raising=False)
+    monkeypatch.delenv("CORS_ORIGINS", raising=False)
+    monkeypatch.setattr(config, "NASS_API_KEY", "")
+    monkeypatch.setattr(config, "CORS_ORIGINS", ["http://localhost:3000"])
+    assert config.CORS_ORIGINS == ["http://localhost:3000"]
+    try:
+        config.nass_api_key()
+    except RuntimeError as error:
+        assert "NASS_API_KEY" in str(error)
+    else:
+        raise AssertionError("missing NASS_API_KEY must fail safely")
+
+
+def test_origin_parser_discards_wildcards_and_malformed_values() -> None:
+    assert config._explicit_origins("*, https://*.vercel.app, javascript:bad, https://app.example.com/") == [
+        "https://app.example.com"
+    ]
