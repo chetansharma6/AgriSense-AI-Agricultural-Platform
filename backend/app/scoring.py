@@ -234,8 +234,7 @@ def score_crop(crop: Crop, soil: dict[str, Any] | None, weather: pd.DataFrame | 
     if limited_by and score is not None:
         score = min(score, CRITICAL_CAP)
     scale = scale_info(crop, acres)
-    if scale["fit"] == "too_small" and score is not None:
-        score = min(score, 40)
+    score = scale_adjusted_score(score, crop, acres)
     gross_value = estimated_gross_value(average_yield(market, crop) if market else None,
                                         price_range(market, crop) if market else None, acres)
     flags = ordered_flags(factors, limited_by)
@@ -276,16 +275,40 @@ def climate_risk_notes(flags: list[str]) -> list[str]:
     return notes
 
 
+# Planning heuristics, not biological minimums or profitability guarantees.
+# These crops can be grown in beds without field-scale harvesting equipment.
+GARDEN_CROPS = {"tomato", "strawberry", "snap_bean", "bell_pepper", "cabbage"}
+
+
 def scale_info(crop: Crop, acres: float | None) -> dict[str, Any]:
+    detail = {"min_practical_acres": crop.min_practical_acres}
     if acres is None:
-        return {"fit": None, "min_practical_acres": crop.min_practical_acres, "note": None}
+        return {**detail, "fit": None, "note": None}
+    if acres < 1 and crop.id in GARDEN_CROPS:
+        return {**detail, "fit": "good",
+                "note": f"Garden-scale planting on {acres:g} acres: use beds and check spacing; commercial yield and price data may not apply. Score capped at 74 for land size."}
     if acres < crop.small_acres:
-        return {"fit": "too_small", "min_practical_acres": crop.min_practical_acres,
-                "note": f"Usually grown on {crop.min_practical_acres:g}+ acres; hard to make work on {acres:g} acres."}
+        if crop.id in {"watermelon", "potato", "sweet_corn"}:
+            return {**detail, "fit": "small",
+                    "note": f"Small planting of {acres:g} acres: allow room for spacing and rotation; score capped at 74 for land size."}
+        return {**detail, "fit": "too_small",
+                "note": f"Usually grown on {crop.min_practical_acres:g}+ acres; hard to make work on {acres:g} acres. Land size caps the score at 40."}
     if acres < crop.min_practical_acres:
-        return {"fit": "small", "min_practical_acres": crop.min_practical_acres,
-                "note": f"Small planting of {acres:g} acres; commercial scale is usually {crop.min_practical_acres:g}+ acres."}
-    return {"fit": "good", "min_practical_acres": crop.min_practical_acres, "note": None}
+        return {**detail, "fit": "small",
+                "note": f"Small planting of {acres:g} acres; commercial scale is usually {crop.min_practical_acres:g}+ acres. Land size caps the score at 74."}
+    return {**detail, "fit": "good", "note": None}
+
+
+def scale_adjusted_score(score: int | None, crop: Crop, acres: float | None) -> int | None:
+    """Cap practical fit without raising or hiding soil/climate limitations."""
+    fit = scale_info(crop, acres)["fit"]
+    if score is None:
+        return None
+    if acres is not None and acres < 1 and crop.id in GARDEN_CROPS:
+        return min(score, 74)
+    if fit in {None, "good"}:
+        return score
+    return min(score, 40 if fit == "too_small" else 74)
 
 
 def estimated_gross_value(yield_info: dict[str, Any] | None, price: dict[str, Any] | None,

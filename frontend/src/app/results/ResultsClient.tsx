@@ -100,6 +100,7 @@ export default function ResultsClient() {
   return withTitle(
     <div>
       <p className="mb-5 text-lg leading-relaxed">{resultsSummary(crops)}</p>
+      <p className="mb-5 text-sm leading-relaxed">{acres === undefined ? "Land size was not provided. Rankings reflect local growing conditions; acreage affects practical suitability and recommendation confidence." : "Land size influences these rankings: field commodities on undersized lots are capped at 40; smaller commercial plantings at 74. Garden-bed crops can fit small lots. These planning rules do not guarantee profitability."}</p>
       <LandSummary response={state.data} place={params.get("place")?.trim() || undefined} />
       <p className="mt-3 text-xs leading-relaxed text-soil">Climate: NASA POWER 2016–2025 · Soil: USDA NRCS SSURGO · Harvests: USDA NASS</p>
       <div className="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="Filter crops">

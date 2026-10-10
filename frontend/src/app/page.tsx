@@ -88,14 +88,8 @@ export default function Home() {
                         className="mt-2 min-h-11 w-full min-w-0 rounded-lg border border-field/25 bg-white px-3 py-2.5 focus:outline-2 focus:outline-field" />
                     </label>
                   </div>
-                  <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Quick acreage picks">
-                    {([['Under 1', '0.5'], ['1-5', '3'], ['5-20', '10'], ['20-100', '50'], ['100+', '100']] as const).map(([label, amount]) => (
-                      <button key={label} type="button" aria-pressed={acreage === amount} onClick={() => setAcreage(amount)}
-                        className={`min-h-11 rounded-full border px-3 py-2 text-sm ${acreage === amount ? "border-field bg-field text-white" : "border-field/25 bg-white"}`}>{label}</button>
-                    ))}
-                  </div>
-                  <p id="acreage-help" className="mt-2 text-sm" aria-live="polite">{validAcres ? 'Optional: enter 0.1–10,000 acres. Quick picks fill a sample size you can edit.' : 'Enter a number from 0.1 to 10,000 acres, or leave blank.'}</p>
-                  {acres !== undefined && validAcres && acres < 1 && <p className="mt-3 text-sm leading-relaxed">Rankings are for commercial growing. For a home garden see <a href="https://gardeningsolutions.ifas.ufl.edu/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">UF/IFAS gardening guides.</a></p>}
+                  <p id="acreage-help" className="mt-2 text-sm" aria-live="polite">{validAcres ? 'Optional: type 0.1–10,000 usable growing acres. Land size adjusts rankings and advice.' : 'Enter a number from 0.1 to 10,000 acres, or leave blank.'}</p>
+                  {acres !== undefined && validAcres && acres < 1 && <p className="mt-3 text-sm leading-relaxed">Small lots favor crops suited to garden beds. Check spacing and usable growing area with <a href="https://gardeningsolutions.ifas.ufl.edu/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">UF/IFAS gardening guides.</a></p>}
                   <form onSubmit={analyze} className="mt-5">
                     <h2 className="text-xl font-semibold">Try a demo farm</h2>
                     <div className="mt-4 grid grid-cols-2 gap-3">

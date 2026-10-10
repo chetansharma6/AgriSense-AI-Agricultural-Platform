@@ -14,7 +14,7 @@ from tests.test_scoring import make_crop
 CROP = make_crop()  # ideal pH 5.5-6.5, drainage well to somewhat poorly drained
 GOOD_SOIL = {"soil_ph": 6.0, "drainage": "Well drained", "texture": "sand"}
 CONTRACT_KEYS = {"id", "name", "score", "season_label", "factors", "factor_details", "avg_yield", "price",
-                 "scale", "est_gross_value", "limited_by", "flags"}
+                 "scale", "est_gross_value", "limited_by", "flags", "risk_notes"}
 
 
 def summer_weather() -> pd.DataFrame:
@@ -86,7 +86,7 @@ def test_scale_gate_caps_too_small_and_flags_small() -> None:
     assert too_small["flags"][0].startswith("Usually grown on 10+ acres")
     small = score_crop(CROP, GOOD_SOIL, summer_weather(), None, acres=5)
     assert small["scale"]["fit"] == "small"
-    assert small["score"] == 100
+    assert small["score"] == 74
     assert "Small planting" in small["flags"][0]
 
 
@@ -136,3 +136,22 @@ def test_muck_caps_crops_not_grown_on_muck() -> None:
     assert result["score"] == CRITICAL_CAP
     on_muck = score_crop(make_crop(muck_suitable=True), muck, summer_weather(), None)
     assert on_muck["limited_by"] == [] and on_muck["score"] > CRITICAL_CAP
+
+
+def test_real_crop_scale_boundaries_and_missing_scores() -> None:
+    from app.crops import load_crops
+    from app.scoring import scale_adjusted_score, scale_info
+
+    crops = load_crops()
+    cotton = crops["cotton"]
+    assert scale_adjusted_score(95, cotton, 0.1) == 40
+    assert scale_adjusted_score(95, cotton, cotton.small_acres) == 74
+    assert scale_adjusted_score(95, cotton, cotton.min_practical_acres) == 95
+    assert scale_adjusted_score(None, cotton, 0.1) is None
+    assert scale_adjusted_score(20, cotton, 0.1) == 20
+    assert scale_adjusted_score(95, cotton, None) == 95
+    for name in ("tomato", "strawberry", "snap_bean", "bell_pepper", "cabbage"):
+        crop = crops[name]
+        assert scale_info(crop, 0.1)["fit"] == "good"
+        assert scale_adjusted_score(95, crop, 0.1) == 74
+        assert scale_adjusted_score(95, crop, 0.99) <= scale_adjusted_score(95, crop, 1)

@@ -26,7 +26,7 @@ from app.clients.power import get_daily_weather
 from app.clients.soil import SoilNotFound, get_soil
 from app.crops import load_crops
 from app.market import load_market
-from app.scoring import climate_risk_notes, estimated_gross_value, rank_crops, scale_info, score_crop, scoring_rules
+from app.scoring import climate_risk_notes, estimated_gross_value, rank_crops, scale_adjusted_score, scale_info, score_crop, scoring_rules
 from app.utils import haversine_km
 
 T = TypeVar("T")
@@ -139,17 +139,17 @@ def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, 
 
     started = time.perf_counter()
     if config.DEMO_MODE:
-        result, complete = _build_with_deadline(lat, lon, acres)
+        result, complete = _build_with_deadline(lat, lon)
     else:
-        result, complete = _build_recommendation(lat, lon, acres)
+        result, complete = _build_recommendation(lat, lon)
+    if complete:
+        _remember(key, result)  # Cache location scores before request-specific land-size caps.
     # Normalize live and partial responses through the same response decoration
     # used by saved/demo data, without changing any score calculation.
     result = _apply_acres(result, acres)
     result["confidence"] = _confidence(result, "live")
     log.info("recommend %s: answered in %.0f ms%s", key, (time.perf_counter() - started) * 1000,
              "" if complete else " (incomplete; not cached)")
-    if complete:  # never pin a degraded answer: the next request retries the failed source
-        _remember(key, result)
     return result
 
 
@@ -493,9 +493,8 @@ def _apply_acres(response: dict[str, Any], acres: float | None) -> dict[str, Any
         crop_result["est_gross_value"] = estimated_gross_value(crop_result.get("avg_yield"),
                                                                  crop_result.get("price"), acres)
         note = scale["note"]
-        if scale["fit"] == "too_small" and crop_result["score"] is not None:
-            crop_result["score"] = min(crop_result["score"], 40)
-        if scale["fit"] in {"small", "too_small"} and note and note not in crop_result["flags"]:
+        crop_result["score"] = scale_adjusted_score(crop_result["score"], crop, acres)
+        if note and note not in crop_result["flags"]:
             crop_result["flags"] = [note, *crop_result["flags"]][:4]
     response["crops"] = rank_crops(response.get("crops", []))
     for crop in response["crops"]:
