@@ -33,7 +33,8 @@ function MapViewport({ value }: Pick<FloridaMapProps, "value">) {
 
   useEffect(() => {
     if (lat !== undefined && lon !== undefined) {
-      map.setView([lat, lon], 9);
+      // Avoid a pending Leaflet zoom animation when navigating immediately to results.
+      map.setView([lat, lon], 9, { animate: false });
     }
   }, [map, lat, lon]);
 

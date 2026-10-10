@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import type { FactorKey } from "@/lib/types";
 import { FACTOR_WEIGHTS } from "@/lib/weights";
@@ -41,17 +40,16 @@ const limitations = [
 export default function About() {
   return (
     <main className="mx-auto w-full max-w-5xl px-5 py-12 sm:px-8">
-      <Link href="/" className="inline-flex min-h-11 items-center text-field underline underline-offset-4">Back to AgriSense</Link>
-      <h1 className="mt-8 text-4xl font-semibold tracking-tight sm:text-5xl">How AgriSense works</h1>
+      <h1 className="page-title">How AgriSense works</h1>
       <p className="mt-5 max-w-3xl leading-relaxed text-ink/75 sm:text-lg">AgriSense combines public soil, climate and harvest data to rank 13 crops for your Florida location. Deterministic calculations produce the suitability scores, and AI explains those results in plain language.</p>
 
       <section aria-labelledby="process-heading" className="mt-10">
-        <h2 id="process-heading" className="text-2xl font-semibold">From data to guidance</h2>
+        <h2 id="process-heading" className="section-title">From data to guidance</h2>
         <ol className="mt-5 flex flex-col gap-3 md:flex-row md:items-stretch">
           {steps.map((step, index) => (
             <li key={step.title} className="flex min-w-0 flex-1 flex-col gap-3 md:flex-row">
               {index > 0 && <span aria-hidden="true" className="self-center text-2xl text-field"><span className="md:hidden">↓</span><span className="hidden md:inline">→</span></span>}
-              <div className="w-full flex-1 rounded-xl border border-field/20 bg-white/50 p-5">
+              <div className="card w-full flex-1 rounded-xl border border-field/20 bg-white/50 p-5">
                 <span className="text-sm font-semibold uppercase tracking-widest text-soil">Step {index + 1}</span>
                 <h3 className="mt-2 text-xl font-semibold text-field">{step.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-ink/75">{step.description}</p>
@@ -62,10 +60,10 @@ export default function About() {
       </section>
 
       <section aria-labelledby="sources-heading" className="mt-12">
-        <h2 id="sources-heading" className="text-2xl font-semibold">Data sources</h2>
+        <h2 id="sources-heading" className="section-title">Data sources</h2>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {sources.map((source) => (
-            <article key={source.name} className="rounded-xl border border-field/20 bg-white/50 p-5">
+            <article key={source.name} className="card rounded-xl border border-field/20 bg-white/50 p-5">
               <h3 className="font-semibold">{source.name}</h3>
               <p className="mt-2 text-sm leading-relaxed text-ink/75">{source.use}</p>
               <a href={source.url} className="mt-2 inline-flex min-h-11 items-center text-sm font-medium text-field underline underline-offset-4">Visit {source.name}</a>
@@ -75,7 +73,7 @@ export default function About() {
       </section>
 
       <section aria-labelledby="factors-heading" className="mt-12">
-        <h2 id="factors-heading" className="text-2xl font-semibold">The six factors</h2>
+        <h2 id="factors-heading" className="section-title">The six factors</h2>
         <p className="mt-3 leading-relaxed text-ink/75">Each factor scores from 0 to 100. Missing factors are excluded and the remaining weights are normalized; climate factors are evaluated for each Florida growing window, and the best window wins. If soil pH, drainage, season temperature or frost risk scores below 25, the total is capped at 45.</p>
         <div className="mt-5 overflow-x-auto rounded-xl border border-field/20">
           <table className="w-full text-left text-sm">
@@ -96,8 +94,8 @@ export default function About() {
         </div>
       </section>
 
-      <section aria-labelledby="limitations-heading" className="mt-12 rounded-xl border border-soil/25 bg-sun/10 p-5 sm:p-6">
-        <h2 id="limitations-heading" className="text-2xl font-semibold">Limitations</h2>
+      <section aria-labelledby="limitations-heading" className="card mt-12 rounded-xl border border-soil/25 bg-sun/10 p-5 sm:p-6">
+        <h2 id="limitations-heading" className="section-title">Limitations</h2>
         <ul className="mt-4 list-disc space-y-3 pl-5 text-sm leading-relaxed text-ink/75">
           {limitations.map((limitation) => <li key={limitation}>{limitation}</li>)}
         </ul>

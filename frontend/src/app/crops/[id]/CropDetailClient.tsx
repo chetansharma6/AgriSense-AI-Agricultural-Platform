@@ -3,6 +3,7 @@
 import Link from "next/link";
 import AiReport from "@/components/AiReport";
 import FactorChart from "@/components/FactorChart";
+import { placeLabel } from "@/lib/presentation";
 import { explanationFor, weightsFor } from "@/lib/weights";
 import { useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -63,7 +64,13 @@ export default function CropDetailClient() {
   const [verdictSlot, setVerdictSlot] = useState<HTMLDivElement | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<DetailState | null>(null);
-  const backUrl = valid ? `/results?lat=${lat.toFixed(4)}&lon=${lon.toFixed(4)}` : "/";
+  const current = state?.key === key && state.attempt === attempt ? state.data : undefined;
+  const place = placeLabel(params.get("place"), current?.location?.county);
+  const name = current?.name ?? id.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+  const query = new URLSearchParams({ lat: lat.toFixed(4), lon: lon.toFixed(4) });
+  if (params.get("place")) query.set("place", params.get("place")!);
+  const backUrl = valid ? `/results?${query}` : "/";
+  useEffect(() => { document.title = `${name} at ${place} · AgriSense`; }, [name, place]);
 
   useEffect(() => {
     if (!valid) return;
@@ -78,12 +85,16 @@ export default function CropDetailClient() {
     return () => { active = false; };
   }, [id, lat, lon, valid, key, attempt]);
 
-  const back = <Link href={backUrl} className="inline-flex min-h-11 items-center text-field underline underline-offset-4">← All crops for this spot</Link>;
+  const back = <nav aria-label="Breadcrumbs" className="no-print"><ol className="flex flex-wrap items-center gap-x-2 text-sm">
+    <li><Link href="/" className="inline-flex min-h-11 items-center text-field underline underline-offset-4">Home</Link></li><li aria-hidden="true">→</li>
+    <li><Link href={backUrl} className="inline-flex min-h-11 items-center text-field underline underline-offset-4">{place} results</Link></li><li aria-hidden="true">→</li>
+    <li aria-current="page" className="py-3">{name}</li>
+  </ol></nav>;
   if (!valid) return <div>{back}<p className="mt-6">Choose a valid Florida location from the home page to view this crop.</p></div>;
   if (state?.key !== key || state.attempt !== attempt) return <div>{back}<div className="mt-6"><CropDetailSkeleton /></div></div>;
   if (state.error) return (
     <div>{back}<section role="alert" className="mt-6 rounded-xl border border-clay/25 bg-white/50 p-5 sm:p-6">
-      <h1 className="text-2xl font-semibold">{state.error.status === 404 ? "We don't have that crop" : "Couldn’t load this crop"}</h1>
+      <h1 className="section-title">{state.error.status === 404 ? "We don't have that crop" : "Couldn’t load this crop"}</h1>
       {state.error.status !== 404 && <p className="mt-3">{state.error.message}</p>}
       <button type="button" onClick={() => setAttempt((n) => n + 1)} className="mt-5 rounded-lg bg-field px-5 py-3 font-semibold text-white">Try again</button>
     </section></div>
@@ -104,11 +115,11 @@ export default function CropDetailClient() {
     ?? (crop.price ? "state" : null);
   return (
     <div className="space-y-8">
-      {back}
-      <header className="rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6">
+      <div className="no-print flex flex-wrap items-center justify-between gap-3">{back}<button type="button" onClick={() => window.print()} className="min-h-11 rounded-lg border border-field bg-white/50 px-4 py-3 text-sm font-semibold text-field hover:bg-leaf/15">Download report</button></div>
+      <header className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h1 className="text-3xl font-semibold sm:text-4xl">{crop.name ?? "Unnamed crop"}</h1>
+            <h1 className="page-title">{crop.name ?? "Unnamed crop"}</h1>
             <p className="mt-2 text-soil">{crop.location?.county ? `${crop.location.county} County, Florida` : "County: No data"}</p>
             <p className="mt-2 text-sm">{crop.season_label ?? "Season: No data"}</p>
           </div>
@@ -123,26 +134,26 @@ export default function CropDetailClient() {
       <FactorChart factors={crop.factors} details={crop.factor_details} weights={weightsFor(crop.scoring)} explanation={explanationFor(crop.scoring)} />
       <AiReport key={key} crop={crop} verdictSlot={verdictSlot} />
       <section aria-labelledby="track-record">
-        <h2 id="track-record" className="mb-5 text-2xl font-semibold">Local track record</h2>
+        <h2 id="track-record" className="section-title mb-5">Local track record</h2>
         <dl className={`grid gap-4 ${hasAcres ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
-          <div className="min-w-0 rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">Average yield</dt><dd className="mt-2 break-words text-xl font-semibold">{formatYield(crop.avg_yield)}</dd><dd className="mt-2 text-sm text-soil">{levelLabel(crop.avg_yield?.level)}</dd></div>
-          <div className="min-w-0 rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">Price range</dt><dd className="mt-2 break-words text-xl font-semibold">{formatPrice(crop.price)}</dd><dd className="mt-2 text-sm text-soil">{levelLabel(priceLevel)}</dd></div>
-          {hasAcres && <div className="min-w-0 rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">County acres</dt><dd className="mt-2 break-words text-xl font-semibold">{formatWhole(acres as number)} acres</dd><dd className="mt-2 text-sm text-soil">Reported area in this county</dd></div>}
+          <div className="card min-w-0 rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">Average yield</dt><dd className="mt-2 break-words text-xl font-semibold">{formatYield(crop.avg_yield)}</dd><dd className="mt-2 text-sm text-soil">{levelLabel(crop.avg_yield?.level)}</dd></div>
+          <div className="card min-w-0 rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">Price range</dt><dd className="mt-2 break-words text-xl font-semibold">{formatPrice(crop.price)}</dd><dd className="mt-2 text-sm text-soil">{levelLabel(priceLevel)}</dd></div>
+          {hasAcres && <div className="card min-w-0 rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">County acres</dt><dd className="mt-2 break-words text-xl font-semibold">{formatWhole(acres as number)} acres</dd><dd className="mt-2 text-sm text-soil">Reported area in this county</dd></div>}
         </dl>
       </section>
-      {!!crop.flags?.length && <section className="rounded-xl border border-sun/40 bg-sun/15 p-5" aria-labelledby="watch-out">
-        <h2 id="watch-out" className="text-2xl font-semibold">Watch out for</h2>
+      {!!crop.flags?.length && <section className="card rounded-xl border border-sun/40 bg-sun/15 p-5" aria-labelledby="watch-out">
+        <h2 id="watch-out" className="section-title">Watch out for</h2>
         <ul className="mt-3 list-disc space-y-2 pl-5">{crop.flags.map((flag, i) => <li key={i}>{formatDisplayText(flag)}</li>)}</ul>
       </section>}
       <section aria-labelledby="growing-it">
-        <h2 id="growing-it" className="text-2xl font-semibold">Growing it</h2>
+        <h2 id="growing-it" className="section-title">Growing it</h2>
         <p className="mt-4 whitespace-pre-line leading-relaxed">{formatDisplayText(crop.general_guidance ?? "Growing guidance is unavailable.")}</p>
         <div className="mt-5 flex flex-wrap gap-3">{crop.extension_links?.map((link, i) => {
           const url = extensionUrl(link.url);
           return url ? <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-field px-4 py-3 text-sm font-semibold text-field hover:bg-leaf/15">{formatGuideTitle(link.title)}</a> : null;
         })}</div>
       </section>
-      <aside className="rounded-xl border border-soil/25 bg-sand p-5 text-sm leading-relaxed">General guidance only. Confirm fertilizer and pesticide decisions with your county UF/IFAS Extension office and always follow product labels.</aside>
+      <aside className="card report-disclaimer rounded-xl border border-soil/25 bg-sand p-5 text-sm leading-relaxed">General guidance only. Confirm fertilizer and pesticide decisions with your county UF/IFAS Extension office and always follow product labels.</aside>
     </div>
   );
 }

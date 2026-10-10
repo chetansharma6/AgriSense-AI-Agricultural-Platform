@@ -1,17 +1,21 @@
-import Link from "next/link";
+import type { Metadata } from "next";
+import { placeLabel } from "@/lib/presentation";
 import { Suspense } from "react";
-import { LandSummarySkeleton } from "@/components/LandSummary";
+import ResultsSkeleton from "@/components/ResultsSkeleton";
 import ResultsClient from "./ResultsClient";
+
+export async function generateMetadata({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }): Promise<Metadata> {
+  const query = await searchParams;
+  const place = placeLabel(typeof query.place === "string" ? query.place : null);
+  return { title: `${place} results · AgriSense` };
+}
 
 export default function ResultsPage() {
   return (
     <main className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
-      <Link href="/" className="inline-flex min-h-11 items-center text-2xl font-bold tracking-tight text-field">AgriSense</Link>
-      <h1 className="mt-8 mb-6 text-3xl font-semibold sm:text-4xl">Your Florida land</h1>
-      <Suspense fallback={<LandSummarySkeleton />}>
+      <Suspense fallback={<ResultsSkeleton />}>
         <ResultsClient />
       </Suspense>
-      <p className="mt-6 text-sm text-soil">Data: USDA NRCS, NASA POWER, USDA NASS. General guidance only.</p>
     </main>
   );
 }
