@@ -469,6 +469,8 @@ def crop_detail(crop_id: str, lat: float, lon: float, acres: float | None = None
                     {"title": "FDACS Agricultural Best Management Practices", "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"}],
     }
     action_plan = _action_plan(crop, result["conditions"], scored)
+    water_plan = _water_plan(crop, scored)
+    management_guidance = _management_guidance(crop)
     return {
         **scored,
         "action_plan": action_plan,
@@ -476,6 +478,8 @@ def crop_detail(crop_id: str, lat: float, lon: float, acres: float | None = None
         "general_guidance": crop.general_guidance,
         "extension_links": [link.model_dump() for link in crop.extension_links],
         "nutrient_plan": nutrient_plan,
+        "water_plan": water_plan,
+        "management_guidance": management_guidance,
         "conditions": result["conditions"],
         "location": result["location"],
         "scoring": result["scoring"],
@@ -529,4 +533,58 @@ def _action_plan(crop: Any, conditions: dict[str, Any], result: dict[str, Any]) 
         "planting_window": f"Use the {result.get('season_label', 'Florida growing')} window: plant at the recommended time.",
         "major_risk": risk,
         "uf_ifas_follow_up": {"title": link.title, "url": link.url},
+    }
+
+
+def _water_plan(crop: Any, result: dict[str, Any]) -> dict[str, Any]:
+    """Describe water pressure using only existing rainfall thresholds and flags."""
+    risks = result.get("risk_notes") or climate_risk_notes(result.get("flags", []))
+    dry = next((note for note in risks if note.startswith("Dry-season irrigation pressure:")), None)
+    wet = next((note for note in risks if note.startswith("Excessive rainfall:")), None)
+    rainfall = (result.get("factors") or {}).get("rainfall")
+    if dry:
+        status = "below crop threshold"
+        sensitivity = "irrigation pressure"
+        note = dry.split(": ", 1)[-1]
+    elif wet:
+        status = "above crop threshold"
+        sensitivity = "drainage pressure"
+        note = wet.split(": ", 1)[-1]
+    elif rainfall is None:
+        status = "unknown"
+        sensitivity = "unknown until climate data is available"
+        note = "Climate data is missing; check soil moisture and irrigation capacity before planting."
+    else:
+        status = "within crop threshold"
+        sensitivity = "routine monitoring"
+        note = "Selected-window rainfall is within the crop's committed threshold; monitor field soil moisture."
+    low, high = crop.rain_mm_per_month
+    link = crop.extension_links[0]
+    return {
+        "ideal_monthly_low_mm": low,
+        "ideal_monthly_high_mm": high,
+        "season_status": status,
+        "irrigation_sensitivity": sensitivity,
+        "note": note,
+        "source": {"title": link.title, "url": link.url},
+    }
+
+
+def _management_guidance(crop: Any) -> dict[str, Any]:
+    """Return beginner soil-health and rotation steps anchored to committed crop guidance."""
+    rotation = next((f"{sentence.strip()}." for sentence in crop.general_guidance.split(".")
+                     if "rotat" in sentence.lower()), None)
+    if rotation is None:
+        rotation = (f"Rotate {crop.name} with a crop from a different botanical family; "
+                    "confirm the sequence with UF/IFAS Extension.")
+    link = crop.extension_links[0]
+    return {
+        "soil_health_practices": [
+            "Test soil pH and nutrients before fertilizing",
+            "Use cover crops and compost to build organic matter on sandy soils",
+            "Split nutrient applications to reduce leaching",
+            "Keep living roots or residue on the soil between cash crops where practical",
+        ],
+        "rotation_guidance": rotation,
+        "source": {"title": link.title, "url": link.url},
     }

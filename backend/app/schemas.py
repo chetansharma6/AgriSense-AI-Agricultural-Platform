@@ -106,6 +106,21 @@ class ActionPlan(Strict):
     uf_ifas_follow_up: ExtensionLink
 
 
+class WaterPlan(Strict):
+    ideal_monthly_low_mm: float
+    ideal_monthly_high_mm: float
+    season_status: str
+    irrigation_sensitivity: str
+    note: str
+    source: ExtensionLink
+
+
+class ManagementGuidance(Strict):
+    soil_health_practices: list[str]
+    rotation_guidance: str
+    source: ExtensionLink
+
+
 class ScoringRules(Strict):
     weights: dict[str, float]
     critical_factors: list[str]
@@ -179,6 +194,8 @@ class CropDetail(CropResult):
     general_guidance: str
     extension_links: list[ExtensionLink]
     nutrient_plan: NutrientPlan
+    water_plan: WaterPlan
+    management_guidance: ManagementGuidance
     conditions: Conditions
     location: Location
     scoring: ScoringRules
