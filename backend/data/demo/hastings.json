@@ -53,7 +53,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 354,
@@ -109,7 +109,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 455,
@@ -163,9 +163,9 @@
             "unit": "C avg"
           },
           "frost_risk": {
-            "value": 0.6,
+            "value": 0.3,
             "ideal": "<= 10",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 577,
@@ -224,7 +224,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 1",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 530,
@@ -282,7 +282,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 2",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 268,
@@ -339,9 +339,9 @@
             "unit": "C avg"
           },
           "frost_risk": {
-            "value": 0.6,
+            "value": 0.3,
             "ideal": "<= 3",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 462,
@@ -399,7 +399,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 607,
@@ -458,7 +458,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 513,
@@ -516,7 +516,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 774,
@@ -573,9 +573,9 @@
             "unit": "C avg"
           },
           "frost_risk": {
-            "value": 0.5,
+            "value": 0.2,
             "ideal": "<= 2",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 1369,
@@ -634,7 +634,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 455,
@@ -693,7 +693,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 935,
@@ -753,7 +753,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 918,
@@ -836,7 +836,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 354,
@@ -1007,7 +1007,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 455,
@@ -1178,9 +1178,9 @@
           "unit": "C avg"
         },
         "frost_risk": {
-          "value": 0.6,
+          "value": 0.3,
           "ideal": "<= 10",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 577,
@@ -1335,7 +1335,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 1",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 530,
@@ -1498,7 +1498,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 2",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 268,
@@ -1661,9 +1661,9 @@
           "unit": "C avg"
         },
         "frost_risk": {
-          "value": 0.6,
+          "value": 0.3,
           "ideal": "<= 3",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 462,
@@ -1817,7 +1817,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 607,
@@ -1995,7 +1995,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 513,
@@ -2159,7 +2159,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 774,
@@ -2326,9 +2326,9 @@
           "unit": "C avg"
         },
         "frost_risk": {
-          "value": 0.5,
+          "value": 0.2,
           "ideal": "<= 2",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 1369,
@@ -2499,7 +2499,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 455,
@@ -2677,7 +2677,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 935,
@@ -2844,7 +2844,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 918,

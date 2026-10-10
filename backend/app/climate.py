@@ -18,15 +18,19 @@ import pandas as pd
 from app.clients.power import get_daily_weather
 
 FREEZE_C = 0.0
+# At or below -2 C (28 F) most crops take real damage (corn, snap bean, sugarcane buds);
+# a night between -2 and 0 C mostly injures leaves.
+HARD_FREEZE_C = -2.0
 SOURCE = "NASA POWER"
 
 
 @dataclass
 class SeasonStats:
     mean_temp_c: float
-    freeze_days: float
+    freeze_days: float  # nights at or below FREEZE_C, including hard freezes
     precip_mm: float
     months: float
+    hard_freeze_days: float = 0.0  # nights at or below HARD_FREEZE_C
 
 
 def _parse_md(month_day: str) -> tuple[int, int]:
@@ -41,7 +45,7 @@ def season_stats(weather: pd.DataFrame, start: str, end: str) -> SeasonStats | N
     crosses_year = (end_m, end_d) < (start_m, start_d)
     first, last = weather.index.min().date(), weather.index.max().date()
 
-    temps, freezes, rains, lengths = [], [], [], []
+    temps, freezes, hard_freezes, rains, lengths = [], [], [], [], []
     for year in range(first.year, last.year + 1):
         season_start = date(year, start_m, start_d)
         season_end = date(year + 1 if crosses_year else year, end_m, end_d)
@@ -50,6 +54,7 @@ def season_stats(weather: pd.DataFrame, start: str, end: str) -> SeasonStats | N
         days = weather.loc[str(season_start):str(season_end)]
         temps.append(days["t_mean_c"].mean())
         freezes.append(int((days["t_min_c"] <= FREEZE_C).sum()))
+        hard_freezes.append(int((days["t_min_c"] <= HARD_FREEZE_C).sum()))
         rains.append(days["precip_mm"].sum())
         lengths.append(len(days))
     if not temps:
@@ -59,6 +64,7 @@ def season_stats(weather: pd.DataFrame, start: str, end: str) -> SeasonStats | N
         freeze_days=float(pd.Series(freezes).mean()),
         precip_mm=float(pd.Series(rains).mean()),
         months=float(pd.Series(lengths).mean()) / 30.44,
+        hard_freeze_days=float(pd.Series(hard_freezes).mean()),
     )
 
 

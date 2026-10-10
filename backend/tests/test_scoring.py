@@ -36,9 +36,11 @@ def make_crop(**overrides: Any) -> Crop:
 CROP = make_crop()
 
 
-def stats(temp: float = 20.0, freezes: float = 0.0, rain: float = 150.0, months: float = 1.0) -> SeasonStats:
-    """One-month season, so the rainfall ideal is exactly 100-200 mm."""
-    return SeasonStats(mean_temp_c=temp, freeze_days=freezes, precip_mm=rain, months=months)
+def stats(temp: float = 20.0, freezes: float = 0.0, rain: float = 150.0, months: float = 1.0,
+          hard: float | None = None) -> SeasonStats:
+    """One-month season, so the rainfall ideal is exactly 100-200 mm. By default every freeze is hard."""
+    return SeasonStats(mean_temp_c=temp, freeze_days=freezes, precip_mm=rain, months=months,
+                       hard_freeze_days=freezes if hard is None else hard)
 
 
 # --- shape helpers -----------------------------------------------------------
@@ -150,7 +152,7 @@ def test_muck_overrides_drainage_class() -> None:
     muck_crop = make_crop(muck_suitable=True)
     assert score_drainage(muck_crop, None, "muck")[0] == 90
     assert score_drainage(CROP, "Well drained", "muck") == (
-        30, {"value": "Well drained", "ideal": "Well drained to somewhat poorly drained"},
+        15, {"value": "Well drained", "ideal": "Well drained to somewhat poorly drained"},
         ["Muck soil: not typical for this crop"])
 
 
@@ -181,17 +183,32 @@ def test_temp_warmer_than_ideal() -> None:
 
 # --- frost risk --------------------------------------------------------------
 
+FROST_UNIT = "freeze days in season (light freezes count half)"
+
+
 @pytest.mark.parametrize("freezes", [0.0, 1.5, 2.0])
 def test_frost_within_tolerance(freezes: float) -> None:
     assert score_climate(CROP, stats(freezes=freezes))["frost_risk"] == (
-        100, {"value": freezes, "ideal": "<= 2", "unit": "freeze days in season"}, [])
+        100, {"value": freezes, "ideal": "<= 2", "unit": FROST_UNIT}, [])
 
 
 def test_frost_over_tolerance_loses_ten_per_day() -> None:
     score, _, flags = score_climate(CROP, stats(freezes=3.0))["frost_risk"]
     assert score == 90
-    assert flags == ["About 3.0 freeze days expected in season (crop tolerates 2): "
-                     "plan frost protection or a later planting"]
+    assert flags == ["About 3.0 freezing nights in season, 3.0 of them hard (-2 C or colder); "
+                     "crop tolerates about 2: plan frost protection or a later planting"]
+
+
+def test_light_freezes_count_half() -> None:
+    # Four nights between -2 and 0 C weigh the same as two hard freezes: still within tolerance.
+    assert score_climate(CROP, stats(freezes=4.0, hard=0.0))["frost_risk"][:2] == (
+        100, {"value": 2.0, "ideal": "<= 2", "unit": FROST_UNIT})
+    # One hard + three light = 2.5 weighted days: half a day over.
+    assert score_climate(CROP, stats(freezes=4.0, hard=1.0))["frost_risk"][0] == 95
+
+
+def test_missing_hard_freeze_count_is_missing() -> None:
+    assert score_climate(CROP, stats(freezes=1.0, hard=float("nan")))["frost_risk"][0] is None
 
 
 def test_frost_floors_at_zero() -> None:

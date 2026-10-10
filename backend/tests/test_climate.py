@@ -55,3 +55,15 @@ def test_monthly_normals() -> None:
     assert january["freeze_days"] == round(2 / 3, 1)
     assert january["tmax_c"] == 28.0
     assert monthly[1]["freeze_days"] == 0.0
+
+
+def test_season_stats_counts_hard_freezes_separately() -> None:
+    frame = weather()
+    frame.loc["2022-01-05", "t_min_c"] = -0.5  # light freeze
+    frame.loc["2022-01-06", "t_min_c"] = -2.0  # hard freeze, exactly on the threshold
+    frame.loc["2022-01-07", "t_min_c"] = -6.0  # hard freeze
+    stats = season_stats(frame, "01-01", "01-31")
+    assert stats is not None
+    # Three complete Januaries (2021-2023); only 2022 has freezes.
+    assert stats.freeze_days == 1.0
+    assert stats.hard_freeze_days == 2 / 3
