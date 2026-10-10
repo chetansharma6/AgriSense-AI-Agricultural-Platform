@@ -6,14 +6,15 @@ import pandas as pd
 import pytest
 
 from app.scoring import (
-    CRITICAL_CAP, CRITICAL_FACTORS, WEIGHTS, ordered_flags, rank_crops, score_crop, scoring_rules,
+    CRITICAL_CAP, CRITICAL_FACTORS, WEIGHTS, estimated_gross_value, ordered_flags, rank_crops, score_crop,
+    scoring_rules,
 )
 from tests.test_scoring import make_crop
 
 CROP = make_crop()  # ideal pH 5.5-6.5, drainage well to somewhat poorly drained
 GOOD_SOIL = {"soil_ph": 6.0, "drainage": "Well drained", "texture": "sand"}
 CONTRACT_KEYS = {"id", "name", "score", "season_label", "factors", "factor_details", "avg_yield", "price",
-                 "limited_by", "flags"}
+                 "scale", "est_gross_value", "limited_by", "flags"}
 
 
 def summer_weather() -> pd.DataFrame:
@@ -76,6 +77,32 @@ def test_output_matches_contract() -> None:
     assert set(result) == CONTRACT_KEYS
     assert set(result["factors"]) == set(WEIGHTS) == set(result["factor_details"])
     assert set(scoring_rules()) == {"weights", "critical_factors", "critical_threshold", "critical_cap"}
+
+
+def test_scale_gate_caps_too_small_and_flags_small() -> None:
+    too_small = score_crop(CROP, GOOD_SOIL, summer_weather(), None, acres=1)
+    assert too_small["scale"]["fit"] == "too_small"
+    assert too_small["score"] <= 40
+    assert too_small["flags"][0].startswith("Usually grown on 10+ acres")
+    small = score_crop(CROP, GOOD_SOIL, summer_weather(), None, acres=5)
+    assert small["scale"]["fit"] == "small"
+    assert small["score"] == 100
+    assert "Small planting" in small["flags"][0]
+
+
+def test_no_acres_preserves_score_and_has_no_scale_note() -> None:
+    result = score_crop(CROP, GOOD_SOIL, summer_weather(), None)
+    assert result["score"] == 100
+    assert result["scale"] == {"fit": None, "min_practical_acres": 10, "note": None}
+
+
+def test_gross_value_requires_matching_units() -> None:
+    yield_info = {"value": 1000, "unit": "LB / ACRE"}
+    price = {"low": 0.50, "high": 0.75, "unit": "$ / LB"}
+    assert estimated_gross_value(yield_info, price, 2) == {
+        "low": 1000, "high": 1500, "label": "Rough gross value before costs"
+    }
+    assert estimated_gross_value(yield_info, {**price, "unit": "$ / CWT"}, 2) is None
 
 
 def test_flags_most_critical_first_deduplicated_and_capped() -> None:

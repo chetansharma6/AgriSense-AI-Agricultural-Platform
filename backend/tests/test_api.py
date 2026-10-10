@@ -19,7 +19,7 @@ SOIL = {"soil_ph": 5.6, "organic_matter_pct": 1.8, "sand_pct": 88.0, "clay_pct":
         "texture": "sand", "drainage": "Poorly drained", "map_unit": "Test sand"}
 FACTORS = {"soil_ph", "drainage", "season_temp", "frost_risk", "rainfall", "local_history"}
 CROP_KEYS = {"id", "name", "score", "season_label", "factors", "factor_details", "avg_yield", "price",
-             "limited_by", "flags"}
+             "scale", "est_gross_value", "limited_by", "flags"}
 
 
 def fake_weather(lat: float, lon: float) -> pd.DataFrame:
@@ -130,6 +130,14 @@ def test_crop_detail(sources: dict[str, Any]) -> None:
     assert "soil_ph" in body["conditions"]
     assert body["scoring"]["weights"]["soil_ph"] == 0.20
     assert body["limited_by"] == []
+
+
+def test_crop_detail_nutrient_plan_and_lime_note(sources: dict[str, Any]) -> None:
+    body = client.get("/api/crops/tomato", params={"lat": 29.71, "lon": -81.50, "acres": 1}).json()
+    assert body["scale"]["fit"] == "small"
+    assert body["nutrient_plan"]["n_lb_per_acre"] == 200
+    assert body["nutrient_plan"]["lime_note"] == "pH 5.6 is below 6-6.8: a soil test will say how much lime is needed"
+    assert len(body["nutrient_plan"]["practices"]) == 5
 
 
 def test_unknown_crop() -> None:

@@ -74,6 +74,11 @@ class Crop(BaseModel):
     extension_links: list[ExtensionLink]
     source_notes: str
     needs_review: bool
+    min_practical_acres: float
+    small_acres: float
+    scale_note: str
+    n_lb_per_acre: float | None
+    nutrient_source: ExtensionLink
 
     @model_validator(mode="after")
     def _check_ranges(self) -> "Crop":
@@ -93,6 +98,10 @@ class Crop(BaseModel):
             raise ValueError(f"{self.id}: drainage must list the driest class first")
         if self.max_freeze_days < 0:
             raise ValueError(f"{self.id}: max_freeze_days must be >= 0")
+        if not 0 < self.small_acres <= self.min_practical_acres:
+            raise ValueError(f"{self.id}: small_acres must be positive and <= min_practical_acres")
+        if self.n_lb_per_acre is not None and self.n_lb_per_acre < 0:
+            raise ValueError(f"{self.id}: n_lb_per_acre must be >= 0")
         if not self.fl_windows:
             raise ValueError(f"{self.id}: needs at least one Florida growing window")
         return self
