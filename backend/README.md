@@ -63,3 +63,19 @@ An exact official coordinate is served from the committed JSON fixture in
 contains 13 ranked crops, and is intended for offline tests and demonstrations.
 Coordinates other than those four exact points retain the existing live path;
 `DEMO_MODE` only applies the bounded fallback/deadline behavior to them.
+
+## Judge demo evaluation
+
+Run the committed demos without network access:
+
+```bash
+cd backend
+.venv/bin/python -m scripts.evaluate_demos
+```
+
+The evaluator runs all four official locations twice and reports response
+latency, crop count, score range and ordering, missing factors, source status,
+deterministic repeatability, and NaN/infinity checks. It forbids provider calls
+and exits nonzero if any demo is slow (one second or more), malformed,
+nondeterministic, out of order, missing crops or provenance, or contains a
+non-finite number. Judges can use its exit status directly in CI or a shell.
