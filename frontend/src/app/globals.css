@@ -1,13 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-field: #2f6b3a;
-  --color-leaf: #7fb069;
-  --color-soil: #7a5c3e;
-  --color-sand: #f4ecd8;
-  --color-sun: #e9a23b;
-  --color-clay: #a8432b;
-  --color-ink: #1f2a1f;
+  --color-field: #244b3c;
+  --color-leaf: #a8c686;
+  --color-soil: #5f705f;
+  --color-sand: #faf9f3;
+  --color-sun: #dfc785;
+  --color-clay: #99503b;
+  --color-ink: #203b30;
+  --color-mint: #eaf2e6;
+  --color-sage: #8faf91;
+  --color-border: #dce6d8;
+  --font-editorial: Georgia, "Times New Roman", serif;
 }
 
 @theme inline {
@@ -67,17 +71,17 @@ body {
 }
 
 html { scroll-behavior: smooth; }
-.page-title { font-size: clamp(2rem, 4vw, 3rem); font-weight: 600; line-height: 1.15; letter-spacing: -0.03em; }
+.page-title { font-family: var(--font-editorial); font-size: clamp(2.4rem, 5vw, 3.8rem); font-weight: 400; line-height: 1.15; letter-spacing: -0.03em; }
 .section-title { font-size: 1.5rem; font-weight: 600; line-height: 1.3; }
 main h2 { font-size: 1.5rem; font-weight: 600; line-height: 1.3; }
 main h3 { font-size: 1.25rem; font-weight: 600; line-height: 1.3; }
 main p { max-width: 70ch; }
-.card { border-radius: 1rem; padding: 1.25rem; }
+.card { border-radius: 1.5rem; padding: 1.25rem; box-shadow: 0 6px 28px #244b3c05; }
 @media (min-width: 640px) { .card { padding: 1.5rem; } }
 .crop-card-link { transition: transform 160ms ease, box-shadow 160ms ease; }
 .crop-card-link:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(31, 42, 31, 0.12); }
-.crop-card-link:focus-visible { outline: 3px solid #2f6b3a; outline-offset: 4px; }
-.skip-link { position: fixed; top: 0.5rem; left: 0.5rem; z-index: 2000; transform: translateY(-160%); border-radius: 0.5rem; background: #f4ecd8; padding: 0.75rem 1rem; }
+.crop-card-link:focus-visible { outline: 3px solid #244b3c; outline-offset: 4px; }
+.skip-link { position: fixed; top: 0.5rem; left: 0.5rem; z-index: 2000; transform: translateY(-160%); border-radius: 0.5rem; background: #faf9f3; padding: 0.75rem 1rem; }
 .skip-link:focus { transform: translateY(0); }
 .print-only { display: none; }
 @media (prefers-reduced-motion: reduce) {
@@ -86,9 +90,42 @@ main p { max-width: 70ch; }
   .crop-card-link:hover { transform: none; }
 }
 
+/* Shared meadow surfaces keep search, reports and supporting pages cohesive. */
+@layer base {
+  body { line-height: 1.6; }
+  button, input, summary { font: inherit; }
+  button, input { border-radius: .85rem; }
+  button { transition: background-color 180ms ease, border-color 180ms ease, box-shadow 180ms ease; }
+  button:enabled:hover { box-shadow: 0 3px 12px #244b3c12; }
+  input { transition: border-color 180ms ease, box-shadow 180ms ease; }
+  input:focus { box-shadow: 0 0 0 4px #8faf9126; }
+  ::selection { background: #dce8d4; color: #203b30; }
+}
+.site-header { background: #faf9f3f2; }
+.site-header nav a { border-radius: 999px; padding-inline: 1rem; text-decoration: none; transition: background-color 180ms; }
+.site-header nav a:hover { background: var(--color-mint); }
+.site-header nav a:first-child { background: var(--color-field); color: white; }
+.site-footer { background: var(--color-mint); }
+#main-content > main { background: radial-gradient(ellipse at 100% 0%, #eaf2e680, transparent 45%); }
+.crop-card-link article { background: #ffffffd9; border-color: var(--color-border); }
+.crop-card-link:hover article { border-color: var(--color-sage); }
+.card .card { background: var(--color-mint); box-shadow: none; border-radius: 1rem; }
+.leaflet-container { font-family: var(--font-geist-sans), sans-serif; }
+@keyframes meadow-entrance { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+#main-content { animation: meadow-entrance 420ms ease-out both; }
+@media (max-width: 480px) {
+  .site-header > div { justify-content: center; gap: .5rem; }
+  .site-header nav { width: 100%; justify-content: center; gap: .25rem; }
+  .site-header img { height: 3rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #main-content { animation: none; }
+  button, input, .site-header nav a { transition: none; }
+}
+
 @page { size: A4; margin: 12mm; }
 @media print {
-  html, body { background: white !important; color: #1f2a1f; font-size: 10pt; scroll-behavior: auto; }
+  html, body { background: white !important; color: #203b30; font-size: 10pt; scroll-behavior: auto; }
   .site-header, .site-footer, .no-print, button, .screen-only, .report-shimmer { display: none !important; }
   .print-only { display: block !important; }
   #main-content, .crop-report { width: 100%; max-width: none; margin: 0; padding: 0; }
