@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
+import CropCard from "@/components/CropCard";
 import LandSummary, { LandSummarySkeleton } from "@/components/LandSummary";
 import { ApiError, getRecommendations } from "@/lib/api";
 import type { RecommendResponse } from "@/lib/types";
@@ -58,5 +59,31 @@ export default function ResultsClient() {
       </div>
     </section>
   );
-  return state.data ? <LandSummary response={state.data} /> : <LandSummarySkeleton />;
+  if (!state.data) return <LandSummarySkeleton />;
+  const crops = [...(state.data.crops ?? [])].sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
+  return (
+    <div>
+      <LandSummary response={state.data} />
+      {crops.length === 0 ? (
+        <p className="mt-8 text-soil">No crop recommendations are available for this spot.</p>
+      ) : (
+        <>
+          <section className="mt-10" aria-labelledby="best-fits-title">
+            <h2 id="best-fits-title" className="mb-5 text-2xl font-semibold">Best fits for this spot</h2>
+            <div className="grid gap-4 lg:grid-cols-3">
+              {crops.slice(0, 3).map((crop, i) => <CropCard key={crop.id ?? i} crop={crop} rank={i + 1} lat={lat} lon={lon} />)}
+            </div>
+          </section>
+          {crops.length > 3 && (
+            <section className="mt-10" aria-labelledby="other-crops-title">
+              <h2 id="other-crops-title" className="mb-5 text-2xl font-semibold">Other crops</h2>
+              <div className="space-y-3">
+                {crops.slice(3).map((crop, i) => <CropCard key={crop.id ?? i} crop={crop} rank={i + 4} lat={lat} lon={lon} compact />)}
+              </div>
+            </section>
+          )}
+        </>
+      )}
+    </div>
+  );
 }
