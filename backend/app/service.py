@@ -219,6 +219,11 @@ def _build_recommendation(lat: float, lon: float) -> tuple[dict[str, Any], bool]
     """The response, and whether every source answered."""
     warnings: list[str] = []
     failed: list[str] = []
+    # Avoid nesting a thread pool inside the DEMO_MODE deadline worker. This
+    # keeps the synchronous ASGI test client and constrained free hosts from
+    # deadlocking while retaining parallel source fetches for normal requests.
+    if threading.current_thread().name.startswith("recommend_"):
+        return _build_recommendation_sequential(lat, lon, warnings, failed)
     with ThreadPoolExecutor(max_workers=4) as pool:
         county_job = pool.submit(_attempt, lambda: lookup_county(lat, lon), "County lookup (FCC)", warnings, failed)
         soil_job = pool.submit(_attempt, lambda: get_soil(lat, lon), "Soil data (USDA SSURGO)", warnings, failed)
@@ -267,6 +272,38 @@ def _build_recommendation(lat: float, lon: float) -> tuple[dict[str, Any], bool]
     }
     response["provenance"] = _provenance("live")
     response["confidence"] = _confidence(response)
+    return response, not failed
+
+
+def _build_recommendation_sequential(lat: float, lon: float, warnings: list[str],
+                                     failed: list[str]) -> tuple[dict[str, Any], bool]:
+    """Build a deadline-worker response without recursively creating pools."""
+    county = _attempt(lambda: lookup_county(lat, lon), "County lookup (FCC)", warnings, failed)
+    soil = _attempt(lambda: get_soil(lat, lon), "Soil data (USDA SSURGO)", warnings, failed)
+    weather = _attempt(lambda: get_daily_weather(lat, lon), "Weather data (NASA POWER)", warnings, failed)
+    station = fawn.nearest_station(lat, lon)
+    station_min = (_attempt(lambda: fawn.daily_min_c(station[0]["id"]), "Freeze records (FAWN station)", warnings, failed)
+                   if station else None)
+    if weather is not None and station_min is not None and station is not None:
+        weather = with_station_minimums(weather, station_min)
+    fcc_failed = "County lookup (FCC)" in failed
+    if county is None and not fcc_failed:
+        raise OutsideFlorida
+    if county is not None and county["state"] != "FL":
+        raise OutsideFlorida
+    if soil is not None and soil["soil_ph"] is None:
+        warnings.append("Soil survey reports no pH for this soil; the pH factor is skipped")
+    market = _attempt(lambda: load_market(county["county_fips"] if county else None),
+                      "Yield and price data (USDA NASS)", warnings, failed)
+    climate = _attempt(lambda: summarize(weather), "Climate summary", warnings, failed) if weather is not None else None
+    conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
+    conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
+    crops = rank_crops([score_crop(crop, soil, weather, market) for crop in load_crops().values()])
+    response = {"location": {"lat": lat, "lon": lon, "county": county["county"] if county else None,
+                              "county_fips": county["county_fips"] if county else None, "state": "FL"},
+                "conditions": conditions, "crops": crops, "warnings": warnings,
+                "scoring": scoring_rules(), "provenance": _provenance("live"),
+                "confidence": _confidence({"crops": crops, "warnings": warnings})}
     return response, not failed
 
 
