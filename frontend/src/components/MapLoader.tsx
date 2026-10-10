@@ -8,7 +8,7 @@ const FloridaMap = dynamic(() => import("./FloridaMap"), {
   loading: () => (
     <div
       className="flex h-full w-full items-center justify-center rounded-lg bg-sand text-ink"
-      role="status"
+      role="status" aria-live="polite"
     >
       Loading Florida map…
     </div>

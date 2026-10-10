@@ -12,7 +12,7 @@ import type { CropDetail } from "@/lib/types";
 
 export function CropDetailSkeleton() {
   return (
-    <div role="status" aria-label="Loading crop details" className="space-y-6">
+    <div role="status" aria-live="polite" aria-label="Loading crop details" className="space-y-6">
       <p className="text-soil">Loading crop details…</p>
       <div aria-hidden="true" className="animate-pulse space-y-6 motion-reduce:animate-none">
         <div className="h-28 rounded-xl bg-soil/10" />
@@ -78,11 +78,11 @@ export default function CropDetailClient() {
     return () => { active = false; };
   }, [id, lat, lon, valid, key, attempt]);
 
-  const back = <Link href={backUrl} className="inline-block text-field underline underline-offset-4">← All crops for this spot</Link>;
+  const back = <Link href={backUrl} className="inline-flex min-h-11 items-center text-field underline underline-offset-4">← All crops for this spot</Link>;
   if (!valid) return <div>{back}<p className="mt-6">Choose a valid Florida location from the home page to view this crop.</p></div>;
   if (state?.key !== key || state.attempt !== attempt) return <div>{back}<div className="mt-6"><CropDetailSkeleton /></div></div>;
   if (state.error) return (
-    <div>{back}<section role="alert" className="mt-6 rounded-xl border border-clay/25 bg-white/50 p-6">
+    <div>{back}<section role="alert" className="mt-6 rounded-xl border border-clay/25 bg-white/50 p-5 sm:p-6">
       <h1 className="text-2xl font-semibold">{state.error.status === 404 ? "We don't have that crop" : "Couldn’t load this crop"}</h1>
       {state.error.status !== 404 && <p className="mt-3">{state.error.message}</p>}
       <button type="button" onClick={() => setAttempt((n) => n + 1)} className="mt-5 rounded-lg bg-field px-5 py-3 font-semibold text-white">Try again</button>
@@ -104,22 +104,22 @@ export default function CropDetailClient() {
       <header className="rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
-            <h1 className="text-3xl font-semibold">{crop.name ?? "Unnamed crop"}</h1>
+            <h1 className="text-3xl font-semibold sm:text-4xl">{crop.name ?? "Unnamed crop"}</h1>
             <p className="mt-2 text-soil">{crop.location?.county ? `${crop.location.county} County, Florida` : "County: No data"}</p>
             <p className="mt-2 text-sm">{crop.season_label ?? "Season: No data"}</p>
           </div>
           <div className={`shrink-0 rounded-lg px-3 py-2 text-center ${tone ? badges[tone].style : "bg-sand text-soil"}`}>
             <p className="text-3xl font-bold">{crop.score ?? "—"}</p>
-            <p className="text-xs font-semibold">{tone ? badges[tone].label : "No data"}</p>
+            <p className="text-sm font-semibold">{tone ? badges[tone].label : "No data"}</p>
           </div>
         </div>
-        {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/15 px-3 py-1 text-sm font-semibold text-clay">Score capped at {crop.scoring?.critical_cap ?? 45}. {limitedText(crop.limited_by)}</p>}
+        {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/10 px-3 py-1 text-sm font-semibold text-clay">Score capped at {crop.scoring?.critical_cap ?? 45}. {limitedText(crop.limited_by)}</p>}
         <div id="ai-verdict" ref={setVerdictSlot} />
       </header>
       <FactorChart factors={crop.factors} details={crop.factor_details} weights={weightsFor(crop.scoring)} explanation={explanationFor(crop.scoring)} />
       <AiReport key={key} crop={crop} verdictSlot={verdictSlot} />
       <section aria-labelledby="track-record">
-        <h2 id="track-record" className="mb-4 text-2xl font-semibold">Local track record</h2>
+        <h2 id="track-record" className="mb-5 text-2xl font-semibold">Local track record</h2>
         <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <div className="rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">Average yield</dt><dd className="mt-2 text-xl font-semibold">{formatYield(crop.avg_yield)}</dd><dd className="mt-2 text-sm text-soil">{levelLabel(crop.avg_yield?.level)}</dd></div>
           <div className="rounded-xl bg-white/50 p-5"><dt className="text-sm text-soil">Price range</dt><dd className="mt-2 text-xl font-semibold">{formatPrice(crop.price)}</dd><dd className="mt-2 text-sm text-soil">{levelLabel(priceLevel)}</dd></div>
