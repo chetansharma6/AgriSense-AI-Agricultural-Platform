@@ -17,8 +17,9 @@ type InputCrop = Record<string, unknown> & {
 };
 type Report = { verdict: string; summary: string; pros: string[]; cons: string[]; first_steps: string[] };
 type Result = { report: Report; source: "ai" | "fallback" };
-// Cache promises as well as completed results so simultaneous clicks share one call.
-const cache = new Map<string, Promise<Result>>();
+// Persist only successful AI reports; share in-flight work without caching failures.
+const cache = new Map<string, Result>();
+const inFlight = new Map<string, Promise<Result>>();
 
 function object(value: unknown): Record<string, unknown> | null {
   return typeof value === "object" && value !== null && !Array.isArray(value) ? value as Record<string, unknown> : null;
@@ -55,10 +56,21 @@ function fallback(crop: InputCrop): Report {
   const factors = keys.map((key) => ({ key, value: crop.factors?.[key] ?? null }))
     .filter((factor): factor is { key: FactorKey; value: number } => factor.value !== null)
     .sort((a, b) => b.value - a.value);
-  const pros = factors.slice(0, 3).map((factor) => `${factorLabel(factor.key)} is one of the highest factors at ${factor.value}/100.`);
-  while (pros.length < 3) pros.push("More factor data is needed to identify another advantage.");
-  const cons = Array.isArray(crop.flags) ? crop.flags.filter((flag): flag is string => typeof flag === "string" && !!flag.trim()).slice(0, 3) : [];
-  while (cons.length < 3) cons.push("No additional crop flag was provided; check local conditions with UF/IFAS Extension.");
+  function factorLine(factor: { key: FactorKey; value: number }, description: string): string {
+    const detail = object(object(crop.factor_details)?.[factor.key]);
+    const unit = typeof detail?.unit === "string" ? ` ${detail.unit}` : "";
+    const actual = detail?.value == null ? "No data" : `${String(detail.value)}${unit}`;
+    const ideal = typeof detail?.ideal === "string" ? `${detail.ideal}${unit}` : "No data";
+    return `${factorLabel(factor.key)} is ${description} at ${factor.value}/100: ${actual} vs ideal ${ideal}.`;
+  }
+  const pros = factors.slice(0, 3).map((factor) => factorLine(factor, "one of the strongest factors"));
+  const flags = Array.isArray(crop.flags) ? crop.flags.filter((flag): flag is string => typeof flag === "string" && !!flag.trim()).map((flag) => flag.trim()) : [];
+  const cons = [...new Set(flags)].slice(0, 3);
+  for (const factor of [...factors].reverse().filter((factor) => factor.value < 75)) {
+    if (cons.length >= 3) break;
+    const line = factorLine(factor, "one of the weakest factors");
+    if (!cons.includes(line)) cons.push(line);
+  }
   const missing = keys.filter((key) => crop.factors?.[key] == null);
   return {
     verdict: crop.score === null ? `${crop.name} has no suitability score available.` : `${crop.name} is ${label} with a suitability score of ${crop.score}/100.`,
@@ -68,25 +80,64 @@ function fallback(crop: InputCrop): Report {
   };
 }
 
+function safeMessage(value: unknown): string {
+  let message = value instanceof Error ? value.message : "Unknown error";
+  const key = process.env.ANTHROPIC_API_KEY?.trim();
+  if (key) message = message.split(key).join("[redacted]");
+  return message.replace(/sk-ant-[A-Za-z0-9_-]+/g, "[redacted]");
+}
+
+function parseReport(text: string): unknown {
+  const stripped = text.trim().replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "");
+  try { return JSON.parse(stripped); } catch {
+    // Recover the first balanced object, respecting braces inside JSON strings.
+    const start = stripped.indexOf("{");
+    let depth = 0;
+    let quoted = false;
+    let escaped = false;
+    for (let i = start; start >= 0 && i < stripped.length; i++) {
+      const char = stripped[i];
+      if (quoted) {
+        if (escaped) escaped = false;
+        else if (char === "\\") escaped = true;
+        else if (char === '"') quoted = false;
+      } else if (char === '"') quoted = true;
+      else if (char === "{") depth++;
+      else if (char === "}" && --depth === 0) return JSON.parse(stripped.slice(start, i + 1));
+    }
+    throw new SyntaxError("No complete JSON report object found");
+  }
+}
+
 async function generate(crop: InputCrop): Promise<Result> {
   const local: Result = { report: fallback(crop), source: "fallback" };
-  if (!process.env.ANTHROPIC_API_KEY?.trim()) return local;
+  if (!process.env.ANTHROPIC_API_KEY?.trim()) {
+    console.log("[report] source=fallback reason=no key");
+    return local;
+  }
+  const model = process.env.ANTHROPIC_MODEL ?? "claude-haiku-5-5";
+  let phase = "api";
   try {
     const client = new Anthropic();
     const message = await client.messages.create({
-      model: process.env.ANTHROPIC_MODEL ?? "claude-haiku-5-5",
-      max_tokens: 800,
-      temperature: 0.3,
-      system: SYSTEM_PROMPT,
+      // The configured model rejects the deprecated temperature parameter.
+      model, max_tokens: 800, thinking: { type: "disabled" }, system: SYSTEM_PROMPT,
       messages: [{ role: "user", content: `${JSON.stringify(crop)}\n\n${INSTRUCTION}` }],
     }, { timeout: 20_000, maxRetries: 0 });
-    const text = message.content.filter((block) => block.type === "text").map((block) => block.text).join("\n").trim();
-    const parsed: unknown = JSON.parse(text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, ""));
-    if (validReport(parsed, crop.name)) return { report: parsed, source: "ai" };
-  } catch {
-    // Do not expose provider errors or credentials; use the local report instead.
+    console.log(`[report] response stop_reason=${message.stop_reason} text_blocks=${message.content.filter((block) => block.type === "text").length} output_tokens=${message.usage.output_tokens}`);
+    phase = "parse";
+    const text = message.content.filter((block) => block.type === "text").map((block) => block.text).join("\n");
+    const parsed = parseReport(text);
+    if (!validReport(parsed, crop.name)) throw new Error("Report JSON does not match the required fields or verdict format");
+    console.log("[report] source=ai reason=valid report");
+    return { report: parsed, source: "ai" };
+  } catch (error) {
+    const status = object(error)?.status;
+    const type = error instanceof Error ? error.name : "UnknownError";
+    console.error(`[report] failure ${JSON.stringify({ type, status: typeof status === "number" ? status : null, message: safeMessage(error), ...(status === 404 ? { model } : {}) })}`);
+    console.log(`[report] source=fallback reason=${phase} error${typeof status === "number" ? ` ${status}` : ""}`);
+    return local;
   }
-  return local;
 }
 
 export async function POST(request: Request): Promise<Response> {
@@ -96,7 +147,18 @@ export async function POST(request: Request): Promise<Response> {
   if (!validCrop(crop)) return Response.json({ detail: "crop must include id, name, score and all six factors (values may be null)" }, { status: 400 });
   const location = object(crop.location);
   const key = `${crop.id}:${location?.lat ?? "unknown"}:${location?.lon ?? "unknown"}`;
-  let pending = cache.get(key);
-  if (!pending) { pending = generate(crop); cache.set(key, pending); }
+  const cached = cache.get(key);
+  if (cached) {
+    console.log("[report] source=ai reason=cache hit");
+    return Response.json(cached);
+  }
+  let pending = inFlight.get(key);
+  if (!pending) {
+    pending = generate(crop).then((result) => {
+      if (result.source === "ai") cache.set(key, result);
+      return result;
+    }).finally(() => inFlight.delete(key));
+    inFlight.set(key, pending);
+  }
   return Response.json(await pending);
 }

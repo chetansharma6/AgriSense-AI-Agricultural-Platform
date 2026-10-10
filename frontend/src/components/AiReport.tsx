@@ -86,7 +86,7 @@ export default function AiReport({ crop, verdictSlot }: { crop: CropDetail; verd
             {result.source === "fallback" && <p className="mt-5 text-xs text-soil">Summary generated from the scores (AI unavailable)</p>}
           </div>
         )}
-        <p className="mt-5 text-xs leading-relaxed text-soil">Written by AI from the numbers on this page. Scores are calculated, not generated.</p>
+        {result?.source === "ai" && <p className="mt-5 text-xs leading-relaxed text-soil">Written by AI from the numbers on this page. Scores are calculated, not generated.</p>}
       </section>
     </>
   );
