@@ -1,6 +1,7 @@
 """DEMO_MODE serves deterministic saved responses for the public demo."""
 
 import json
+import time
 from typing import Any
 
 import pytest
@@ -22,6 +23,7 @@ def saved_demo(farm: str) -> dict[str, Any]:
 @pytest.fixture
 def demo(monkeypatch: pytest.MonkeyPatch) -> pytest.MonkeyPatch:
     """Enable deterministic demo mode."""
+    service.clear_response_cache()
     monkeypatch.setattr(config, "DEMO_MODE", True)
     monkeypatch.setattr(config, "DEMO_DEADLINE_S", DEADLINE_S)
     monkeypatch.setattr(service, "lookup_county", lambda lat, lon: COUNTY)
@@ -46,9 +48,11 @@ def test_nearby_location_uses_nearest_saved_demo(demo: pytest.MonkeyPatch) -> No
     assert body["location"] == saved["location"]  # the farm the data is really for
 
 
-def test_far_location_is_rejected_in_demo_mode(demo: pytest.MonkeyPatch) -> None:
-    with pytest.raises(service.SourcesTooSlow):
-        service.recommend(**ORLANDO)
+def test_far_location_gets_live_response_in_demo_mode(demo: pytest.MonkeyPatch) -> None:
+    body = service.recommend(**ORLANDO)
+    assert len(body["crops"]) == 13
+    assert body["provenance"]["mode"] == "live"
+    assert body["location"]["lat"] == ORLANDO["lat"]
 
 
 def test_failed_source_near_demo_farm_falls_back(demo: pytest.MonkeyPatch) -> None:
@@ -56,10 +60,45 @@ def test_failed_source_near_demo_farm_falls_back(demo: pytest.MonkeyPatch) -> No
     assert body["warnings"][0].startswith("Showing cached data for Hastings")
 
 
-def test_far_location_does_not_call_live_sources(demo: pytest.MonkeyPatch) -> None:
-    demo.setattr(service, "get_soil", lambda *_: pytest.fail("live source called"))
-    with pytest.raises(service.SourcesTooSlow):
-        service.recommend(**ORLANDO)
+def test_failed_source_far_from_demo_returns_partial_response(demo: pytest.MonkeyPatch) -> None:
+    demo.setattr(service, "get_soil", lambda *_: (_ for _ in ()).throw(TimeoutError("soil down")))
+    body = service.recommend(**ORLANDO)
+    assert len(body["crops"]) == 13
+    assert body["conditions"]["soil_ph"] is None
+    assert any("SSURGO" in warning for warning in body["warnings"])
+
+
+def test_slow_source_far_from_demo_returns_before_deadline(demo: pytest.MonkeyPatch) -> None:
+    calls = 0
+
+    def slow_weather(*_: float) -> Any:
+        nonlocal calls
+        calls += 1
+        time.sleep(1)
+        return fake_weather(0, 0)
+
+    demo.setattr(service, "get_daily_weather", slow_weather)
+    started = time.perf_counter()
+    body = service.recommend(**ORLANDO)
+    assert time.perf_counter() - started < DEADLINE_S + 0.4
+    assert len(body["crops"]) == 13
+    assert body["conditions"]["annual_precip_mm"] is None
+    assert any("NASA POWER" in warning for warning in body["warnings"])
+    assert calls == 1
+
+
+def test_incomplete_far_response_is_retried_not_cached(demo: pytest.MonkeyPatch) -> None:
+    calls = 0
+
+    def broken_soil(*_: float) -> Any:
+        nonlocal calls
+        calls += 1
+        raise TimeoutError("soil down")
+
+    demo.setattr(service, "get_soil", broken_soil)
+    service.recommend(**ORLANDO)
+    service.recommend(**ORLANDO)
+    assert calls == 2
 
 
 def test_nearby_location_is_deterministic(demo: pytest.MonkeyPatch) -> None:
@@ -76,8 +115,8 @@ def test_crop_detail_falls_back_too(demo: pytest.MonkeyPatch) -> None:
 
 
 def test_far_non_demo_location_is_unavailable(demo: pytest.MonkeyPatch) -> None:
-    with pytest.raises(service.SourcesTooSlow):
-        service.recommend(30.9, -84.0)
+    body = service.recommend(30.9, -84.0)
+    assert len(body["crops"]) == 13
 
 
 def test_no_deadline_outside_demo_mode(demo: pytest.MonkeyPatch) -> None:
