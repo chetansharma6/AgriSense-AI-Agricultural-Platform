@@ -37,6 +37,18 @@ The frontend can use mock data when `NEXT_PUBLIC_USE_MOCKS=true`. With backend `
 ## Limits
 
 Public mapped soil and gridded climate data are not on-field measurements. County and state records are not individual farm yields or sale prices. The score has not been validated as a predictor of farm outcomes and does not model profit, hurricanes, pests, labor, or irrigation infrastructure comprehensively. Review missing-data warnings, confirm conditions with soil tests, and consult county UF/IFAS Extension before planting.
+
+## Judge-facing technical claims
+
+The one-sentence innovation is: AgriSense converts a Florida location into a transparent crop shortlist by joining several public agricultural datasets with explicit crop and season rules, then uses AI only to explain the resulting numbers.
+
+The parts that require real implementation are the provider adapters and caches, climate-window aggregation, light-versus-hard freeze handling, Everglades muck rules, county/state market fallbacks, response provenance, and partial-result behavior. These are code paths rather than presentation claims and are exercised by mocked provider tests and deterministic demo fixtures.
+
+Trust is bounded and specific. The scoring weights and formulas are source-visible, each factor is returned with its value and ideal, missing factors remain null and are excluded from the weighted mean, and critical low factors can cap a result. Response tests check the contract, score ranges, ordering, crop count, and demo consistency. This demonstrates reproducibility and explainability; it does not demonstrate that the index predicts yield, profit, or farm success.
+
+When a provider fails, its related values remain unavailable, a warning and failed-source status are returned, and supported factors can still be scored. In `DEMO_MODE`, exact official demo coordinates use committed responses immediately; nearby demo fallback is explicitly labeled. An arbitrary live location is not silently replaced with a distant farm. A slow live request may still return an incomplete response or, when no bounded response is possible, HTTP 503.
+
+The AI report receives calculated crop data and is validated for its expected shape. Provider failure, timeout, missing credentials, or invalid AI output uses the local deterministic report instead. The AI path does not calculate or rewrite suitability scores. The repository does not establish production uptime, adversarial prompt robustness beyond input validation, provider data freshness guarantees, or performance under concurrent load.
 ## How to judge a result
 
 Suitability is calculated by the backend from the six displayed factors. The
