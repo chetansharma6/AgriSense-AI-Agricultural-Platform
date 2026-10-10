@@ -53,7 +53,7 @@ export default function CropCard({ crop, rank, lat, lon, compact = false }: Crop
         })}
       </div>
       <p className="mt-5 text-sm leading-relaxed text-soil">Price: {formatPrice(crop.price)} · Yield: {formatYield(crop.avg_yield)}</p>
-      {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/15 px-3 py-1 text-sm font-semibold text-clay">{limitedText(crop.limited_by)}</p>}
+      {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/10 px-3 py-1 text-sm font-semibold text-clay">{limitedText(crop.limited_by)}</p>}
       {crop.flags?.[0] && !crop.flags[0].startsWith("Limited by") && <p className="mt-3 inline-block rounded-full bg-sun/20 px-3 py-1 text-sm text-ink">{crop.flags[0]}</p>}
     </article>
   );

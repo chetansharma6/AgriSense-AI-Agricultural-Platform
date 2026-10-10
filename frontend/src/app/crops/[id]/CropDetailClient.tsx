@@ -113,7 +113,7 @@ export default function CropDetailClient() {
             <p className="text-sm font-semibold">{tone ? badges[tone].label : "No data"}</p>
           </div>
         </div>
-        {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/15 px-3 py-1 text-sm font-semibold text-clay">Score capped at {crop.scoring?.critical_cap ?? 45}. {limitedText(crop.limited_by)}</p>}
+        {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/10 px-3 py-1 text-sm font-semibold text-clay">Score capped at {crop.scoring?.critical_cap ?? 45}. {limitedText(crop.limited_by)}</p>}
         <div id="ai-verdict" ref={setVerdictSlot} />
       </header>
       <FactorChart factors={crop.factors} details={crop.factor_details} weights={weightsFor(crop.scoring)} explanation={explanationFor(crop.scoring)} />

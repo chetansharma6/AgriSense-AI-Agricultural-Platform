@@ -56,3 +56,12 @@ body {
   display: inline-block;
   padding-block: 0.85rem;
 }
+
+.leaflet-container .leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-ink);
+}
+
+.leaflet-container .leaflet-control-attribution a {
+  color: #005a80;
+}
