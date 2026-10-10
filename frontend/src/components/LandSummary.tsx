@@ -41,6 +41,7 @@ export default function LandSummary({ response, place }: { response: RecommendRe
   const otherWarnings = response.warnings?.filter((warning) => warning !== cached) ?? [];
   return (
     <div>
+      {response.provenance?.mode === "demo" && <p className="mb-4 text-sm text-soil">Saved demo recommendations; soil and climate are not live measurements for your property.</p>}
       {cached && <p role="status" aria-live="polite" className="mb-4 rounded-lg border border-sun/60 bg-sun/20 p-4 font-semibold">{formatDisplayText(cached)}</p>}
       <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="land-summary-title">
         <h2 id="land-summary-title" className="section-title">Your land at a glance</h2>

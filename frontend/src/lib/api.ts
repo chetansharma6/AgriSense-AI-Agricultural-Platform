@@ -19,14 +19,7 @@ function backendUnavailable(error: unknown): boolean {
 }
 
 function fallbackRecommendations(lat: number, lon: number, acres?: number): RecommendResponse {
-  let response: RecommendResponse;
-  try {
-    response = getMockRecommend(lat, lon, acres);
-  } catch {
-    // Saved acreage variants are intentionally limited. A connection outage
-    // should still provide useful crop data rather than another error screen.
-    response = getMockRecommend(lat, lon);
-  }
+  const response = getMockRecommend(lat, lon, acres);
   response.warnings = [fallbackWarning, ...(response.warnings ?? [])];
   return response;
 }
@@ -101,11 +94,7 @@ export async function getCropDetail(id: string, lat: number, lon: number, acres?
     return await request<CropDetail>(`crops/${encodeURIComponent(id)}`, lat, lon, acres);
   } catch (error) {
     if (backendUnavailable(error)) {
-      try {
-        return getMockCropDetail(id, lat, lon, acres);
-      } catch {
-        return getMockCropDetail(id, lat, lon);
-      }
+      return getMockCropDetail(id, lat, lon, acres);
     }
     throw error;
   }

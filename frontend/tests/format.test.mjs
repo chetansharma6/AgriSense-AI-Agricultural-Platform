@@ -9,6 +9,14 @@ const source = fs.readFileSync(new URL('../src/lib/format.ts', import.meta.url),
 vm.runInNewContext(ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText, context);
 const f = context.exports;
 
+test('acreage in notes and summaries preserves manually entered fractional lots', () => {
+ for (const acres of [0.1, 0.25, 0.5, 2.7, 1000]) {
+  const text = f.formatDisplayText(`Growing area: ${acres} acres.`);
+  assert.equal(text, `Growing area: ${acres.toLocaleString('en-US')} acres.`);
+  assert.equal(f.formatDisplayText(text), text);
+ }
+});
+
 test('whole-number units and yields preserve zero and missing data', () => {
  assert.equal(f.formatDays(271.6), '272 days');
  assert.equal(f.formatDays(365), '365 days');

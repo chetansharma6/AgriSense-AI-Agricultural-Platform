@@ -479,6 +479,7 @@ def crop_detail(crop_id: str, lat: float, lon: float, acres: float | None = None
         "conditions": result["conditions"],
         "location": result["location"],
         "scoring": result["scoring"],
+        "provenance": result.get("provenance"),
     }
 
 

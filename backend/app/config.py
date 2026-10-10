@@ -35,6 +35,10 @@ def _explicit_origins(raw: str) -> list[str]:
 
 
 CORS_ORIGINS = _explicit_origins(os.getenv("CORS_ORIGINS", "http://localhost:3000"))
+# Keep the production website explicit while retaining configured local/preview origins.
+PRODUCTION_ORIGIN = "https://agrisense-ai-cyan.vercel.app"
+if PRODUCTION_ORIGIN not in CORS_ORIGINS:
+    CORS_ORIGINS.append(PRODUCTION_ORIGIN)
 # Origins are explicit by design; never broaden production access to every
 # deployment on a shared hosting domain such as *.vercel.app.
 CORS_ORIGIN_REGEX = None
