@@ -2,6 +2,8 @@
   {
     "id": "peanut",
     "name": "Peanut",
+    "nass_commodity": "PEANUTS",
+    "nass_class": null,
     "nass": {
       "acres_descs": [
         "PEANUTS - ACRES HARVESTED"
@@ -9,30 +11,38 @@
       "yield_desc": "PEANUTS - YIELD, MEASURED IN LB / ACRE",
       "price_desc": "PEANUTS - PRICE RECEIVED, MEASURED IN $ / LB"
     },
-    "ph": [
-      5.8,
-      6.5
-    ],
-    "drainage": [
-      "Somewhat excessively drained",
-      "Moderately well drained"
-    ],
-    "season_temp_c": [
-      22,
-      30
-    ],
-    "max_freeze_days": 0,
-    "rain_mm_per_month": [
-      90,
-      150
-    ],
-    "muck_suitable": false,
     "fl_windows": [
       {
         "label": "Summer: plant Apr-May, harvest Aug-Sep",
         "start": "04-20",
-        "end": "09-10"
+        "end": "09-10",
+        "months": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
       }
+    ],
+    "ph_min": 4.5,
+    "ph_ideal_min": 5.8,
+    "ph_ideal_max": 6.5,
+    "ph_max": 7.8,
+    "drainage": [
+      "Somewhat excessively drained",
+      "Moderately well drained"
+    ],
+    "muck_suitable": false,
+    "temp_min_c": 16,
+    "temp_ideal_min_c": 22,
+    "temp_ideal_max_c": 30,
+    "temp_max_c": 35,
+    "max_freeze_days": 0,
+    "rain_mm_per_month": [
+      90,
+      150
     ],
     "general_guidance": "Peanuts do best on well-drained sandy or loamy sand soils in North Florida. Rotate with grasses such as bahiagrass or corn to limit diseases and nematodes, and avoid planting peanuts in the same field more than one year in three. Peanuts need calcium in the pegging zone, so soil-test and apply gypsum when calcium is low. Inoculate seed with rhizobia in fields without a recent peanut history.",
     "extension_links": [
@@ -56,11 +66,15 @@
         "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
         "url": "https://edis.ifas.ufl.edu/publication/SS163"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "needs_review": false
   },
   {
     "id": "cotton",
     "name": "Cotton",
+    "nass_commodity": "COTTON",
+    "nass_class": null,
     "nass": {
       "acres_descs": [
         "COTTON, UPLAND - ACRES HARVESTED"
@@ -68,30 +82,39 @@
       "yield_desc": "COTTON, UPLAND - YIELD, MEASURED IN LB / ACRE",
       "price_desc": "COTTON, UPLAND - PRICE RECEIVED, MEASURED IN $ / LB"
     },
-    "ph": [
-      5.8,
-      6.5
-    ],
-    "drainage": [
-      "Somewhat excessively drained",
-      "Moderately well drained"
-    ],
-    "season_temp_c": [
-      21,
-      30
-    ],
-    "max_freeze_days": 0,
-    "rain_mm_per_month": [
-      90,
-      150
-    ],
-    "muck_suitable": false,
     "fl_windows": [
       {
         "label": "Summer: plant late Apr-May, harvest Sep-Oct",
         "start": "04-25",
-        "end": "10-15"
+        "end": "10-15",
+        "months": [
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
       }
+    ],
+    "ph_min": 4.5,
+    "ph_ideal_min": 5.8,
+    "ph_ideal_max": 6.5,
+    "ph_max": 8.0,
+    "drainage": [
+      "Somewhat excessively drained",
+      "Moderately well drained"
+    ],
+    "muck_suitable": false,
+    "temp_min_c": 15,
+    "temp_ideal_min_c": 21,
+    "temp_ideal_max_c": 30,
+    "temp_max_c": 35,
+    "max_freeze_days": 0,
+    "rain_mm_per_month": [
+      90,
+      150
     ],
     "general_guidance": "Cotton is a North Florida crop planted from late April into early June once soils are warm. Most Florida soils have a compacted layer, so subsoiling or strip tillage helps roots. Plant seed shallow (1/2 to 1 inch), rotate with peanuts or grasses to manage nematodes, and use growth regulators to control plant height on fertile ground.",
     "extension_links": [
@@ -111,11 +134,15 @@
         "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
         "url": "https://edis.ifas.ufl.edu/publication/SS163"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "needs_review": false
   },
   {
     "id": "field_corn",
     "name": "Field corn",
+    "nass_commodity": "CORN",
+    "nass_class": "GRAIN",
     "nass": {
       "acres_descs": [
         "CORN, GRAIN - ACRES HARVESTED"
@@ -123,30 +150,37 @@
       "yield_desc": "CORN, GRAIN - YIELD, MEASURED IN BU / ACRE",
       "price_desc": "CORN, GRAIN - PRICE RECEIVED, MEASURED IN $ / BU"
     },
-    "ph": [
-      5.8,
-      6.5
-    ],
-    "drainage": [
-      "Well drained",
-      "Somewhat poorly drained"
-    ],
-    "season_temp_c": [
-      18,
-      28
-    ],
-    "max_freeze_days": 1,
-    "rain_mm_per_month": [
-      100,
-      160
-    ],
-    "muck_suitable": false,
     "fl_windows": [
       {
         "label": "Spring: plant Mar, harvest Jul-Aug",
         "start": "03-01",
-        "end": "07-20"
+        "end": "07-20",
+        "months": [
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
       }
+    ],
+    "ph_min": 4.5,
+    "ph_ideal_min": 5.8,
+    "ph_ideal_max": 6.5,
+    "ph_max": 8.0,
+    "drainage": [
+      "Well drained",
+      "Somewhat poorly drained"
+    ],
+    "muck_suitable": false,
+    "temp_min_c": 12,
+    "temp_ideal_min_c": 18,
+    "temp_ideal_max_c": 28,
+    "temp_max_c": 33,
+    "max_freeze_days": 1,
+    "rain_mm_per_month": [
+      100,
+      160
     ],
     "general_guidance": "Field corn is planted in early spring in North and Central Florida; waiting until after March 1 reduces freeze risk. Yields on sandy soils depend heavily on irrigation and split nitrogen applications, since nitrogen leaches quickly. Rotating with peanuts, cotton or soybeans helps break nematode and disease cycles.",
     "extension_links": [
@@ -166,11 +200,15 @@
         "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
         "url": "https://edis.ifas.ufl.edu/publication/SS163"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "needs_review": false
   },
   {
     "id": "soybean",
     "name": "Soybean",
+    "nass_commodity": "SOYBEANS",
+    "nass_class": null,
     "nass": {
       "acres_descs": [
         "SOYBEANS - ACRES HARVESTED"
@@ -178,30 +216,38 @@
       "yield_desc": "SOYBEANS - YIELD, MEASURED IN BU / ACRE",
       "price_desc": "SOYBEANS - PRICE RECEIVED, MEASURED IN $ / BU"
     },
-    "ph": [
-      6.0,
-      6.5
-    ],
-    "drainage": [
-      "Well drained",
-      "Somewhat poorly drained"
-    ],
-    "season_temp_c": [
-      20,
-      30
-    ],
-    "max_freeze_days": 0,
-    "rain_mm_per_month": [
-      90,
-      150
-    ],
-    "muck_suitable": false,
     "fl_windows": [
       {
         "label": "Summer: plant May-Jun, harvest Oct-Nov",
         "start": "05-15",
-        "end": "10-31"
+        "end": "10-31",
+        "months": [
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
       }
+    ],
+    "ph_min": 4.8,
+    "ph_ideal_min": 6.0,
+    "ph_ideal_max": 6.5,
+    "ph_max": 8.0,
+    "drainage": [
+      "Well drained",
+      "Somewhat poorly drained"
+    ],
+    "muck_suitable": false,
+    "temp_min_c": 14,
+    "temp_ideal_min_c": 20,
+    "temp_ideal_max_c": 30,
+    "temp_max_c": 35,
+    "max_freeze_days": 0,
+    "rain_mm_per_month": [
+      90,
+      150
     ],
     "general_guidance": "Soybeans are a summer crop in North Florida, often following a winter grain. Choose varieties adapted to Florida day length and planting date, inoculate seed in fields without recent soybeans, and scout for soybean rust and nematodes. Irrigation markedly raises and stabilizes yields on sandy soils.",
     "extension_links": [
@@ -221,11 +267,15 @@
         "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
         "url": "https://edis.ifas.ufl.edu/publication/SS163"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "needs_review": false
   },
   {
     "id": "sugarcane",
     "name": "Sugarcane",
+    "nass_commodity": "SUGARCANE",
+    "nass_class": null,
     "nass": {
       "acres_descs": [
         "SUGARCANE, SUGAR - ACRES HARVESTED"
@@ -233,30 +283,44 @@
       "yield_desc": "SUGARCANE, SUGAR - YIELD, MEASURED IN TONS / ACRE",
       "price_desc": "SUGARCANE, SUGAR - PRICE RECEIVED, MEASURED IN $ / TON"
     },
-    "ph": [
-      5.5,
-      7.5
-    ],
-    "drainage": [
-      "Moderately well drained",
-      "Very poorly drained"
-    ],
-    "season_temp_c": [
-      22,
-      30
-    ],
-    "max_freeze_days": 2,
-    "rain_mm_per_month": [
-      90,
-      160
-    ],
-    "muck_suitable": true,
     "fl_windows": [
       {
         "label": "Year-round: plant Sep-Jan, harvest Oct-Mar of the next season",
         "start": "01-01",
-        "end": "12-31"
+        "end": "12-31",
+        "months": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
       }
+    ],
+    "ph_min": 4.5,
+    "ph_ideal_min": 5.5,
+    "ph_ideal_max": 7.5,
+    "ph_max": 8.5,
+    "drainage": [
+      "Moderately well drained",
+      "Very poorly drained"
+    ],
+    "muck_suitable": true,
+    "temp_min_c": 15,
+    "temp_ideal_min_c": 22,
+    "temp_ideal_max_c": 30,
+    "temp_max_c": 35,
+    "max_freeze_days": 2,
+    "rain_mm_per_month": [
+      90,
+      160
     ],
     "general_guidance": "Florida sugarcane is concentrated on the organic muck soils south of Lake Okeechobee, with some acreage on nearby sands. It is a multi-year crop: one planting is usually harvested for several seasons. Growers manage the water table to supply water and slow muck subsidence, and fertilizer needs on muck differ from sandy soils, so follow soil tests. A sugar mill within hauling distance is essential.",
     "extension_links": [
@@ -276,11 +340,15 @@
         "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
         "url": "https://edis.ifas.ufl.edu/publication/SS163"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates. Season temperature is the 12-month mean; freeze tolerance (2 days) is an estimate for a ratoon crop.",
+    "needs_review": true
   },
   {
     "id": "tomato",
     "name": "Tomato",
+    "nass_commodity": "TOMATOES",
+    "nass_class": null,
     "nass": {
       "acres_descs": [
         "TOMATOES, IN THE OPEN - ACRES HARVESTED"
@@ -288,40 +356,62 @@
       "yield_desc": "TOMATOES, IN THE OPEN - YIELD, MEASURED IN CWT / ACRE",
       "price_desc": "TOMATOES, FRESH MARKET - PRICE RECEIVED, MEASURED IN $ / CWT"
     },
-    "ph": [
-      6.0,
-      6.8
-    ],
-    "drainage": [
-      "Somewhat excessively drained",
-      "Somewhat poorly drained"
-    ],
-    "season_temp_c": [
-      18,
-      27
-    ],
-    "max_freeze_days": 0,
-    "rain_mm_per_month": [
-      60,
-      130
-    ],
-    "muck_suitable": false,
     "fl_windows": [
       {
         "label": "Fall: plant Aug-Sep, harvest Nov-Dec",
         "start": "08-20",
-        "end": "12-15"
+        "end": "12-15",
+        "months": [
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
       },
       {
         "label": "Winter: plant Oct-Nov, harvest Jan-Mar",
         "start": "10-20",
-        "end": "03-15"
+        "end": "03-15",
+        "months": [
+          10,
+          11,
+          12,
+          1,
+          2,
+          3
+        ]
       },
       {
         "label": "Spring: plant Feb-Mar, harvest May-Jun",
         "start": "02-15",
-        "end": "06-10"
+        "end": "06-10",
+        "months": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
       }
+    ],
+    "ph_min": 4.8,
+    "ph_ideal_min": 6.0,
+    "ph_ideal_max": 6.8,
+    "ph_max": 8.0,
+    "drainage": [
+      "Somewhat excessively drained",
+      "Somewhat poorly drained"
+    ],
+    "muck_suitable": false,
+    "temp_min_c": 12,
+    "temp_ideal_min_c": 18,
+    "temp_ideal_max_c": 27,
+    "temp_max_c": 32,
+    "max_freeze_days": 0,
+    "rain_mm_per_month": [
+      60,
+      130
     ],
     "general_guidance": "Florida fresh-market tomatoes are grown on raised beds with plastic mulch and drip or seepage irrigation, mostly in fall, winter and spring; summer heat and rain bring disease. Stake and tie plants, keep fertility steady through the drip line, and scout often for whiteflies and the viruses they carry. Expect high input and labor costs, so arrange a buyer before planting.",
     "extension_links": [
@@ -329,11 +419,15 @@
         "title": "Chapter 18. Tomato Production",
         "url": "https://edis.ifas.ufl.edu/publication/CV137"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "needs_review": false
   },
   {
     "id": "watermelon",
     "name": "Watermelon",
+    "nass_commodity": "MELONS",
+    "nass_class": "WATERMELON",
     "nass": {
       "acres_descs": [
         "MELONS, WATERMELON - ACRES HARVESTED"
@@ -341,35 +435,60 @@
       "yield_desc": "MELONS, WATERMELON - YIELD, MEASURED IN CWT / ACRE",
       "price_desc": "MELONS, WATERMELON - PRICE RECEIVED, MEASURED IN $ / CWT"
     },
-    "ph": [
-      5.5,
-      6.8
-    ],
-    "drainage": [
-      "Somewhat excessively drained",
-      "Moderately well drained"
-    ],
-    "season_temp_c": [
-      21,
-      30
-    ],
-    "max_freeze_days": 0,
-    "rain_mm_per_month": [
-      60,
-      130
-    ],
-    "muck_suitable": false,
     "fl_windows": [
       {
         "label": "Spring: plant Feb-Mar, harvest May-Jun",
         "start": "02-20",
-        "end": "06-15"
+        "end": "06-15",
+        "months": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
       },
       {
         "label": "Fall: plant Aug-Sep, harvest Nov",
         "start": "08-15",
-        "end": "11-30"
+        "end": "11-30",
+        "months": [
+          8,
+          9,
+          10,
+          11
+        ]
+      },
+      {
+        "label": "Winter (South FL): plant Dec-Jan, harvest Mar-Apr",
+        "start": "12-01",
+        "end": "04-15",
+        "months": [
+          12,
+          1,
+          2,
+          3,
+          4
+        ]
       }
+    ],
+    "ph_min": 4.5,
+    "ph_ideal_min": 5.5,
+    "ph_ideal_max": 6.8,
+    "ph_max": 8.0,
+    "drainage": [
+      "Somewhat excessively drained",
+      "Moderately well drained"
+    ],
+    "muck_suitable": false,
+    "temp_min_c": 15,
+    "temp_ideal_min_c": 21,
+    "temp_ideal_max_c": 30,
+    "temp_max_c": 35,
+    "max_freeze_days": 0,
+    "rain_mm_per_month": [
+      60,
+      130
     ],
     "general_guidance": "Watermelons favor well-drained sandy soils and warm weather. Most Florida acreage is planted in late winter for May-June harvest, ahead of other states. Use raised beds with plastic mulch and drip irrigation, plan for pollinizer plants with seedless varieties, and rotate fields to reduce Fusarium wilt.",
     "extension_links": [
@@ -377,11 +496,15 @@
         "title": "Chapter 7. Cucurbit Production",
         "url": "https://edis.ifas.ufl.edu/publication/CV123"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "needs_review": false
   },
   {
     "id": "strawberry",
     "name": "Strawberry",
+    "nass_commodity": "STRAWBERRIES",
+    "nass_class": null,
     "nass": {
       "acres_descs": [
         "STRAWBERRIES - ACRES HARVESTED",
@@ -390,30 +513,38 @@
       "yield_desc": "STRAWBERRIES - YIELD, MEASURED IN CWT / ACRE",
       "price_desc": "STRAWBERRIES, FRESH MARKET - PRICE RECEIVED, MEASURED IN $ / CWT"
     },
-    "ph": [
-      5.5,
-      6.5
-    ],
-    "drainage": [
-      "Somewhat excessively drained",
-      "Somewhat poorly drained"
-    ],
-    "season_temp_c": [
-      13,
-      22
-    ],
-    "max_freeze_days": 3,
-    "rain_mm_per_month": [
-      50,
-      110
-    ],
-    "muck_suitable": false,
     "fl_windows": [
       {
         "label": "Winter: plant Oct, harvest Dec-Mar",
         "start": "10-01",
-        "end": "03-31"
+        "end": "03-31",
+        "months": [
+          10,
+          11,
+          12,
+          1,
+          2,
+          3
+        ]
       }
+    ],
+    "ph_min": 4.3,
+    "ph_ideal_min": 5.5,
+    "ph_ideal_max": 6.5,
+    "ph_max": 7.5,
+    "drainage": [
+      "Somewhat excessively drained",
+      "Somewhat poorly drained"
+    ],
+    "muck_suitable": false,
+    "temp_min_c": 8,
+    "temp_ideal_min_c": 13,
+    "temp_ideal_max_c": 22,
+    "temp_max_c": 27,
+    "max_freeze_days": 3,
+    "rain_mm_per_month": [
+      50,
+      110
     ],
     "general_guidance": "Florida strawberries are planted as bare-root or plug transplants in October on plastic-mulched beds and picked from December to March, centered on the Plant City area. Overhead irrigation is used to establish transplants and to protect blooms and fruit on freezing nights. Picking is hand labor several times a week, so plan labor and market access early.",
     "extension_links": [
@@ -421,11 +552,15 @@
         "title": "Chapter 16. Strawberry Production",
         "url": "https://edis.ifas.ufl.edu/publication/CV134"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates. max_freeze_days 3 assumes overhead-irrigation freeze protection.",
+    "needs_review": true
   },
   {
     "id": "potato",
     "name": "Potato",
+    "nass_commodity": "POTATOES",
+    "nass_class": null,
     "nass": {
       "acres_descs": [
         "POTATOES - ACRES HARVESTED"
@@ -433,35 +568,49 @@
       "yield_desc": "POTATOES - YIELD, MEASURED IN CWT / ACRE",
       "price_desc": "POTATOES - PRICE RECEIVED, MEASURED IN $ / CWT"
     },
-    "ph": [
-      5.0,
-      6.0
-    ],
-    "drainage": [
-      "Well drained",
-      "Somewhat poorly drained"
-    ],
-    "season_temp_c": [
-      15,
-      24
-    ],
-    "max_freeze_days": 5,
-    "rain_mm_per_month": [
-      70,
-      130
-    ],
-    "muck_suitable": false,
     "fl_windows": [
       {
         "label": "Spring: plant Jan-Feb, harvest Apr-May",
         "start": "01-20",
-        "end": "05-15"
+        "end": "05-15",
+        "months": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
       },
       {
         "label": "Winter: plant Oct-Nov, harvest Jan-Mar",
         "start": "10-25",
-        "end": "02-28"
+        "end": "02-28",
+        "months": [
+          10,
+          11,
+          12,
+          1,
+          2
+        ]
       }
+    ],
+    "ph_min": 4.3,
+    "ph_ideal_min": 5.0,
+    "ph_ideal_max": 6.0,
+    "ph_max": 7.0,
+    "drainage": [
+      "Well drained",
+      "Somewhat poorly drained"
+    ],
+    "muck_suitable": false,
+    "temp_min_c": 9,
+    "temp_ideal_min_c": 15,
+    "temp_ideal_max_c": 24,
+    "temp_max_c": 29,
+    "max_freeze_days": 5,
+    "rain_mm_per_month": [
+      70,
+      130
     ],
     "general_guidance": "Florida potatoes are a winter-spring crop, centered on the Hastings area in the northeast and on South Florida farms. Use certified seed pieces, plant in raised beds, and manage the water table or irrigation carefully, since both drought and waterlogging hurt yield and quality. A slightly acidic soil helps limit common scab.",
     "extension_links": [
@@ -469,11 +618,15 @@
         "title": "Chapter 14. Potato Production",
         "url": "https://edis.ifas.ufl.edu/publication/CV131"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates. pH upper limit 7.0 reflects common scab risk; South FL winter window dates are approximate.",
+    "needs_review": true
   },
   {
     "id": "sweet_corn",
     "name": "Sweet corn",
+    "nass_commodity": "SWEET CORN",
+    "nass_class": null,
     "nass": {
       "acres_descs": [
         "SWEET CORN - ACRES HARVESTED"
@@ -481,40 +634,60 @@
       "yield_desc": "SWEET CORN - YIELD, MEASURED IN CWT / ACRE",
       "price_desc": "SWEET CORN, FRESH MARKET - PRICE RECEIVED, MEASURED IN $ / CWT"
     },
-    "ph": [
-      5.8,
-      6.8
-    ],
-    "drainage": [
-      "Well drained",
-      "Very poorly drained"
-    ],
-    "season_temp_c": [
-      16,
-      28
-    ],
-    "max_freeze_days": 0,
-    "rain_mm_per_month": [
-      60,
-      130
-    ],
-    "muck_suitable": true,
     "fl_windows": [
       {
         "label": "Spring: plant Feb-Mar, harvest May-Jun",
         "start": "02-15",
-        "end": "06-01"
+        "end": "06-01",
+        "months": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
       },
       {
         "label": "Fall: plant Aug-Sep, harvest Nov",
         "start": "08-20",
-        "end": "11-30"
+        "end": "11-30",
+        "months": [
+          8,
+          9,
+          10,
+          11
+        ]
       },
       {
         "label": "Winter: plant Oct-Dec, harvest Jan-Mar",
         "start": "11-01",
-        "end": "03-15"
+        "end": "03-15",
+        "months": [
+          11,
+          12,
+          1,
+          2,
+          3
+        ]
       }
+    ],
+    "ph_min": 4.6,
+    "ph_ideal_min": 5.8,
+    "ph_ideal_max": 6.8,
+    "ph_max": 8.0,
+    "drainage": [
+      "Well drained",
+      "Very poorly drained"
+    ],
+    "muck_suitable": true,
+    "temp_min_c": 10,
+    "temp_ideal_min_c": 16,
+    "temp_ideal_max_c": 28,
+    "temp_max_c": 33,
+    "max_freeze_days": 0,
+    "rain_mm_per_month": [
+      60,
+      130
     ],
     "general_guidance": "Florida sweet corn is grown from fall through spring, with large acreage on the muck soils near Belle Glade and on sandy soils elsewhere. Plant blocks of a single type to avoid cross-pollination, keep the crop well watered at silking, and scout closely for fall armyworm and corn earworm. Harvest at peak quality and cool quickly.",
     "extension_links": [
@@ -522,11 +695,15 @@
         "title": "Chapter 17. Sweet Corn Production",
         "url": "https://edis.ifas.ufl.edu/publication/CV135"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "needs_review": false
   },
   {
     "id": "snap_bean",
     "name": "Snap bean",
+    "nass_commodity": "BEANS",
+    "nass_class": "SNAP",
     "nass": {
       "acres_descs": [
         "BEANS, SNAP - ACRES HARVESTED"
@@ -534,40 +711,58 @@
       "yield_desc": "BEANS, SNAP - YIELD, MEASURED IN CWT / ACRE",
       "price_desc": "BEANS, SNAP, FRESH MARKET - PRICE RECEIVED, MEASURED IN $ / CWT"
     },
-    "ph": [
-      5.8,
-      6.5
-    ],
-    "drainage": [
-      "Well drained",
-      "Very poorly drained"
-    ],
-    "season_temp_c": [
-      16,
-      27
-    ],
-    "max_freeze_days": 0,
-    "rain_mm_per_month": [
-      50,
-      110
-    ],
-    "muck_suitable": true,
     "fl_windows": [
       {
         "label": "Fall: plant Sep-Oct, harvest Nov-Dec",
         "start": "09-15",
-        "end": "12-10"
+        "end": "12-10",
+        "months": [
+          9,
+          10,
+          11,
+          12
+        ]
       },
       {
         "label": "Winter: plant Nov-Dec, harvest Jan-Feb",
         "start": "11-15",
-        "end": "02-28"
+        "end": "02-28",
+        "months": [
+          11,
+          12,
+          1,
+          2
+        ]
       },
       {
         "label": "Spring: plant Feb-Mar, harvest Apr-May",
         "start": "02-20",
-        "end": "05-15"
+        "end": "05-15",
+        "months": [
+          2,
+          3,
+          4,
+          5
+        ]
       }
+    ],
+    "ph_min": 4.6,
+    "ph_ideal_min": 5.8,
+    "ph_ideal_max": 6.5,
+    "ph_max": 7.8,
+    "drainage": [
+      "Well drained",
+      "Very poorly drained"
+    ],
+    "muck_suitable": true,
+    "temp_min_c": 10,
+    "temp_ideal_min_c": 16,
+    "temp_ideal_max_c": 27,
+    "temp_max_c": 30,
+    "max_freeze_days": 0,
+    "rain_mm_per_month": [
+      50,
+      110
     ],
     "general_guidance": "Snap beans are a short-season crop (about 55-65 days) grown in fall, winter and spring, including on South Florida muck. They are sensitive to frost and to high heat at bloom, so time plantings to avoid both. Fertilizer needs are modest, and steady soil moisture during flowering and pod fill is important.",
     "extension_links": [
@@ -575,11 +770,15 @@
         "title": "Chapter 11. Legume Production",
         "url": "https://edis.ifas.ufl.edu/publication/CV125"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates. Rainfall range for a 60-90 day season is an estimate.",
+    "needs_review": true
   },
   {
     "id": "bell_pepper",
     "name": "Bell pepper",
+    "nass_commodity": "PEPPERS",
+    "nass_class": "BELL",
     "nass": {
       "acres_descs": [
         "PEPPERS, BELL - ACRES HARVESTED"
@@ -587,35 +786,63 @@
       "yield_desc": "PEPPERS, BELL - YIELD, MEASURED IN CWT / ACRE",
       "price_desc": "PEPPERS, BELL - PRICE RECEIVED, MEASURED IN $ / CWT"
     },
-    "ph": [
-      6.0,
-      6.5
-    ],
-    "drainage": [
-      "Somewhat excessively drained",
-      "Somewhat poorly drained"
-    ],
-    "season_temp_c": [
-      18,
-      27
-    ],
-    "max_freeze_days": 0,
-    "rain_mm_per_month": [
-      60,
-      130
-    ],
-    "muck_suitable": false,
     "fl_windows": [
       {
         "label": "Fall: plant Aug-Sep, harvest Nov-Dec",
         "start": "08-15",
-        "end": "12-20"
+        "end": "12-20",
+        "months": [
+          8,
+          9,
+          10,
+          11,
+          12
+        ]
       },
       {
         "label": "Spring: plant Jan-Feb, harvest Apr-Jun",
         "start": "01-20",
-        "end": "06-10"
+        "end": "06-10",
+        "months": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      {
+        "label": "Winter (South FL): plant Oct-Nov, harvest Jan-Mar",
+        "start": "10-15",
+        "end": "03-15",
+        "months": [
+          10,
+          11,
+          12,
+          1,
+          2,
+          3
+        ]
       }
+    ],
+    "ph_min": 4.8,
+    "ph_ideal_min": 6.0,
+    "ph_ideal_max": 6.5,
+    "ph_max": 7.8,
+    "drainage": [
+      "Somewhat excessively drained",
+      "Somewhat poorly drained"
+    ],
+    "muck_suitable": false,
+    "temp_min_c": 12,
+    "temp_ideal_min_c": 18,
+    "temp_ideal_max_c": 27,
+    "temp_max_c": 32,
+    "max_freeze_days": 0,
+    "rain_mm_per_month": [
+      60,
+      130
     ],
     "general_guidance": "Bell peppers are grown much like tomatoes in Florida: transplants on raised beds with plastic mulch and drip irrigation, in fall and spring seasons. Plants are sensitive to waterlogging and to heat during flowering. Scout for pepper weevil, thrips and the viruses they spread, and keep fertility steady through the long harvest period.",
     "extension_links": [
@@ -623,11 +850,15 @@
         "title": "Chapter 13. Pepper Production",
         "url": "https://edis.ifas.ufl.edu/publication/CV130"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "needs_review": false
   },
   {
     "id": "cabbage",
     "name": "Cabbage",
+    "nass_commodity": "CABBAGE",
+    "nass_class": null,
     "nass": {
       "acres_descs": [
         "CABBAGE, HEAD - ACRES HARVESTED"
@@ -635,30 +866,38 @@
       "yield_desc": "CABBAGE - YIELD, MEASURED IN CWT / ACRE",
       "price_desc": "CABBAGE, FRESH MARKET - PRICE RECEIVED, MEASURED IN $ / CWT"
     },
-    "ph": [
-      6.0,
-      6.5
-    ],
-    "drainage": [
-      "Well drained",
-      "Poorly drained"
-    ],
-    "season_temp_c": [
-      12,
-      21
-    ],
-    "max_freeze_days": 10,
-    "rain_mm_per_month": [
-      50,
-      110
-    ],
-    "muck_suitable": true,
     "fl_windows": [
       {
         "label": "Winter: plant Oct-Dec, harvest Jan-Apr",
         "start": "10-15",
-        "end": "03-31"
+        "end": "03-31",
+        "months": [
+          10,
+          11,
+          12,
+          1,
+          2,
+          3
+        ]
       }
+    ],
+    "ph_min": 4.8,
+    "ph_ideal_min": 6.0,
+    "ph_ideal_max": 6.5,
+    "ph_max": 8.0,
+    "drainage": [
+      "Well drained",
+      "Poorly drained"
+    ],
+    "muck_suitable": true,
+    "temp_min_c": 5,
+    "temp_ideal_min_c": 12,
+    "temp_ideal_max_c": 21,
+    "temp_max_c": 27,
+    "max_freeze_days": 10,
+    "rain_mm_per_month": [
+      50,
+      110
     ],
     "general_guidance": "Cabbage is a cool-season crop planted in fall and winter, with major acreage around Hastings in Northeast Florida. It tolerates light freezes but bolts or splits in warm weather, so avoid late-spring harvests. Provide steady moisture and nitrogen, and scout for diamondback moth and other caterpillars.",
     "extension_links": [
@@ -666,6 +905,8 @@
         "title": "Chapter 6. Cole Crop Production",
         "url": "https://edis.ifas.ufl.edu/publication/CV122"
       }
-    ]
+    ],
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates. max_freeze_days 10 is an estimate of light-freeze tolerance.",
+    "needs_review": true
   }
 ]

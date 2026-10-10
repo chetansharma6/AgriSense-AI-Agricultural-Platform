@@ -79,7 +79,7 @@ def test_outside_bounding_box() -> None:
 def test_crop_detail(sources: dict[str, Any]) -> None:
     body = client.get("/api/crops/potato", params={"lat": 29.71, "lon": -81.50}).json()
     assert body["id"] == "potato"
-    assert body["requirements"]["ph"] == [5.0, 6.0]
+    assert (body["requirements"]["ph_ideal_min"], body["requirements"]["ph_ideal_max"]) == (5.0, 6.0)
     assert body["general_guidance"]
     assert body["extension_links"][0]["url"].startswith("https://edis.ifas.ufl.edu/")
     assert body["location"]["county"] == "St. Johns"

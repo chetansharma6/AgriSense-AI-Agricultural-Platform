@@ -28,9 +28,9 @@ the API; the default is `http://localhost:3000`.
 
 | Factor | Weight | 100 when |
 |---|---|---|
-| soil_ph | 0.15 | pH inside the crop's range (-40 per pH unit outside) |
+| soil_ph | 0.15 | pH inside the crop's ideal range; falls linearly to 0 at its hard limit (`ph_min`/`ph_max`) |
 | drainage | 0.15 | drainage class inside the crop's range (-25 per class); muck is 90 for muck crops, 30 otherwise |
-| season_temp | 0.20 | mean temperature in the growing window inside the range (-10 per C) |
+| season_temp | 0.20 | mean temperature in the growing window inside the ideal range; falls linearly to 0 at `temp_min_c`/`temp_max_c` |
 | frost_risk | 0.15 | freeze days in the window at or below the crop's limit (-10 per extra day) |
 | rainfall | 0.10 | window rainfall inside the range (-1 per % outside) |
 | local_history | 0.25 | 5,000+ acres in the county at the latest Census (log scale from 60 at 1 acre; 75 if withheld; 30 if not grown) |

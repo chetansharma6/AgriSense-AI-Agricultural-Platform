@@ -1,7 +1,7 @@
 from app.crops import load_crops
 from app.market import CountyAcreage
 from app.scoring import (
-    range_score, relative_range_score, score_drainage, score_local_history, score_ph, weighted_score,
+    range_score, relative_range_score, trapezoid_score, score_drainage, score_local_history, score_ph, weighted_score,
 )
 
 POTATO = load_crops()["potato"]
@@ -20,9 +20,16 @@ def test_relative_range_score() -> None:
     assert relative_range_score(1200, 350, 600) == 0
 
 
+def test_trapezoid_score() -> None:
+    assert trapezoid_score(5.5, 4.0, 5.0, 6.0, 7.0) == 100
+    assert trapezoid_score(4.5, 4.0, 5.0, 6.0, 7.0) == 50
+    assert trapezoid_score(6.75, 4.0, 5.0, 6.0, 7.0) == 25
+    assert trapezoid_score(3.0, 4.0, 5.0, 6.0, 7.0) == 0
+
+
 def test_score_ph_flags_acidic_soil() -> None:
     score, detail, flags = score_ph(POTATO, 4.5)
-    assert score == 80
+    assert score == round(100 * (4.5 - 4.3) / (5.0 - 4.3))
     assert detail == {"value": 4.5, "ideal": "5-6", "unit": "pH"}
     assert flags == ["Soil is more acidic than ideal: lime may be needed"]
 
