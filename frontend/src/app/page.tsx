@@ -21,6 +21,9 @@ export default function Home() {
   const [photoReady, setPhotoReady] = useState(false);
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
+  const [acreage, setAcreage] = useState("");
+  const acres = acreage.trim() === "" ? undefined : Number(acreage);
+  const validAcres = acres === undefined || Number.isFinite(acres) && acres >= 0.1 && acres <= 10000;
   const [place, setPlace] = useState("");
   const lat = Number(latitude);
   const lon = Number(longitude);
@@ -37,8 +40,9 @@ export default function Home() {
 
   function analyze(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (valid) {
+    if (valid && validAcres) {
       const query = new URLSearchParams({ lat: lat.toFixed(4), lon: lon.toFixed(4) });
+      if (acres !== undefined) query.set("acres", String(acres));
       if (place) query.set("place", place);
       router.push(`/results?${query}`);
     }
@@ -62,12 +66,25 @@ export default function Home() {
                   <p className="mb-3 text-sm font-semibold uppercase tracking-widest">Florida land. Local possibilities.</p>
                   <h1 id="hero-title" className="page-title">Know what your Florida land is built to grow.</h1>
                   <p className="mt-5 text-base leading-relaxed sm:text-lg">Pick a spot on the map. We check soil, climate and local harvest history, then rank 13 Florida crops by how well they fit.</p>
-                  <div className="mt-6">
+                  <div className="mt-6 grid min-w-0 gap-4 sm:grid-cols-2">
                     <LocationSearch selectedLabel={place} onSelect={(result) => {
                       selectPoint(result.lat, result.lon);
                       setPlace(result.label);
                     }} />
+                    <label className="block text-sm font-semibold" htmlFor="acreage">How much land? (acres)
+                      <input id="acreage" type="number" min="0.1" max="10000" step="any" inputMode="decimal" placeholder="Optional" value={acreage}
+                        onChange={(event) => setAcreage(event.target.value)} aria-invalid={!validAcres} aria-describedby="acreage-help"
+                        className="mt-2 min-h-11 w-full min-w-0 rounded-lg border border-field/25 bg-white px-3 py-2.5 focus:outline-2 focus:outline-field" />
+                    </label>
                   </div>
+                  <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Quick acreage picks">
+                    {([['Under 1', '0.5'], ['1-5', '3'], ['5-20', '10'], ['20-100', '50'], ['100+', '100']] as const).map(([label, amount]) => (
+                      <button key={label} type="button" aria-pressed={acreage === amount} onClick={() => setAcreage(amount)}
+                        className={`min-h-11 rounded-full border px-3 py-2 text-sm ${acreage === amount ? "border-field bg-field text-white" : "border-field/25 bg-white"}`}>{label}</button>
+                    ))}
+                  </div>
+                  <p id="acreage-help" className="mt-2 text-sm" aria-live="polite">{validAcres ? 'Optional: enter 0.1–10,000 acres. Quick picks fill a sample size you can edit.' : 'Enter a number from 0.1 to 10,000 acres, or leave blank.'}</p>
+                  {acres !== undefined && validAcres && acres < 1 && <p className="mt-3 text-sm leading-relaxed">Rankings are for commercial growing. For a home garden see <a href="https://gardeningsolutions.ifas.ufl.edu/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">UF/IFAS gardening guides.</a></p>}
                   <form onSubmit={analyze} className="mt-5">
                     <h2 className="text-xl font-semibold">Try a demo farm</h2>
                     <div className="mt-4 grid grid-cols-2 gap-3">
@@ -101,7 +118,7 @@ export default function Home() {
                     <p id="location-message" aria-live="polite" className={`mt-3 text-sm ${complete && !valid ? 'font-semibold text-ink' : 'text-ink'}`}>
                       {complete && !valid ? 'Location must be in Florida: latitude 24.3–31.1, longitude −87.7–−79.9.' : 'Choose a location in Florida to analyze your land.'}
                     </p>
-                    <button type="submit" disabled={!valid} className="mt-5 min-h-11 w-full rounded-lg bg-field px-5 py-3 font-semibold text-white transition-colors enabled:hover:bg-field/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field disabled:cursor-not-allowed disabled:opacity-55">Analyze my land</button>
+                    <button type="submit" disabled={!valid || !validAcres} className="mt-5 min-h-11 w-full rounded-lg bg-field px-5 py-3 font-semibold text-white transition-colors enabled:hover:bg-field/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field disabled:cursor-not-allowed disabled:opacity-55">Analyze my land</button>
                   </form>
                 </div>
                 <section className="min-w-0" aria-label="Farm location map">

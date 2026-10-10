@@ -27,7 +27,7 @@ function Shimmer({ className }: { className: string }) {
   return <div aria-hidden="true" className={`report-shimmer rounded bg-gradient-to-r from-soil/10 via-sand to-soil/10 ${className}`} />;
 }
 
-export default function AiReport({ crop, verdictSlot }: { crop: CropDetail; verdictSlot: HTMLElement | null }) {
+export default function AiReport({ crop, acres, verdictSlot }: { crop: CropDetail; acres?: number; verdictSlot: HTMLElement | null }) {
   const [result, setResult] = useState<ReportResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -38,7 +38,7 @@ export default function AiReport({ crop, verdictSlot }: { crop: CropDetail; verd
       try {
         const response = await fetch("/api/report", {
           method: "POST", headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ crop }), signal: controller.signal,
+          body: JSON.stringify({ crop, acres }), signal: controller.signal,
         });
         if (!response.ok) throw new Error("The summary is unavailable. Your crop scores are still shown above.");
         const body: unknown = await response.json();
@@ -50,7 +50,7 @@ export default function AiReport({ crop, verdictSlot }: { crop: CropDetail; verd
     }
     void load();
     return () => controller.abort();
-  }, [crop, attempt]);
+  }, [crop, acres, attempt]);
 
   const verdict = result ? (
     <p className="mt-3 truncate text-sm italic text-ink/80" title={formatDisplayText(result.report.verdict)}>{formatDisplayText(result.report.verdict)}</p>

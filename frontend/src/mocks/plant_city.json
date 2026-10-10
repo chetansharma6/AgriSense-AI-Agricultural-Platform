@@ -53,7 +53,7 @@
           "frost_risk": {
             "value": 0.1,
             "ideal": "<= 3",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 360,
@@ -78,7 +78,13 @@
         "limited_by": [],
         "flags": [
           "Soil pH 5.1 is below the ideal 5.5-6.5: lime may be needed"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "potato",
@@ -111,7 +117,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 2",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 213,
@@ -136,7 +142,13 @@
         "limited_by": [],
         "flags": [
           "Likely needs irrigation (213 mm rain expected, 340 mm needed)"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "watermelon",
@@ -169,7 +181,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 502,
@@ -195,7 +207,13 @@
         "flags": [
           "Soil pH 5.1 is below the ideal 5.5-6.8: lime may be needed",
           "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "field_corn",
@@ -228,7 +246,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 1",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 521,
@@ -253,7 +271,13 @@
         "limited_by": [],
         "flags": [
           "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "sugarcane",
@@ -286,7 +310,7 @@
           "frost_risk": {
             "value": 0.1,
             "ideal": "<= 2",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 1303,
@@ -313,7 +337,13 @@
           "Soil pH 5.1 is below the ideal 5.5-7.5: lime may be needed",
           "Season averages 23.2 C, cooler than the ideal 24-37 C: slower growth",
           "Likely needs irrigation (1303 mm rain expected, 1320 mm needed)"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 500,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "snap_bean",
@@ -346,7 +376,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 316,
@@ -371,7 +401,13 @@
         "limited_by": [],
         "flags": [
           "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "tomato",
@@ -404,7 +440,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 640,
@@ -430,7 +466,13 @@
         "flags": [
           "Soil pH 5.1 is below the ideal 6-6.8: lime may be needed",
           "Season rainfall 640 mm is above the ideal 290-640 mm: watch for disease and leaching"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "sweet_corn",
@@ -463,7 +505,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 415,
@@ -488,7 +530,13 @@
         "limited_by": [],
         "flags": [
           "Soil pH 5.1 is below the ideal 5.8-6.8: lime may be needed"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "bell_pepper",
@@ -521,7 +569,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 570,
@@ -546,7 +594,13 @@
         "limited_by": [],
         "flags": [
           "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "cabbage",
@@ -579,7 +633,7 @@
           "frost_risk": {
             "value": 0.1,
             "ideal": "<= 10",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 460,
@@ -605,7 +659,13 @@
         "flags": [
           "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
           "Likely needs irrigation (460 mm rain expected, 520 mm needed)"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "peanut",
@@ -638,7 +698,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 839,
@@ -665,7 +725,13 @@
           "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
           "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
           "Season rainfall 839 mm is above the ideal 570-710 mm: watch for disease and leaching"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "soybean",
@@ -698,7 +764,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 952,
@@ -724,7 +790,13 @@
         "flags": [
           "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
           "Season rainfall 952 mm is above the ideal 610-840 mm: watch for disease and leaching"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "est_gross_value": null
       },
       {
         "id": "cotton",
@@ -757,7 +829,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 969,
@@ -785,7 +857,13 @@
           "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
           "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
           "Season rainfall 969 mm is above the ideal 630-860 mm: watch for disease and leaching"
-        ]
+        ],
+        "scale": {
+          "fit": null,
+          "min_practical_acres": 500,
+          "note": null
+        },
+        "est_gross_value": null
       }
     ],
     "warnings": [],
@@ -840,7 +918,7 @@
         "frost_risk": {
           "value": 0.1,
           "ideal": "<= 3",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 360,
@@ -904,17 +982,32 @@
           "Somewhat poorly drained"
         ],
         "muck_suitable": false,
-        "temp_min_c": 6.0,
-        "temp_ideal_min_c": 11.0,
-        "temp_ideal_max_c": 24.0,
-        "temp_max_c": 28.0,
-        "max_freeze_days": 3.0,
+        "temp_min_c": 6,
+        "temp_ideal_min_c": 11,
+        "temp_ideal_max_c": 24,
+        "temp_max_c": 28,
+        "max_freeze_days": 3,
         "rain_mm_per_month": [
-          40.0,
-          110.0
+          40,
+          110
         ],
-        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 3: plants survive, flowers and fruit are damaged near 30 F and are protected with overhead irrigation (FAWN, UF/IFAS CV201, HS403).",
-        "needs_review": true
+        "general_guidance": "Florida strawberries are planted as bare-root or plug transplants in October on plastic-mulched beds and picked from December to March, centered on the Plant City area. Overhead irrigation is used to establish transplants and to protect blooms and fruit on freezing nights. Picking is hand labor several times a week, so plan labor and market access early.",
+        "extension_links": [
+          {
+            "title": "Chapter 16. Strawberry Production",
+            "url": "https://edis.ifas.ufl.edu/publication/CV134"
+          }
+        ],
+        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 3 (weighted): crowns survive to about 20 F and flowers and fruit are protected with overhead irrigation from about 31 F (FAWN, UF/IFAS CV201, HS403); freeze events are typically 1-2 nights (SWFWMD). At Plant City only the worst 10-15% of seasons (e.g. 2010) exceed 3. Still to verify: protection nights per season, and North Florida suitability.",
+        "needs_review": true,
+        "min_practical_acres": 1,
+        "small_acres": 0.25,
+        "scale_note": "Strawberries can be grown on small blocks, but beds, transplants, labor, cooling, and contracts are substantial fixed costs.",
+        "n_lb_per_acre": 150,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+          "url": "https://edis.ifas.ufl.edu/publication/CV002"
+        }
       },
       "general_guidance": "Florida strawberries are planted as bare-root or plug transplants in October on plastic-mulched beds and picked from December to March, centered on the Plant City area. Overhead irrigation is used to establish transplants and to protect blooms and fruit on freezing nights. Picking is hand labor several times a week, so plan labor and market access early.",
       "extension_links": [
@@ -961,6 +1054,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 1,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 150,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 5.5-6.5: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+            "url": "https://edis.ifas.ufl.edu/publication/CV002"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "potato": {
@@ -994,7 +1119,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 2",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 213,
@@ -1068,17 +1193,32 @@
           "Somewhat poorly drained"
         ],
         "muck_suitable": false,
-        "temp_min_c": 7.0,
-        "temp_ideal_min_c": 15.0,
-        "temp_ideal_max_c": 25.0,
-        "temp_max_c": 30.0,
-        "max_freeze_days": 2.0,
+        "temp_min_c": 7,
+        "temp_ideal_min_c": 15,
+        "temp_ideal_max_c": 25,
+        "temp_max_c": 30,
+        "max_freeze_days": 2,
         "rain_mm_per_month": [
-          90.0,
-          130.0
+          90,
+          130
         ],
-        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 2: UF/IFAS HS183 says potato cannot handle temperatures below 32 F. pH upper limit 7.0 (common scab) is not confirmed by UF/IFAS.",
-        "needs_review": true
+        "general_guidance": "Florida potatoes are a winter-spring crop, centered on the Hastings area in the northeast and on South Florida farms. Use certified seed pieces, plant in raised beds, and manage the water table or irrigation carefully, since both drought and waterlogging hurt yield and quality. A slightly acidic soil helps limit common scab.",
+        "extension_links": [
+          {
+            "title": "Chapter 14. Potato Production",
+            "url": "https://edis.ifas.ufl.edu/publication/CV131"
+          }
+        ],
+        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 2 (weighted): potato cannot handle temperatures below 32 F (UF/IFAS HS183), but young plants rebound and growers cover them with soil before a freeze (UF/IFAS Putnam County 2022). Still to verify: yield loss per freeze; NASA POWER misses Hastings freezes (Jan 2022). pH upper limit 7.0 (common scab) is not confirmed by UF/IFAS.",
+        "needs_review": true,
+        "min_practical_acres": 5,
+        "small_acres": 1,
+        "scale_note": "Vegetable acreage can be smaller, but specialized harvest, grading, packing, and buyer access favor commercial blocks.",
+        "n_lb_per_acre": 150,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+          "url": "https://edis.ifas.ufl.edu/publication/CV002"
+        }
       },
       "general_guidance": "Florida potatoes are a winter-spring crop, centered on the Hastings area in the northeast and on South Florida farms. Use certified seed pieces, plant in raised beds, and manage the water table or irrigation carefully, since both drought and waterlogging hurt yield and quality. A slightly acidic soil helps limit common scab.",
       "extension_links": [
@@ -1125,6 +1265,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 5,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 150,
+        "soil_test_first": true,
+        "lime_note": null,
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+            "url": "https://edis.ifas.ufl.edu/publication/CV002"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "watermelon": {
@@ -1158,7 +1330,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 502,
@@ -1233,17 +1405,32 @@
           "Moderately well drained"
         ],
         "muck_suitable": false,
-        "temp_min_c": 15.0,
-        "temp_ideal_min_c": 20.0,
-        "temp_ideal_max_c": 30.0,
-        "temp_max_c": 35.0,
-        "max_freeze_days": 0.0,
+        "temp_min_c": 15,
+        "temp_ideal_min_c": 20,
+        "temp_ideal_max_c": 30,
+        "temp_max_c": 35,
+        "max_freeze_days": 0,
         "rain_mm_per_month": [
-          90.0,
-          130.0
+          90,
+          130
+        ],
+        "general_guidance": "Watermelons favor well-drained sandy soils and warm weather. Most Florida acreage is planted in late winter for May-June harvest, ahead of other states. Use raised beds with plastic mulch and drip irrigation, plan for pollinizer plants with seedless varieties, and rotate fields to reduce Fusarium wilt.",
+        "extension_links": [
+          {
+            "title": "Chapter 7. Cucurbit Production",
+            "url": "https://edis.ifas.ufl.edu/publication/CV123"
+          }
         ],
         "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
-        "needs_review": false
+        "needs_review": true,
+        "min_practical_acres": 5,
+        "small_acres": 1,
+        "scale_note": "Vegetable acreage can be smaller, but plasticulture, labor, packing, and buyer contracts still favor commercial blocks.",
+        "n_lb_per_acre": 150,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+          "url": "https://edis.ifas.ufl.edu/publication/CV002"
+        }
       },
       "general_guidance": "Watermelons favor well-drained sandy soils and warm weather. Most Florida acreage is planted in late winter for May-June harvest, ahead of other states. Use raised beds with plastic mulch and drip irrigation, plan for pollinizer plants with seedless varieties, and rotate fields to reduce Fusarium wilt.",
       "extension_links": [
@@ -1290,6 +1477,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 5,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 150,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 5.5-6.8: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+            "url": "https://edis.ifas.ufl.edu/publication/CV002"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "field_corn": {
@@ -1323,7 +1542,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 1",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 521,
@@ -1384,17 +1603,44 @@
           "Somewhat poorly drained"
         ],
         "muck_suitable": false,
-        "temp_min_c": 12.0,
-        "temp_ideal_min_c": 20.0,
-        "temp_ideal_max_c": 27.0,
-        "temp_max_c": 45.0,
-        "max_freeze_days": 1.0,
+        "temp_min_c": 12,
+        "temp_ideal_min_c": 20,
+        "temp_ideal_max_c": 27,
+        "temp_max_c": 45,
+        "max_freeze_days": 1,
         "rain_mm_per_month": [
-          110.0,
-          160.0
+          110,
+          160
+        ],
+        "general_guidance": "Field corn is planted in early spring in North and Central Florida; waiting until after March 1 reduces freeze risk. Yields on sandy soils depend heavily on irrigation and split nitrogen applications, since nitrogen leaches quickly. Rotating with peanuts, cotton or soybeans helps break nematode and disease cycles.",
+        "extension_links": [
+          {
+            "title": "Ask IFAS: Field Corn",
+            "url": "https://edis.ifas.ufl.edu/entity/topic/field_corn_ipm"
+          },
+          {
+            "title": "Management of Plant-Parasitic Nematodes in Florida Field Corn Production",
+            "url": "https://edis.ifas.ufl.edu/publication/NG014"
+          },
+          {
+            "title": "Planting Dates, Rates, and Methods of Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/AA127"
+          },
+          {
+            "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/SS163"
+          }
         ],
         "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP (Dent maize). Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
-        "needs_review": false
+        "needs_review": true,
+        "min_practical_acres": 100,
+        "small_acres": 25,
+        "scale_note": "Large row-crop acreage spreads planting, harvest, and grain-handling equipment costs.",
+        "n_lb_per_acre": 180,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+          "url": "https://edis.ifas.ufl.edu/publication/SS163"
+        }
       },
       "general_guidance": "Field corn is planted in early spring in North and Central Florida; waiting until after March 1 reduces freeze risk. Yields on sandy soils depend heavily on irrigation and split nitrogen applications, since nitrogen leaches quickly. Rotating with peanuts, cotton or soybeans helps break nematode and disease cycles.",
       "extension_links": [
@@ -1453,6 +1699,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 100,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 180,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 5.8-6.5: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/SS163"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "sugarcane": {
@@ -1486,7 +1764,7 @@
         "frost_risk": {
           "value": 0.1,
           "ideal": "<= 2",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 1303,
@@ -1556,17 +1834,44 @@
           "Very poorly drained"
         ],
         "muck_suitable": true,
-        "temp_min_c": 15.0,
-        "temp_ideal_min_c": 24.0,
-        "temp_ideal_max_c": 37.0,
-        "temp_max_c": 41.0,
-        "max_freeze_days": 2.0,
+        "temp_min_c": 15,
+        "temp_ideal_min_c": 24,
+        "temp_ideal_max_c": 37,
+        "temp_max_c": 41,
+        "max_freeze_days": 2,
         "rain_mm_per_month": [
-          110.0,
-          160.0
+          110,
+          160
         ],
-        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. Season temperature is the 12-month mean. max_freeze_days 2 is a judgement call: a 0 C night browns leaves and terminal buds; multi-night freezes cause losses (LSU AgCenter, SASRI, USDA NASS FL 2010).",
-        "needs_review": true
+        "general_guidance": "Florida sugarcane is concentrated on the organic muck soils south of Lake Okeechobee, with some acreage on nearby sands. It is a multi-year crop: one planting is usually harvested for several seasons. Growers manage the water table to supply water and slow muck subsidence, and fertilizer needs on muck differ from sandy soils, so follow soil tests. A sugar mill within hauling distance is essential.",
+        "extension_links": [
+          {
+            "title": "Nutrient Requirements for Sugarcane Production on Florida Muck Soils",
+            "url": "https://edis.ifas.ufl.edu/publication/SC026"
+          },
+          {
+            "title": "Sugarcane Plant Nutrient Diagnosis",
+            "url": "https://edis.ifas.ufl.edu/publication/SC075"
+          },
+          {
+            "title": "Planting Dates, Rates, and Methods of Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/AA127"
+          },
+          {
+            "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/SS163"
+          }
+        ],
+        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. Season temperature is the 12-month mean. max_freeze_days 2 (weighted; light freezes count half): nights of 28-32 F kill terminal buds and brown leaves without souring (LSU AgCenter); killing cold is very infrequent near Lake Okeechobee (UF/IFAS SC032); damaging EAA freezes are multi-night events (USDA NASS FL 2010, 2026). No commercial production in the Panhandle since the 1950s (UF/IFAS). NASA POWER's grid minimum understates EAA freezes.",
+        "needs_review": true,
+        "min_practical_acres": 500,
+        "small_acres": 100,
+        "scale_note": "Sugarcane requires large acreage, specialized harvest equipment, and practical access to a nearby mill and contracts.",
+        "n_lb_per_acre": 160,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+          "url": "https://edis.ifas.ufl.edu/publication/SS163"
+        }
       },
       "general_guidance": "Florida sugarcane is concentrated on the organic muck soils south of Lake Okeechobee, with some acreage on nearby sands. It is a multi-year crop: one planting is usually harvested for several seasons. Growers manage the water table to supply water and slow muck subsidence, and fertilizer needs on muck differ from sandy soils, so follow soil tests. A sugar mill within hauling distance is essential.",
       "extension_links": [
@@ -1625,6 +1930,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 500,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 160,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 5.5-7.5: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/SS163"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "snap_bean": {
@@ -1658,7 +1995,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 316,
@@ -1741,17 +2078,32 @@
           "Very poorly drained"
         ],
         "muck_suitable": true,
-        "temp_min_c": 7.0,
-        "temp_ideal_min_c": 16.0,
-        "temp_ideal_max_c": 25.0,
-        "temp_max_c": 32.0,
-        "max_freeze_days": 0.0,
+        "temp_min_c": 7,
+        "temp_ideal_min_c": 16,
+        "temp_ideal_max_c": 25,
+        "temp_max_c": 32,
+        "max_freeze_days": 0,
         "rain_mm_per_month": [
-          80.0,
-          110.0
+          80,
+          110
+        ],
+        "general_guidance": "Snap beans are a short-season crop (about 55-65 days) grown in fall, winter and spring, including on South Florida muck. They are sensitive to frost and to high heat at bloom, so time plantings to avoid both. Fertilizer needs are modest, and steady soil moisture during flowering and pod fill is important.",
+        "extension_links": [
+          {
+            "title": "Chapter 11. Legume Production",
+            "url": "https://edis.ifas.ufl.edu/publication/CV125"
+          }
         ],
         "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP (Common bean). Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: freeze injury at 28 F for 30-45 minutes (UF/IFAS HS853).",
-        "needs_review": false
+        "needs_review": true,
+        "min_practical_acres": 2,
+        "small_acres": 0.5,
+        "scale_note": "Specialty vegetable acreage can be small, though harvest labor, packing, and reliable buyer access remain important.",
+        "n_lb_per_acre": 120,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+          "url": "https://edis.ifas.ufl.edu/publication/CV002"
+        }
       },
       "general_guidance": "Snap beans are a short-season crop (about 55-65 days) grown in fall, winter and spring, including on South Florida muck. They are sensitive to frost and to high heat at bloom, so time plantings to avoid both. Fertilizer needs are modest, and steady soil moisture during flowering and pod fill is important.",
       "extension_links": [
@@ -1798,6 +2150,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 2,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 120,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 5.8-6.5: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+            "url": "https://edis.ifas.ufl.edu/publication/CV002"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "tomato": {
@@ -1831,7 +2215,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 640,
@@ -1919,17 +2303,32 @@
           "Somewhat poorly drained"
         ],
         "muck_suitable": false,
-        "temp_min_c": 7.0,
-        "temp_ideal_min_c": 20.0,
-        "temp_ideal_max_c": 27.0,
-        "temp_max_c": 35.0,
-        "max_freeze_days": 0.0,
+        "temp_min_c": 7,
+        "temp_ideal_min_c": 20,
+        "temp_ideal_max_c": 27,
+        "temp_max_c": 35,
+        "max_freeze_days": 0,
         "rain_mm_per_month": [
-          60.0,
-          130.0
+          60,
+          130
+        ],
+        "general_guidance": "Florida fresh-market tomatoes are grown on raised beds with plastic mulch and drip or seepage irrigation, mostly in fall, winter and spring; summer heat and rain bring disease. Stake and tie plants, keep fertility steady through the drip line, and scout often for whiteflies and the viruses they carry. Expect high input and labor costs, so arrange a buyer before planting.",
+        "extension_links": [
+          {
+            "title": "Chapter 18. Tomato Production",
+            "url": "https://edis.ifas.ufl.edu/publication/CV137"
+          }
         ],
         "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: injury 2 F below freezing (UF/IFAS TR014).",
-        "needs_review": false
+        "needs_review": true,
+        "min_practical_acres": 5,
+        "small_acres": 1,
+        "scale_note": "Vegetable acreage can be smaller, but packing, labor, cooling, and buyer contracts still favor commercial blocks.",
+        "n_lb_per_acre": 200,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+          "url": "https://edis.ifas.ufl.edu/publication/CV002"
+        }
       },
       "general_guidance": "Florida fresh-market tomatoes are grown on raised beds with plastic mulch and drip or seepage irrigation, mostly in fall, winter and spring; summer heat and rain bring disease. Stake and tie plants, keep fertility steady through the drip line, and scout often for whiteflies and the viruses they carry. Expect high input and labor costs, so arrange a buyer before planting.",
       "extension_links": [
@@ -1976,6 +2375,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 5,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 200,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 6-6.8: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+            "url": "https://edis.ifas.ufl.edu/publication/CV002"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "sweet_corn": {
@@ -2009,7 +2440,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 415,
@@ -2094,17 +2525,32 @@
           "Very poorly drained"
         ],
         "muck_suitable": true,
-        "temp_min_c": 12.0,
-        "temp_ideal_min_c": 16.0,
-        "temp_ideal_max_c": 24.0,
-        "temp_max_c": 38.0,
-        "max_freeze_days": 0.0,
+        "temp_min_c": 12,
+        "temp_ideal_min_c": 16,
+        "temp_ideal_max_c": 24,
+        "temp_max_c": 38,
+        "max_freeze_days": 0,
         "rain_mm_per_month": [
-          70.0,
-          130.0
+          70,
+          130
+        ],
+        "general_guidance": "Florida sweet corn is grown from fall through spring, with large acreage on the muck soils near Belle Glade and on sandy soils elsewhere. Plant blocks of a single type to avoid cross-pollination, keep the crop well watered at silking, and scout closely for fall armyworm and corn earworm. Harvest at peak quality and cool quickly.",
+        "extension_links": [
+          {
+            "title": "Chapter 17. Sweet Corn Production",
+            "url": "https://edis.ifas.ufl.edu/publication/CV135"
+          }
         ],
         "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: little frost resistance (UF/IFAS TR013).",
-        "needs_review": false
+        "needs_review": true,
+        "min_practical_acres": 5,
+        "small_acres": 1,
+        "scale_note": "Vegetable acreage can be smaller, but harvest, packing, and buyer contracts still favor commercial blocks.",
+        "n_lb_per_acre": 180,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+          "url": "https://edis.ifas.ufl.edu/publication/CV002"
+        }
       },
       "general_guidance": "Florida sweet corn is grown from fall through spring, with large acreage on the muck soils near Belle Glade and on sandy soils elsewhere. Plant blocks of a single type to avoid cross-pollination, keep the crop well watered at silking, and scout closely for fall armyworm and corn earworm. Harvest at peak quality and cool quickly.",
       "extension_links": [
@@ -2151,6 +2597,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 5,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 180,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 5.8-6.8: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+            "url": "https://edis.ifas.ufl.edu/publication/CV002"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "bell_pepper": {
@@ -2184,7 +2662,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 570,
@@ -2271,17 +2749,32 @@
           "Somewhat poorly drained"
         ],
         "muck_suitable": false,
-        "temp_min_c": 8.0,
-        "temp_ideal_min_c": 17.0,
-        "temp_ideal_max_c": 30.0,
-        "temp_max_c": 35.0,
-        "max_freeze_days": 0.0,
+        "temp_min_c": 8,
+        "temp_ideal_min_c": 17,
+        "temp_ideal_max_c": 30,
+        "temp_max_c": 35,
+        "max_freeze_days": 0,
         "rain_mm_per_month": [
-          80.0,
-          130.0
+          80,
+          130
+        ],
+        "general_guidance": "Bell peppers are grown much like tomatoes in Florida: transplants on raised beds with plastic mulch and drip irrigation, in fall and spring seasons. Plants are sensitive to waterlogging and to heat during flowering. Scout for pepper weevil, thrips and the viruses they spread, and keep fertility steady through the long harvest period.",
+        "extension_links": [
+          {
+            "title": "Chapter 13. Pepper Production",
+            "url": "https://edis.ifas.ufl.edu/publication/CV130"
+          }
         ],
         "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP (Sweet pepper). Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: injury 2 F below freezing (UF/IFAS TR010).",
-        "needs_review": false
+        "needs_review": true,
+        "min_practical_acres": 2,
+        "small_acres": 0.5,
+        "scale_note": "Specialty vegetable acreage can be small, though harvest labor, packing, and reliable buyer access remain important.",
+        "n_lb_per_acre": 150,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+          "url": "https://edis.ifas.ufl.edu/publication/CV002"
+        }
       },
       "general_guidance": "Bell peppers are grown much like tomatoes in Florida: transplants on raised beds with plastic mulch and drip irrigation, in fall and spring seasons. Plants are sensitive to waterlogging and to heat during flowering. Scout for pepper weevil, thrips and the viruses they spread, and keep fertility steady through the long harvest period.",
       "extension_links": [
@@ -2328,6 +2821,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 2,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 150,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 6-6.5: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+            "url": "https://edis.ifas.ufl.edu/publication/CV002"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "cabbage": {
@@ -2361,7 +2886,7 @@
         "frost_risk": {
           "value": 0.1,
           "ideal": "<= 10",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 460,
@@ -2426,17 +2951,32 @@
           "Poorly drained"
         ],
         "muck_suitable": true,
-        "temp_min_c": 7.0,
-        "temp_ideal_min_c": 15.0,
-        "temp_ideal_max_c": 24.0,
-        "temp_max_c": 32.0,
-        "max_freeze_days": 10.0,
+        "temp_min_c": 7,
+        "temp_ideal_min_c": 15,
+        "temp_ideal_max_c": 24,
+        "temp_max_c": 32,
+        "max_freeze_days": 10,
         "rain_mm_per_month": [
-          70.0,
-          110.0
+          70,
+          110
+        ],
+        "general_guidance": "Cabbage is a cool-season crop planted in fall and winter, with major acreage around Hastings in Northeast Florida. It tolerates light freezes but bolts or splits in warm weather, so avoid late-spring harvests. Provide steady moisture and nitrogen, and scout for diamondback moth and other caterpillars.",
+        "extension_links": [
+          {
+            "title": "Chapter 6. Cole Crop Production",
+            "url": "https://edis.ifas.ufl.edu/publication/CV122"
+          }
         ],
         "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 10: no frost injury until 10-16 F below freezing (UF/IFAS TR006).",
-        "needs_review": false
+        "needs_review": true,
+        "min_practical_acres": 2,
+        "small_acres": 0.5,
+        "scale_note": "Specialty vegetable acreage can be small, though harvest labor, packing, and reliable buyer access remain important.",
+        "n_lb_per_acre": 170,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+          "url": "https://edis.ifas.ufl.edu/publication/CV002"
+        }
       },
       "general_guidance": "Cabbage is a cool-season crop planted in fall and winter, with major acreage around Hastings in Northeast Florida. It tolerates light freezes but bolts or splits in warm weather, so avoid late-spring harvests. Provide steady moisture and nitrogen, and scout for diamondback moth and other caterpillars.",
       "extension_links": [
@@ -2483,6 +3023,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 2,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 170,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 6-6.5: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida",
+            "url": "https://edis.ifas.ufl.edu/publication/CV002"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "peanut": {
@@ -2516,7 +3088,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 839,
@@ -2580,17 +3152,48 @@
           "Moderately well drained"
         ],
         "muck_suitable": false,
-        "temp_min_c": 10.0,
-        "temp_ideal_min_c": 22.0,
-        "temp_ideal_max_c": 32.0,
-        "temp_max_c": 45.0,
-        "max_freeze_days": 0.0,
+        "temp_min_c": 10,
+        "temp_ideal_min_c": 22,
+        "temp_ideal_max_c": 32,
+        "temp_max_c": 45,
+        "max_freeze_days": 0,
         "rain_mm_per_month": [
-          120.0,
-          150.0
+          120,
+          150
+        ],
+        "general_guidance": "Peanuts do best on well-drained sandy or loamy sand soils in North Florida. Rotate with grasses such as bahiagrass or corn to limit diseases and nematodes, and avoid planting peanuts in the same field more than one year in three. Peanuts need calcium in the pegging zone, so soil-test and apply gypsum when calcium is low. Inoculate seed with rhizobia in fields without a recent peanut history.",
+        "extension_links": [
+          {
+            "title": "Ask IFAS: Peanuts",
+            "url": "https://edis.ifas.ufl.edu/topics/peanuts"
+          },
+          {
+            "title": "Producing Peanuts Using Conservation Tillage",
+            "url": "https://edis.ifas.ufl.edu/publication/AG187"
+          },
+          {
+            "title": "Insect and Mite Pest Management in Florida Peanut",
+            "url": "https://edis.ifas.ufl.edu/publication/IN1408"
+          },
+          {
+            "title": "Planting Dates, Rates, and Methods of Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/AA127"
+          },
+          {
+            "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/SS163"
+          }
         ],
         "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
-        "needs_review": false
+        "needs_review": false,
+        "min_practical_acres": 100,
+        "small_acres": 25,
+        "scale_note": "Large row-crop acreage spreads specialized planting, harvesting, and drying equipment costs.",
+        "n_lb_per_acre": 0,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+          "url": "https://edis.ifas.ufl.edu/publication/SS163"
+        }
       },
       "general_guidance": "Peanuts do best on well-drained sandy or loamy sand soils in North Florida. Rotate with grasses such as bahiagrass or corn to limit diseases and nematodes, and avoid planting peanuts in the same field more than one year in three. Peanuts need calcium in the pegging zone, so soil-test and apply gypsum when calcium is low. Inoculate seed with rhizobia in fields without a recent peanut history.",
       "extension_links": [
@@ -2653,6 +3256,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 100,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 0,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 5.8-6.5: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/SS163"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "soybean": {
@@ -2686,7 +3321,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 952,
@@ -2749,17 +3384,44 @@
           "Somewhat poorly drained"
         ],
         "muck_suitable": false,
-        "temp_min_c": 10.0,
-        "temp_ideal_min_c": 20.0,
-        "temp_ideal_max_c": 33.0,
-        "temp_max_c": 38.0,
-        "max_freeze_days": 0.0,
+        "temp_min_c": 10,
+        "temp_ideal_min_c": 20,
+        "temp_ideal_max_c": 33,
+        "temp_max_c": 38,
+        "max_freeze_days": 0,
         "rain_mm_per_month": [
-          110.0,
-          150.0
+          110,
+          150
+        ],
+        "general_guidance": "Soybeans are a summer crop in North Florida, often following a winter grain. Choose varieties adapted to Florida day length and planting date, inoculate seed in fields without recent soybeans, and scout for soybean rust and nematodes. Irrigation markedly raises and stabilizes yields on sandy soils.",
+        "extension_links": [
+          {
+            "title": "Ask IFAS: Soybeans",
+            "url": "https://edis.ifas.ufl.edu/entity/topic/soybeans"
+          },
+          {
+            "title": "Management of Plant-Parasitic Nematodes in Florida Soybean Production",
+            "url": "https://edis.ifas.ufl.edu/publication/NG018"
+          },
+          {
+            "title": "Planting Dates, Rates, and Methods of Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/AA127"
+          },
+          {
+            "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/SS163"
+          }
         ],
         "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
-        "needs_review": false
+        "needs_review": true,
+        "min_practical_acres": 100,
+        "small_acres": 25,
+        "scale_note": "Large row-crop acreage spreads planting, harvest, and grain-handling equipment costs.",
+        "n_lb_per_acre": 0,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+          "url": "https://edis.ifas.ufl.edu/publication/SS163"
+        }
       },
       "general_guidance": "Soybeans are a summer crop in North Florida, often following a winter grain. Choose varieties adapted to Florida day length and planting date, inoculate seed in fields without recent soybeans, and scout for soybean rust and nematodes. Irrigation markedly raises and stabilizes yields on sandy soils.",
       "extension_links": [
@@ -2818,6 +3480,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 100,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 0,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 6-6.5: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/SS163"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     },
     "cotton": {
@@ -2851,7 +3545,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 969,
@@ -2917,17 +3611,44 @@
           "Moderately well drained"
         ],
         "muck_suitable": false,
-        "temp_min_c": 15.0,
-        "temp_ideal_min_c": 22.0,
-        "temp_ideal_max_c": 36.0,
-        "temp_max_c": 42.0,
-        "max_freeze_days": 0.0,
+        "temp_min_c": 15,
+        "temp_ideal_min_c": 22,
+        "temp_ideal_max_c": 36,
+        "temp_max_c": 42,
+        "max_freeze_days": 0,
         "rain_mm_per_month": [
-          110.0,
-          150.0
+          110,
+          150
+        ],
+        "general_guidance": "Cotton is a North Florida crop planted from late April into early June once soils are warm. Most Florida soils have a compacted layer, so subsoiling or strip tillage helps roots. Plant seed shallow (1/2 to 1 inch), rotate with peanuts or grasses to manage nematodes, and use growth regulators to control plant height on fertile ground.",
+        "extension_links": [
+          {
+            "title": "Cotton Cultural Practices and Fertility Management",
+            "url": "https://edis.ifas.ufl.edu/publication/AG200"
+          },
+          {
+            "title": "Ask IFAS: Cotton",
+            "url": "https://edis.ifas.ufl.edu/topics/cotton"
+          },
+          {
+            "title": "Planting Dates, Rates, and Methods of Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/AA127"
+          },
+          {
+            "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/SS163"
+          }
         ],
         "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
-        "needs_review": false
+        "needs_review": true,
+        "min_practical_acres": 500,
+        "small_acres": 100,
+        "scale_note": "Large row-crop acreage spreads specialized equipment and supports reliable gin and market access.",
+        "n_lb_per_acre": 60,
+        "nutrient_source": {
+          "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+          "url": "https://edis.ifas.ufl.edu/publication/SS163"
+        }
       },
       "general_guidance": "Cotton is a North Florida crop planted from late April into early June once soils are warm. Most Florida soils have a compacted layer, so subsoiling or strip tillage helps roots. Plant seed shallow (1/2 to 1 inch), rotate with peanuts or grasses to manage nematodes, and use growth regulators to control plant height on fertile ground.",
       "extension_links": [
@@ -2986,6 +3707,38 @@
         ],
         "critical_threshold": 25,
         "critical_cap": 45
+      },
+      "scale": {
+        "fit": null,
+        "min_practical_acres": 500,
+        "note": null
+      },
+      "est_gross_value": null,
+      "nutrient_plan": {
+        "n_lb_per_acre": 60,
+        "soil_test_first": true,
+        "lime_note": "pH 5.1 is below 5.8-6.5: a soil test will say how much lime is needed",
+        "practices": [
+          "Soil test before fertilizing",
+          "Split nitrogen into several smaller applications",
+          "Consider controlled-release fertilizer or fertigation through drip lines",
+          "Use cover crops and compost to build organic matter on sandy soils",
+          "Follow Florida agricultural Best Management Practices (FDACS)"
+        ],
+        "sources": [
+          {
+            "title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops",
+            "url": "https://edis.ifas.ufl.edu/publication/SS163"
+          },
+          {
+            "title": "UF/IFAS 4R nutrient management",
+            "url": "https://edis.ifas.ufl.edu/publication/SS639"
+          },
+          {
+            "title": "FDACS Agricultural Best Management Practices",
+            "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"
+          }
+        ]
       }
     }
   }

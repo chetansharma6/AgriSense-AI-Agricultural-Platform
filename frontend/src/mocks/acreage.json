@@ -1,0 +1,4494 @@
+{
+  "marianna": {
+    "0.5": {
+      "watermelon": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.3 is below the ideal 5.5-6.8: lime may be needed",
+          "About 1.2 freezing nights in season, 0.4 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 3852,
+          "high": 4563,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 227,
+          "high": 342,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 384,
+          "high": 589,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 404,
+          "high": 475,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "About 6.1 freezing nights in season, 2.9 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 2484,
+          "high": 3331,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "snap_bean": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 89,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed",
+          "About 0.9 freezing nights in season, 0.3 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting",
+          "Likely needs irrigation (259 mm rain expected, 270 mm needed)",
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 1468,
+          "high": 1645,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 150,
+          "high": 167,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.3 is below the ideal 5.8-6.8: lime may be needed",
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 2083,
+          "high": 2845,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.3 is below the ideal 6-6.8: lime may be needed",
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 6357,
+          "high": 10949,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 10: plan frost protection or a later planting",
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 2312,
+          "high": 3663,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 77,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "About 3.5 freezing nights in season, 1.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting",
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 6020,
+          "high": 9450,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 1,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 1+ acres."
+        },
+        "score": 45,
+        "flags": [
+          "Limited by freeze risk",
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 3: plan frost protection or a later planting",
+          "Not reported in this county: confirm local buyers and markets",
+          "Small planting of 0.5 acres; commercial scale is usually 1+ acres."
+        ],
+        "est_gross_value": {
+          "low": 12362,
+          "high": 17845,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 0.5 acres.",
+          "Limited by freeze risk",
+          "About 15.9 freezing nights in season, 8.0 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": null
+      }
+    },
+    "3": {
+      "watermelon": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 93,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.5-6.8: lime may be needed",
+          "About 1.2 freezing nights in season, 0.4 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 23113,
+          "high": 27377,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 3 acres.",
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 1360,
+          "high": 2051,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 2306,
+          "high": 3535,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 2425,
+          "high": 2847,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 90,
+        "flags": [
+          "About 6.1 freezing nights in season, 2.9 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 14906,
+          "high": 19984,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 89,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed",
+          "About 0.9 freezing nights in season, 0.3 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting",
+          "Likely needs irrigation (259 mm rain expected, 270 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 8811,
+          "high": 9868,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 902,
+          "high": 1004,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 88,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.8: lime may be needed",
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 12497,
+          "high": 17069,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 83,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.8: lime may be needed",
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 38142,
+          "high": 65694,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 10: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 13875,
+          "high": 21978,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 77,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "About 3.5 freezing nights in season, 1.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 36120,
+          "high": 56700,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by freeze risk",
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 3: plan frost protection or a later planting",
+          "Not reported in this county: confirm local buyers and markets",
+          "Soil pH 5.3 is below the ideal 5.5-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 74175,
+          "high": 107070,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 3 acres.",
+          "Limited by freeze risk",
+          "About 15.9 freezing nights in season, 8.0 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": null
+      }
+    },
+    "10": {
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 93,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.5-6.8: lime may be needed",
+          "About 1.2 freezing nights in season, 0.4 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 77044,
+          "high": 91256,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 10 acres.",
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 4533,
+          "high": 6836,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 7686,
+          "high": 11783,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 8085,
+          "high": 9491,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 90,
+        "flags": [
+          "About 6.1 freezing nights in season, 2.9 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 49686,
+          "high": 66612,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 89,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed",
+          "About 0.9 freezing nights in season, 0.3 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting",
+          "Likely needs irrigation (259 mm rain expected, 270 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 29370,
+          "high": 32894,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 3008,
+          "high": 3346,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 88,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.8: lime may be needed",
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 41656,
+          "high": 56896,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 83,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.8: lime may be needed",
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 127141,
+          "high": 218981,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 10: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 46250,
+          "high": 73260,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 77,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "About 3.5 freezing nights in season, 1.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 120400,
+          "high": 189000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by freeze risk",
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 3: plan frost protection or a later planting",
+          "Not reported in this county: confirm local buyers and markets",
+          "Soil pH 5.3 is below the ideal 5.5-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 247250,
+          "high": 356900,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 10 acres.",
+          "Limited by freeze risk",
+          "About 15.9 freezing nights in season, 8.0 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": null
+      }
+    },
+    "50": {
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 93,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.5-6.8: lime may be needed",
+          "About 1.2 freezing nights in season, 0.4 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 385220,
+          "high": 456280,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 50 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 50 acres.",
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 22667,
+          "high": 34181,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 92,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 38430,
+          "high": 58915,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 92,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 40425,
+          "high": 47455,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 90,
+        "flags": [
+          "About 6.1 freezing nights in season, 2.9 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 248430,
+          "high": 333060,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 89,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed",
+          "About 0.9 freezing nights in season, 0.3 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting",
+          "Likely needs irrigation (259 mm rain expected, 270 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 146850,
+          "high": 164472,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 88,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 15040,
+          "high": 16732,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 88,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.8: lime may be needed",
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 208280,
+          "high": 284480,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 83,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.8: lime may be needed",
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 635705,
+          "high": 1094905,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 10: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 231250,
+          "high": 366300,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 77,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "About 3.5 freezing nights in season, 1.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 602000,
+          "high": 945000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by freeze risk",
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 3: plan frost protection or a later planting",
+          "Not reported in this county: confirm local buyers and markets",
+          "Soil pH 5.3 is below the ideal 5.5-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 1236250,
+          "high": 1784500,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 50 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 50 acres.",
+          "Limited by freeze risk",
+          "About 15.9 freezing nights in season, 8.0 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": null
+      }
+    },
+    "100": {
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 93,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.5-6.8: lime may be needed",
+          "About 1.2 freezing nights in season, 0.4 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 770440,
+          "high": 912560,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 500,
+          "note": "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        },
+        "score": 92,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed",
+          "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        ],
+        "est_gross_value": {
+          "low": 45335,
+          "high": 68362,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 92,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 76859,
+          "high": 117830,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 92,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 80850,
+          "high": 94910,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 90,
+        "flags": [
+          "About 6.1 freezing nights in season, 2.9 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 496860,
+          "high": 666120,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 89,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed",
+          "About 0.9 freezing nights in season, 0.3 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting",
+          "Likely needs irrigation (259 mm rain expected, 270 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 293700,
+          "high": 328944,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 88,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 30080,
+          "high": 33464,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 88,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.8-6.8: lime may be needed",
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 416560,
+          "high": 568960,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 83,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.8: lime may be needed",
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 1271410,
+          "high": 2189810,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 10: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 462500,
+          "high": 732600,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 77,
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "About 3.5 freezing nights in season, 1.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ],
+        "est_gross_value": {
+          "low": 1204000,
+          "high": 1890000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by freeze risk",
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 3: plan frost protection or a later planting",
+          "Not reported in this county: confirm local buyers and markets",
+          "Soil pH 5.3 is below the ideal 5.5-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 2472500,
+          "high": 3569000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 500,
+          "note": "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        },
+        "score": 45,
+        "flags": [
+          "Limited by freeze risk",
+          "About 15.9 freezing nights in season, 8.0 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting",
+          "Not reported in this county: confirm local buyers and markets",
+          "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        ],
+        "est_gross_value": null
+      }
+    }
+  },
+  "hastings": {
+    "0.5": {
+      "snap_bean": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 97,
+        "flags": [
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 1468,
+          "high": 1645,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        ],
+        "est_gross_value": {
+          "low": 2083,
+          "high": 2845,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 92,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (well drained to poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed",
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 2312,
+          "high": 3663,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 384,
+          "high": 589,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Likely needs irrigation (268 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 2484,
+          "high": 3331,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 1,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 1+ acres."
+        },
+        "score": 88,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Small planting of 0.5 acres; commercial scale is usually 1+ acres."
+        ],
+        "est_gross_value": {
+          "low": 12362,
+          "high": 17845,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 84,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed",
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 6020,
+          "high": 9450,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 3852,
+          "high": 4563,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Season rainfall 774 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 424,
+          "high": 497,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 0.5 acres.",
+          "Not reported in this county: confirm local buyers and markets",
+          "Season averages 22.5 C, cooler than the ideal 24-37 C: slower growth"
+        ],
+        "est_gross_value": null
+      },
+      "tomato": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.8: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 6357,
+          "high": 10949,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 0.5 acres.",
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Not reported in this county: confirm local buyers and markets",
+          "Season rainfall 935 mm is above the ideal 630-860 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 235,
+          "high": 355,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Not reported in this county: confirm local buyers and markets",
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 150,
+          "high": 167,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "3": {
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 97,
+        "flags": [],
+        "est_gross_value": {
+          "low": 8811,
+          "high": 9868,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 95,
+        "flags": [
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 12497,
+          "high": 17069,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 92,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (well drained to poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 13875,
+          "high": 21978,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 2306,
+          "high": 3535,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 90,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Likely needs irrigation (268 mm rain expected, 340 mm needed)",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 14906,
+          "high": 19984,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 88,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 74175,
+          "high": 107070,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 36120,
+          "high": 56700,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 84,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 23113,
+          "high": 27377,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Season rainfall 774 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 2542,
+          "high": 2984,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 3 acres.",
+          "Not reported in this county: confirm local buyers and markets",
+          "Season averages 22.5 C, cooler than the ideal 24-37 C: slower growth"
+        ],
+        "est_gross_value": null
+      },
+      "tomato": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 83,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.8: lime may be needed",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 38142,
+          "high": 65694,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 3 acres.",
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Not reported in this county: confirm local buyers and markets",
+          "Season rainfall 935 mm is above the ideal 630-860 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 1412,
+          "high": 2130,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Not reported in this county: confirm local buyers and markets",
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 902,
+          "high": 1004,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "10": {
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 97,
+        "flags": [],
+        "est_gross_value": {
+          "low": 29370,
+          "high": 32894,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 95,
+        "flags": [],
+        "est_gross_value": {
+          "low": 41656,
+          "high": 56896,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 92,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (well drained to poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 46250,
+          "high": 73260,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 7686,
+          "high": 11783,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 90,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Likely needs irrigation (268 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 49686,
+          "high": 66612,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 88,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 247250,
+          "high": 356900,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 120400,
+          "high": 189000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 77044,
+          "high": 91256,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Season rainfall 774 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 8473,
+          "high": 9947,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 10 acres.",
+          "Not reported in this county: confirm local buyers and markets",
+          "Season averages 22.5 C, cooler than the ideal 24-37 C: slower growth"
+        ],
+        "est_gross_value": null
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 83,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.8: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 127141,
+          "high": 218981,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 10 acres.",
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Not reported in this county: confirm local buyers and markets",
+          "Season rainfall 935 mm is above the ideal 630-860 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 4707,
+          "high": 7098,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Not reported in this county: confirm local buyers and markets",
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 3008,
+          "high": 3346,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "50": {
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 97,
+        "flags": [],
+        "est_gross_value": {
+          "low": 146850,
+          "high": 164472,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 95,
+        "flags": [],
+        "est_gross_value": {
+          "low": 208280,
+          "high": 284480,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 92,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (well drained to poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 231250,
+          "high": 366300,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 92,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 38430,
+          "high": 58915,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 90,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Likely needs irrigation (268 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 248430,
+          "high": 333060,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 88,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 1236250,
+          "high": 1784500,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 602000,
+          "high": 945000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 385220,
+          "high": 456280,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 83,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Season rainfall 774 mm is above the ideal 570-710 mm: watch for disease and leaching",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 42366,
+          "high": 49734,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 50 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 50 acres.",
+          "Not reported in this county: confirm local buyers and markets",
+          "Season averages 22.5 C, cooler than the ideal 24-37 C: slower growth"
+        ],
+        "est_gross_value": null
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 83,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.8: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 635705,
+          "high": 1094905,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 50 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 50 acres.",
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Not reported in this county: confirm local buyers and markets",
+          "Season rainfall 935 mm is above the ideal 630-860 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 23537,
+          "high": 35492,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 74,
+        "flags": [
+          "Not reported in this county: confirm local buyers and markets",
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 15040,
+          "high": 16732,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "100": {
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 97,
+        "flags": [],
+        "est_gross_value": {
+          "low": 293700,
+          "high": 328944,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 95,
+        "flags": [],
+        "est_gross_value": {
+          "low": 416560,
+          "high": 568960,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 92,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (well drained to poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 462500,
+          "high": 732600,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 92,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 76859,
+          "high": 117830,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 90,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Likely needs irrigation (268 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 496860,
+          "high": 666120,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 88,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 2472500,
+          "high": 3569000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 1204000,
+          "high": 1890000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 770440,
+          "high": 912560,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 83,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Season rainfall 774 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 84732,
+          "high": 99468,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 500,
+          "note": "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        },
+        "score": 83,
+        "flags": [
+          "Not reported in this county: confirm local buyers and markets",
+          "Season averages 22.5 C, cooler than the ideal 24-37 C: slower growth",
+          "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        ],
+        "est_gross_value": null
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 83,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.8: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 1271410,
+          "high": 2189810,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 500,
+          "note": "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        },
+        "score": 74,
+        "flags": [
+          "Very poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Not reported in this county: confirm local buyers and markets",
+          "Season rainfall 935 mm is above the ideal 630-860 mm: watch for disease and leaching",
+          "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        ],
+        "est_gross_value": {
+          "low": 47074,
+          "high": 70984,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 74,
+        "flags": [
+          "Not reported in this county: confirm local buyers and markets",
+          "Very poorly drained soil is wetter than ideal (well drained to somewhat poorly drained): use raised beds or improve drainage",
+          "Soil pH 5.8 is below the ideal 6-6.5: lime may be needed",
+          "Season rainfall 918 mm is above the ideal 610-840 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 30080,
+          "high": 33464,
+          "label": "Rough gross value before costs"
+        }
+      }
+    }
+  },
+  "plant_city": {
+    "0.5": {
+      "strawberry": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 1,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 1+ acres."
+        },
+        "score": 93,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.5-6.5: lime may be needed",
+          "Small planting of 0.5 acres; commercial scale is usually 1+ acres."
+        ],
+        "est_gross_value": {
+          "low": 12362,
+          "high": 17845,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Likely needs irrigation (213 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 2484,
+          "high": 3331,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.1 is below the ideal 5.5-6.8: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 3852,
+          "high": 4563,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 384,
+          "high": 589,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.1 is below the ideal 5.5-7.5: lime may be needed",
+          "Season averages 23.2 C, cooler than the ideal 24-37 C: slower growth",
+          "Likely needs irrigation (1303 mm rain expected, 1320 mm needed)"
+        ],
+        "est_gross_value": null
+      },
+      "snap_bean": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 84,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 1468,
+          "high": 1645,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.1 is below the ideal 6-6.8: lime may be needed",
+          "Season rainfall 640 mm is above the ideal 290-640 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 6357,
+          "high": 10949,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.1 is below the ideal 5.8-6.8: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 2083,
+          "high": 2845,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 80,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 6020,
+          "high": 9450,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
+          "Likely needs irrigation (460 mm rain expected, 520 mm needed)",
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 2312,
+          "high": 3663,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Season rainfall 839 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 424,
+          "high": 497,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
+          "Season rainfall 952 mm is above the ideal 610-840 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 150,
+          "high": 167,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 0.5 acres.",
+          "Not reported in this county: confirm local buyers and markets",
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 235,
+          "high": 355,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "3": {
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 93,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.5-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 74175,
+          "high": 107070,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 91,
+        "flags": [
+          "Likely needs irrigation (213 mm rain expected, 340 mm needed)",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 14906,
+          "high": 19984,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 87,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.5-6.8: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 23113,
+          "high": 27377,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 2306,
+          "high": 3535,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 3 acres.",
+          "Soil pH 5.1 is below the ideal 5.5-7.5: lime may be needed",
+          "Season averages 23.2 C, cooler than the ideal 24-37 C: slower growth",
+          "Likely needs irrigation (1303 mm rain expected, 1320 mm needed)"
+        ],
+        "est_gross_value": null
+      },
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 8811,
+          "high": 9868,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 84,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.8: lime may be needed",
+          "Season rainfall 640 mm is above the ideal 290-640 mm: watch for disease and leaching",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 38142,
+          "high": 65694,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 83,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.8: lime may be needed",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 12497,
+          "high": 17069,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 80,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 36120,
+          "high": 56700,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
+          "Likely needs irrigation (460 mm rain expected, 520 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 13875,
+          "high": 21978,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Season rainfall 839 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 2542,
+          "high": 2984,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
+          "Season rainfall 952 mm is above the ideal 610-840 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 902,
+          "high": 1004,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 3 acres.",
+          "Not reported in this county: confirm local buyers and markets",
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 1412,
+          "high": 2130,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "10": {
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 93,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.5-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 247250,
+          "high": 356900,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 91,
+        "flags": [
+          "Likely needs irrigation (213 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 49686,
+          "high": 66612,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 87,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.5-6.8: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 77044,
+          "high": 91256,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 7686,
+          "high": 11783,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 10 acres.",
+          "Soil pH 5.1 is below the ideal 5.5-7.5: lime may be needed",
+          "Season averages 23.2 C, cooler than the ideal 24-37 C: slower growth",
+          "Likely needs irrigation (1303 mm rain expected, 1320 mm needed)"
+        ],
+        "est_gross_value": null
+      },
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 29370,
+          "high": 32894,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.8: lime may be needed",
+          "Season rainfall 640 mm is above the ideal 290-640 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 127141,
+          "high": 218981,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 83,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.8: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 41656,
+          "high": 56896,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 80,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 120400,
+          "high": 189000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
+          "Likely needs irrigation (460 mm rain expected, 520 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 46250,
+          "high": 73260,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Season rainfall 839 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 8473,
+          "high": 9947,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
+          "Season rainfall 952 mm is above the ideal 610-840 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 3008,
+          "high": 3346,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 10 acres.",
+          "Not reported in this county: confirm local buyers and markets",
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 4707,
+          "high": 7098,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "50": {
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 93,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.5-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 1236250,
+          "high": 1784500,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 91,
+        "flags": [
+          "Likely needs irrigation (213 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 248430,
+          "high": 333060,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 87,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.5-6.8: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 385220,
+          "high": 456280,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 85,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 38430,
+          "high": 58915,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 50 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 50 acres.",
+          "Soil pH 5.1 is below the ideal 5.5-7.5: lime may be needed",
+          "Season averages 23.2 C, cooler than the ideal 24-37 C: slower growth",
+          "Likely needs irrigation (1303 mm rain expected, 1320 mm needed)"
+        ],
+        "est_gross_value": null
+      },
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 146850,
+          "high": 164472,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.8: lime may be needed",
+          "Season rainfall 640 mm is above the ideal 290-640 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 635705,
+          "high": 1094905,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 83,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.8: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 208280,
+          "high": 284480,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 80,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 602000,
+          "high": 945000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
+          "Likely needs irrigation (460 mm rain expected, 520 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 231250,
+          "high": 366300,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Season rainfall 839 mm is above the ideal 570-710 mm: watch for disease and leaching",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 42366,
+          "high": 49734,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
+          "Season rainfall 952 mm is above the ideal 610-840 mm: watch for disease and leaching",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 15040,
+          "high": 16732,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 50 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 50 acres.",
+          "Not reported in this county: confirm local buyers and markets",
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 23537,
+          "high": 35492,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "100": {
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 93,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.5-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 2472500,
+          "high": 3569000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 91,
+        "flags": [
+          "Likely needs irrigation (213 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 496860,
+          "high": 666120,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 87,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.5-6.8: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage"
+        ],
+        "est_gross_value": {
+          "low": 770440,
+          "high": 912560,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 85,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 76859,
+          "high": 117830,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 500,
+          "note": "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        },
+        "score": 85,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.5-7.5: lime may be needed",
+          "Season averages 23.2 C, cooler than the ideal 24-37 C: slower growth",
+          "Likely needs irrigation (1303 mm rain expected, 1320 mm needed)",
+          "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        ],
+        "est_gross_value": null
+      },
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 293700,
+          "high": 328944,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 84,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.8: lime may be needed",
+          "Season rainfall 640 mm is above the ideal 290-640 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 1271410,
+          "high": 2189810,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 83,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.8: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 416560,
+          "high": 568960,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 80,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed"
+        ],
+        "est_gross_value": {
+          "low": 1204000,
+          "high": 1890000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
+          "Likely needs irrigation (460 mm rain expected, 520 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 462500,
+          "high": 732600,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Season rainfall 839 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 84732,
+          "high": 99468,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 79,
+        "flags": [
+          "Soil pH 5.1 is below the ideal 6-6.5: lime may be needed",
+          "Season rainfall 952 mm is above the ideal 610-840 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 30080,
+          "high": 33464,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 500,
+          "note": "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        },
+        "score": 70,
+        "flags": [
+          "Not reported in this county: confirm local buyers and markets",
+          "Soil pH 5.1 is below the ideal 5.8-6.5: lime may be needed",
+          "Somewhat poorly drained soil is wetter than ideal (somewhat excessively drained to moderately well drained): use raised beds or improve drainage",
+          "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        ],
+        "est_gross_value": {
+          "low": 47074,
+          "high": 70984,
+          "label": "Rough gross value before costs"
+        }
+      }
+    }
+  },
+  "belle_glade": {
+    "0.5": {
+      "snap_bean": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 98,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control",
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 1468,
+          "high": 1645,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Muck soil: needs managed drainage and water table control",
+          "Season averages 24.1 C, warmer than the ideal 16-24 C: heat stress risk"
+        ],
+        "est_gross_value": {
+          "low": 2083,
+          "high": 2845,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 0.5 acres.",
+          "Muck soil: needs managed drainage and water table control",
+          "Likely needs irrigation (1239 mm rain expected, 1320 mm needed)"
+        ],
+        "est_gross_value": null
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 96,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control",
+          "Likely needs irrigation (482 mm rain expected, 520 mm needed)",
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 2312,
+          "high": 3663,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 2,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Small planting of 0.5 acres; commercial scale is usually 2+ acres."
+        ],
+        "est_gross_value": {
+          "low": 6020,
+          "high": 9450,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 0.5 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": {
+          "low": 235,
+          "high": 355,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 384,
+          "high": 589,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Season rainfall 748 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 424,
+          "high": 497,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Likely needs irrigation (215 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 2484,
+          "high": 3331,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 0.5 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Season rainfall 900 mm is above the ideal 610-840 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 150,
+          "high": 167,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 1,
+          "note": "Small planting of 0.5 acres; commercial scale is usually 1+ acres."
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Not reported in this county: confirm local buyers and markets",
+          "Small planting of 0.5 acres; commercial scale is usually 1+ acres."
+        ],
+        "est_gross_value": {
+          "low": 12362,
+          "high": 17845,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 6357,
+          "high": 10949,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 5,
+          "note": "Usually grown on 5+ acres; hard to make work on 0.5 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 5+ acres; hard to make work on 0.5 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 3852,
+          "high": 4563,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "3": {
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 98,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control"
+        ],
+        "est_gross_value": {
+          "low": 8811,
+          "high": 9868,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 98,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control",
+          "Season averages 24.1 C, warmer than the ideal 16-24 C: heat stress risk",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 12497,
+          "high": 17069,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 3 acres.",
+          "Muck soil: needs managed drainage and water table control",
+          "Likely needs irrigation (1239 mm rain expected, 1320 mm needed)"
+        ],
+        "est_gross_value": null
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 96,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control",
+          "Likely needs irrigation (482 mm rain expected, 520 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 13875,
+          "high": 21978,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 36120,
+          "high": 56700,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 3 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": {
+          "low": 1412,
+          "high": 2130,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 2306,
+          "high": 3535,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Season rainfall 748 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 2542,
+          "high": 2984,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Likely needs irrigation (215 mm rain expected, 340 mm needed)",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 14906,
+          "high": 19984,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 3 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 3 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Season rainfall 900 mm is above the ideal 610-840 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 902,
+          "high": 1004,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": {
+          "low": 74175,
+          "high": 107070,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 38142,
+          "high": 65694,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 5,
+          "note": "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Small planting of 3 acres; commercial scale is usually 5+ acres."
+        ],
+        "est_gross_value": {
+          "low": 23113,
+          "high": 27377,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "10": {
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 98,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control"
+        ],
+        "est_gross_value": {
+          "low": 29370,
+          "high": 32894,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 98,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control",
+          "Season averages 24.1 C, warmer than the ideal 16-24 C: heat stress risk"
+        ],
+        "est_gross_value": {
+          "low": 41656,
+          "high": 56896,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 10 acres.",
+          "Muck soil: needs managed drainage and water table control",
+          "Likely needs irrigation (1239 mm rain expected, 1320 mm needed)"
+        ],
+        "est_gross_value": null
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 96,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control",
+          "Likely needs irrigation (482 mm rain expected, 520 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 46250,
+          "high": 73260,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 120400,
+          "high": 189000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 10 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": {
+          "low": 4707,
+          "high": 7098,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 7686,
+          "high": 11783,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Season rainfall 748 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 8473,
+          "high": 9947,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Likely needs irrigation (215 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 49686,
+          "high": 66612,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 100,
+          "note": "Usually grown on 100+ acres; hard to make work on 10 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 100+ acres; hard to make work on 10 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Season rainfall 900 mm is above the ideal 610-840 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 3008,
+          "high": 3346,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": {
+          "low": 247250,
+          "high": 356900,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 127141,
+          "high": 218981,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 77044,
+          "high": 91256,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "50": {
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 98,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control"
+        ],
+        "est_gross_value": {
+          "low": 146850,
+          "high": 164472,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 98,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control",
+          "Season averages 24.1 C, warmer than the ideal 16-24 C: heat stress risk"
+        ],
+        "est_gross_value": {
+          "low": 208280,
+          "high": 284480,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 50 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 50 acres.",
+          "Muck soil: needs managed drainage and water table control",
+          "Likely needs irrigation (1239 mm rain expected, 1320 mm needed)"
+        ],
+        "est_gross_value": null
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 96,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control",
+          "Likely needs irrigation (482 mm rain expected, 520 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 231250,
+          "high": 366300,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 602000,
+          "high": 945000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "too_small",
+          "min_practical_acres": 500,
+          "note": "Usually grown on 500+ acres; hard to make work on 50 acres."
+        },
+        "score": 40,
+        "flags": [
+          "Usually grown on 500+ acres; hard to make work on 50 acres.",
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": {
+          "low": 23537,
+          "high": 35492,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 38430,
+          "high": 58915,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Season rainfall 748 mm is above the ideal 570-710 mm: watch for disease and leaching",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 42366,
+          "high": 49734,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Likely needs irrigation (215 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 248430,
+          "high": 333060,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 100,
+          "note": "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Season rainfall 900 mm is above the ideal 610-840 mm: watch for disease and leaching",
+          "Small planting of 50 acres; commercial scale is usually 100+ acres."
+        ],
+        "est_gross_value": {
+          "low": 15040,
+          "high": 16732,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": {
+          "low": 1236250,
+          "high": 1784500,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 635705,
+          "high": 1094905,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 385220,
+          "high": 456280,
+          "label": "Rough gross value before costs"
+        }
+      }
+    },
+    "100": {
+      "snap_bean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 98,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control"
+        ],
+        "est_gross_value": {
+          "low": 293700,
+          "high": 328944,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sweet_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 98,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control",
+          "Season averages 24.1 C, warmer than the ideal 16-24 C: heat stress risk"
+        ],
+        "est_gross_value": {
+          "low": 416560,
+          "high": 568960,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "sugarcane": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 500,
+          "note": "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        },
+        "score": 97,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control",
+          "Likely needs irrigation (1239 mm rain expected, 1320 mm needed)",
+          "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        ],
+        "est_gross_value": null
+      },
+      "cabbage": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 96,
+        "flags": [
+          "Muck soil: needs managed drainage and water table control",
+          "Likely needs irrigation (482 mm rain expected, 520 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 462500,
+          "high": 732600,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "bell_pepper": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 2,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 1204000,
+          "high": 1890000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "cotton": {
+        "scale": {
+          "fit": "small",
+          "min_practical_acres": 500,
+          "note": "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Not reported in this county: confirm local buyers and markets",
+          "Small planting of 100 acres; commercial scale is usually 500+ acres."
+        ],
+        "est_gross_value": {
+          "low": 47074,
+          "high": 70984,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "field_corn": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 76859,
+          "high": 117830,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "peanut": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Season rainfall 748 mm is above the ideal 570-710 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 84732,
+          "high": 99468,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "potato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Likely needs irrigation (215 mm rain expected, 340 mm needed)"
+        ],
+        "est_gross_value": {
+          "low": 496860,
+          "high": 666120,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "soybean": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 100,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Season rainfall 900 mm is above the ideal 610-840 mm: watch for disease and leaching"
+        ],
+        "est_gross_value": {
+          "low": 30080,
+          "high": 33464,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "strawberry": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 1,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop",
+          "Not reported in this county: confirm local buyers and markets"
+        ],
+        "est_gross_value": {
+          "low": 2472500,
+          "high": 3569000,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "tomato": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 1271410,
+          "high": 2189810,
+          "label": "Rough gross value before costs"
+        }
+      },
+      "watermelon": {
+        "scale": {
+          "fit": "good",
+          "min_practical_acres": 5,
+          "note": null
+        },
+        "score": 45,
+        "flags": [
+          "Limited by drainage",
+          "Muck soil: not typical for this crop"
+        ],
+        "est_gross_value": {
+          "low": 770440,
+          "high": 912560,
+          "label": "Rough gross value before costs"
+        }
+      }
+    }
+  }
+}

@@ -16,10 +16,11 @@ function mockDelay(): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, 500));
 }
 
-async function request<T>(path: string, lat: number, lon: number): Promise<T> {
+async function request<T>(path: string, lat: number, lon: number, acres?: number): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 90_000);
   const query = new URLSearchParams({ lat: String(lat), lon: String(lon) });
+  if (acres !== undefined) query.set("acres", String(acres));
   const baseUrl = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
 
   try {
@@ -48,27 +49,31 @@ async function request<T>(path: string, lat: number, lon: number): Promise<T> {
   }
 }
 
-export async function getRecommendations(lat: number, lon: number): Promise<RecommendResponse> {
-  if (process.env.NEXT_PUBLIC_USE_MOCKS === "true") {
-    await mockDelay();
-    return getMockRecommend(lat, lon);
-  }
-  return request<RecommendResponse>("recommend", lat, lon);
-}
-
-export async function getCropDetail(id: string, lat: number, lon: number): Promise<CropDetail> {
+export async function getRecommendations(lat: number, lon: number, acres?: number): Promise<RecommendResponse> {
   if (process.env.NEXT_PUBLIC_USE_MOCKS === "true") {
     await mockDelay();
     try {
-      return getMockCropDetail(id, lat, lon);
+      return getMockRecommend(lat, lon, acres);
+    } catch (error) {
+      throw new ApiError(error instanceof Error ? error.message : "Mock data is unavailable.", 0);
+    }
+  }
+  return request<RecommendResponse>("recommend", lat, lon, acres);
+}
+
+export async function getCropDetail(id: string, lat: number, lon: number, acres?: number): Promise<CropDetail> {
+  if (process.env.NEXT_PUBLIC_USE_MOCKS === "true") {
+    await mockDelay();
+    try {
+      return getMockCropDetail(id, lat, lon, acres);
     } catch (error) {
       if (error instanceof Error && error.message === "Unknown crop") {
         throw new ApiError(error.message, 404);
       }
-      throw error;
+      throw new ApiError(error instanceof Error ? error.message : "Mock data is unavailable.", 0);
     }
   }
-  return request<CropDetail>(`crops/${encodeURIComponent(id)}`, lat, lon);
+  return request<CropDetail>(`crops/${encodeURIComponent(id)}`, lat, lon, acres);
 }
 
 export async function searchLocation(q: string): Promise<LocationResult[]> {

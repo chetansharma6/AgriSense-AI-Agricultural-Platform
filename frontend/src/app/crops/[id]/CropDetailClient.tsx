@@ -1,5 +1,6 @@
 "use client";
 
+import { parseAcres } from "@/lib/acreage";
 import Link from "next/link";
 import AiReport from "@/components/AiReport";
 import FactorChart from "@/components/FactorChart";
@@ -53,14 +54,15 @@ const badges = {
 export default function CropDetailClient() {
   const { id } = useParams<{ id: string }>();
   const params = useSearchParams();
+  const landAcres = parseAcres(params.get("acres"));
   const rawLat = params.get("lat");
   const rawLon = params.get("lon");
   const lat = Number(rawLat);
   const lon = Number(rawLon);
-  const valid = !!id && rawLat !== null && rawLon !== null && rawLat.trim() !== "" && rawLon.trim() !== ""
+  const valid = (landAcres === undefined || Number.isFinite(landAcres)) && !!id && rawLat !== null && rawLon !== null && rawLat.trim() !== "" && rawLon.trim() !== ""
     && Number.isFinite(lat) && Number.isFinite(lon)
     && lat >= 24.3 && lat <= 31.1 && lon >= -87.7 && lon <= -79.9;
-  const key = `${id}:${lat},${lon}`;
+  const key = `${id}:${lat},${lon}:${landAcres ?? ""}`;
   const [verdictSlot, setVerdictSlot] = useState<HTMLDivElement | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<DetailState | null>(null);
@@ -68,6 +70,7 @@ export default function CropDetailClient() {
   const place = placeLabel(params.get("place"), current?.location?.county);
   const name = current?.name ?? id.replace(/_/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
   const query = new URLSearchParams({ lat: lat.toFixed(4), lon: lon.toFixed(4) });
+  if (landAcres !== undefined) query.set("acres", String(landAcres));
   if (params.get("place")) query.set("place", params.get("place")!);
   const backUrl = valid ? `/results?${query}` : "/";
   useEffect(() => { document.title = `${name} at ${place} · AgriSense`; }, [name, place]);
@@ -75,7 +78,7 @@ export default function CropDetailClient() {
   useEffect(() => {
     if (!valid) return;
     let active = true;
-    getCropDetail(id, lat, lon).then(
+    getCropDetail(id, lat, lon, landAcres).then(
       (data) => { if (active) setState({ key, attempt, data }); },
       (error: unknown) => {
         if (active) setState({ key, attempt, error: error instanceof ApiError ? error
@@ -83,7 +86,7 @@ export default function CropDetailClient() {
       },
     );
     return () => { active = false; };
-  }, [id, lat, lon, valid, key, attempt]);
+  }, [id, lat, lon, landAcres, valid, key, attempt]);
 
   const back = <nav aria-label="Breadcrumbs" className="no-print"><ol className="flex flex-wrap items-center gap-x-2 text-sm">
     <li><Link href="/" className="inline-flex min-h-11 items-center text-field underline underline-offset-4">Home</Link></li><li aria-hidden="true">→</li>
@@ -128,11 +131,11 @@ export default function CropDetailClient() {
             <p className="text-sm font-semibold">{tone ? badges[tone].label : "No data"}</p>
           </div>
         </div>
-        {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/10 px-3 py-1 text-sm font-semibold text-clay">Score capped at {crop.scoring?.critical_cap ?? 45}. {limitedText(crop.limited_by)}</p>}
+        {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/10 px-3 py-1 text-sm font-semibold text-clay">Score capped at {crop.scale?.fit === "too_small" ? Math.min(40, crop.scoring?.critical_cap ?? 45) : crop.scoring?.critical_cap ?? 45}. {limitedText(crop.limited_by)}</p>}
         <div id="ai-verdict" ref={setVerdictSlot} />
       </header>
       <FactorChart factors={crop.factors} details={crop.factor_details} weights={weightsFor(crop.scoring)} explanation={explanationFor(crop.scoring)} />
-      <AiReport key={key} crop={crop} verdictSlot={verdictSlot} />
+      <AiReport key={key} crop={crop} acres={landAcres} verdictSlot={verdictSlot} />
       <section aria-labelledby="track-record">
         <h2 id="track-record" className="section-title mb-5">Local track record</h2>
         <dl className={`grid gap-4 ${hasAcres ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
@@ -153,6 +156,17 @@ export default function CropDetailClient() {
           return url ? <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-field px-4 py-3 text-sm font-semibold text-field hover:bg-leaf/15">{formatGuideTitle(link.title)}</a> : null;
         })}</div>
       </section>
+      {crop.nutrient_plan && <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="feeding-soil">
+        <h2 id="feeding-soil" className="section-title">Feeding the soil</h2>
+        {crop.nutrient_plan.lime_note && <p className="mt-4 leading-relaxed">{crop.nutrient_plan.lime_note}</p>}
+        <p className="mt-4">Get a soil test before choosing fertilizer or lime.</p>
+        {crop.nutrient_plan.n_lb_per_acre !== null && <p className="mt-4 leading-relaxed">UF/IFAS suggests about {crop.nutrient_plan.n_lb_per_acre} lb of nitrogen per acre per season, split into several applications.</p>}
+        <ul className="mt-4 space-y-3" aria-label="Soil feeding checklist">{crop.nutrient_plan.practices.map((practice, i) => <li key={i} className="flex items-start gap-3"><span aria-hidden="true" className="text-field">✓</span><span>{practice}</span></li>)}</ul>
+        <div className="mt-4 flex flex-wrap gap-3">{crop.nutrient_plan.sources.map((source, i) => {
+          const url = extensionUrl(source.url);
+          return url ? <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-sm text-field underline underline-offset-4">{source.title}</a> : null;
+        })}</div>
+      </section>}
       <aside className="card report-disclaimer rounded-xl border border-soil/25 bg-sand p-5 text-sm leading-relaxed">General guidance only. Confirm fertilizer and pesticide decisions with your county UF/IFAS Extension office and always follow product labels.</aside>
     </div>
   );
