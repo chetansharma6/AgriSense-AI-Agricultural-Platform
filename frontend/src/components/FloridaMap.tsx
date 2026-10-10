@@ -1,6 +1,7 @@
 "use client";
 
-import { CircleMarker, MapContainer, TileLayer, Tooltip, useMapEvents } from "react-leaflet";
+import { useEffect } from "react";
+import { CircleMarker, MapContainer, TileLayer, Tooltip, useMap, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
 export interface MapPoint {
@@ -25,6 +26,27 @@ function MapClicks({ onChange }: Pick<FloridaMapProps, "onChange">) {
   return null;
 }
 
+function MapViewport({ value }: Pick<FloridaMapProps, "value">) {
+  const map = useMap();
+  const lat = value?.lat;
+  const lon = value?.lon;
+
+  useEffect(() => {
+    if (lat !== undefined && lon !== undefined) {
+      map.setView([lat, lon], 9);
+    }
+  }, [map, lat, lon]);
+
+  useEffect(() => {
+    const observer = new ResizeObserver(() => map.invalidateSize());
+    observer.observe(map.getContainer());
+    map.invalidateSize();
+    return () => observer.disconnect();
+  }, [map]);
+
+  return null;
+}
+
 export default function FloridaMap({ value, onChange, demoPins }: FloridaMapProps) {
   return (
     <MapContainer
@@ -33,7 +55,8 @@ export default function FloridaMap({ value, onChange, demoPins }: FloridaMapProp
       minZoom={5}
       maxBounds={[[23.3, -88.7], [32.1, -78.9]]}
       maxBoundsViscosity={1}
-      className="h-[320px] lg:h-[420px] w-full rounded-lg bg-sand"
+      style={{ height: "100%", width: "100%" }}
+      className="rounded-lg bg-sand"
       aria-label="Select a Florida farm location"
     >
       <TileLayer
@@ -41,6 +64,7 @@ export default function FloridaMap({ value, onChange, demoPins }: FloridaMapProp
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
       <MapClicks onChange={onChange} />
+      <MapViewport value={value} />
       {demoPins.map((pin) => (
         <CircleMarker
           key={`${pin.name}:${pin.lat}:${pin.lon}`}
