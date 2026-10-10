@@ -159,19 +159,3 @@ def _typical_date(dates: list[pd.Timestamp], n_years: int) -> str | None:
     median = offsets[len(offsets) // 2]
     return (pd.Timestamp(2001, 7, 1) + pd.Timedelta(days=median)).strftime("%m-%d")
 
-
-if __name__ == "__main__":
-    import time
-
-    from app.config import DEMO_FARMS
-
-    started = time.perf_counter()
-    for name, (lat, lon) in DEMO_FARMS.items():
-        climate = get_climate(lat, lon)
-        print(f"{name}:")
-        for key, value in climate.items():
-            if key != "monthly":
-                print(f"  {key}: {value}")
-        for month in climate["monthly"]:
-            print(f"  {month}")
-    print(f"elapsed: {time.perf_counter() - started:.2f} s")
