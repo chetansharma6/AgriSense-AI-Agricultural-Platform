@@ -1,0 +1,17 @@
+# Render Blueprint for the AgriSense backend (render.com -> New -> Blueprint).
+services:
+  - type: web
+    name: agrisense-api
+    runtime: python
+    plan: free  # sleeps after 15 min idle; open /api/health a minute before the demo
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION  # Render reads this, not runtime.txt; needs a full x.y.z version
+        value: "3.11.17"
+      - key: NASS_API_KEY
+        sync: false  # set by hand in the Render dashboard
+      - key: DEMO_MODE
+        value: "true"
