@@ -1,7 +1,6 @@
 """App settings, loaded once from environment variables and backend/.env."""
 
 import os
-from functools import lru_cache
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -12,6 +11,12 @@ CACHE_DIR = DATA_DIR / "cache"
 
 load_dotenv(BACKEND_DIR / ".env")
 
+NASS_API_KEY = os.getenv("NASS_API_KEY", "").strip()
+
+# DEMO_MODE=true serves only cached data and never calls an outside API, so
+# the demo cannot be slowed or broken by a network or service problem.
+DEMO_MODE = os.getenv("DEMO_MODE", "false").strip().lower() in {"1", "true", "yes"}
+
 # Comma-separated browser origins allowed to call the API. In Codespaces, add
 # the forwarded frontend URL (https://<name>-3000.app.github.dev).
 CORS_ORIGINS = [
@@ -19,20 +24,20 @@ CORS_ORIGINS = [
     for origin in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
     if origin.strip()
 ]
+# Vercel deployments (production and preview URLs).
+CORS_ORIGIN_REGEX = r"https://.*\.vercel\.app"
 
-FL_LAT_MIN, FL_LAT_MAX = 24.3, 31.1
-FL_LON_MIN, FL_LON_MAX = -87.7, -79.9
+FL_BBOX = (24.3, 31.1, -87.7, -79.9)  # lat_min, lat_max, lon_min, lon_max
 
 
 def in_florida(lat: float, lon: float) -> bool:
     """Return True if the point is inside the Florida bounding box."""
-    return FL_LAT_MIN <= lat <= FL_LAT_MAX and FL_LON_MIN <= lon <= FL_LON_MAX
+    lat_min, lat_max, lon_min, lon_max = FL_BBOX
+    return lat_min <= lat <= lat_max and lon_min <= lon <= lon_max
 
 
-@lru_cache(maxsize=1)
 def nass_api_key() -> str:
     """Return the NASS Quick Stats key. Raises if it is not configured."""
-    key = os.getenv("NASS_API_KEY", "").strip()
-    if not key:
+    if not NASS_API_KEY:
         raise RuntimeError("NASS_API_KEY is not set (add it to backend/.env)")
-    return key
+    return NASS_API_KEY

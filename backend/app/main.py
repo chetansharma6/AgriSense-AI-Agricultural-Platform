@@ -5,7 +5,7 @@ from typing import Any
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.config import CORS_ORIGINS, in_florida
+from app.config import CORS_ORIGIN_REGEX, CORS_ORIGINS, in_florida
 from app.crops import load_crops
 from app.service import OutsideFlorida, crop_detail, recommend
 
@@ -14,6 +14,7 @@ app = FastAPI(title="AgriSense API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=CORS_ORIGINS,
+    allow_origin_regex=CORS_ORIGIN_REGEX,
     allow_methods=["GET"],
     allow_headers=["*"],
 )
