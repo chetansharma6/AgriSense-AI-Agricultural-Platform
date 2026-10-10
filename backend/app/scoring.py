@@ -41,8 +41,11 @@ FACTOR_NAMES = {
 
 DRAINAGE_PENALTY_PER_CLASS = 25
 FREEZE_PENALTY_PER_DAY = 10
+# A light freeze (-2 to 0 C) counts as half a freeze day, a hard freeze (<= -2 C) as a whole one.
+LIGHT_FREEZE_WEIGHT = 0.5
 MUCK_SUITABLE_SCORE = 90
-MUCK_UNSUITABLE_SCORE = 30
+# Below CRITICAL_THRESHOLD on purpose: a crop not grown on muck is capped there.
+MUCK_UNSUITABLE_SCORE = 15
 # Local history: 60 for any reported acreage, rising to 100 at FULL_HISTORY_ACRES
 # on a log scale; 75 when NASS withholds the number; 30 when not grown.
 HISTORY_BASE_SCORE = 60
@@ -125,7 +128,8 @@ def score_climate(crop: Crop, stats: SeasonStats | None) -> dict[str, Factor]:
     r_low = round(crop.rain_mm_per_month[0] * stats.months, -1) if stats else None
     r_high = round(crop.rain_mm_per_month[1] * stats.months, -1) if stats else None
     temp_detail = {"value": None, "ideal": f"{t_low:g}-{t_high:g}", "unit": "C avg"}
-    frost_detail = {"value": None, "ideal": f"<= {crop.max_freeze_days:g}", "unit": "freeze days in season"}
+    frost_detail = {"value": None, "ideal": f"<= {crop.max_freeze_days:g}",
+                    "unit": "freeze days in season (light freezes count half)"}
     rain_detail = {"value": None, "ideal": f"{r_low:.0f}-{r_high:.0f}" if stats else None, "unit": "mm in season"}
     result: dict[str, Factor] = {"season_temp": (None, temp_detail, []), "frost_risk": (None, frost_detail, []),
                                  "rainfall": (None, rain_detail, [])}
@@ -143,13 +147,15 @@ def score_climate(crop: Crop, stats: SeasonStats | None) -> dict[str, Factor]:
         result["season_temp"] = (trapezoid_score(temp, crop.temp_min_c, t_low, t_high, crop.temp_max_c),
                                  temp_detail, temp_flags)
 
-    if not is_missing(stats.freeze_days):
-        frost_detail["value"] = round(stats.freeze_days, 1)
-        excess_freezes = stats.freeze_days - crop.max_freeze_days
+    if not is_missing(stats.freeze_days) and not is_missing(stats.hard_freeze_days):
+        weighted = weighted_freeze_days(stats)
+        frost_detail["value"] = round(weighted, 1)
+        excess_freezes = weighted - crop.max_freeze_days
         frost_flags = []
         if excess_freezes > 0:
-            frost_flags.append(f"About {stats.freeze_days:.1f} freeze days expected in season (crop tolerates "
-                               f"{crop.max_freeze_days:g}): plan frost protection or a later planting")
+            frost_flags.append(f"About {stats.freeze_days:.1f} freezing nights in season, {stats.hard_freeze_days:.1f} "
+                               f"of them hard (-2 C or colder); crop tolerates about {crop.max_freeze_days:g}: "
+                               "plan frost protection or a later planting")
         result["frost_risk"] = (max(0, round(100 - FREEZE_PENALTY_PER_DAY * max(0.0, excess_freezes))),
                                 frost_detail, frost_flags)
 
@@ -164,6 +170,12 @@ def score_climate(crop: Crop, stats: SeasonStats | None) -> dict[str, Factor]:
                               "watch for disease and leaching")
         result["rainfall"] = (relative_range_score(rain, r_low, r_high), rain_detail, rain_flags)
     return result
+
+
+def weighted_freeze_days(stats: SeasonStats) -> float:
+    """Hard freezes count fully, light ones (above HARD_FREEZE_C) by LIGHT_FREEZE_WEIGHT."""
+    light = max(0.0, stats.freeze_days - stats.hard_freeze_days)
+    return stats.hard_freeze_days + LIGHT_FREEZE_WEIGHT * light
 
 
 def score_local_history(acreage: CountyAcreage | None) -> Factor:

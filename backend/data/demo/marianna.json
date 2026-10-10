@@ -23,6 +23,65 @@
     },
     "crops": [
       {
+        "id": "watermelon",
+        "name": "Watermelon",
+        "score": 93,
+        "season_label": "Spring: plant Feb-Apr, harvest May-Jul",
+        "factors": {
+          "soil_ph": 80,
+          "drainage": 100,
+          "season_temp": 100,
+          "frost_risk": 92,
+          "rainfall": 100,
+          "local_history": 91
+        },
+        "factor_details": {
+          "soil_ph": {
+            "value": 5.3,
+            "ideal": "5.5-6.8",
+            "unit": "pH"
+          },
+          "drainage": {
+            "value": "Well drained",
+            "ideal": "Somewhat excessively drained to moderately well drained"
+          },
+          "season_temp": {
+            "value": 21.9,
+            "ideal": "20-30",
+            "unit": "C avg"
+          },
+          "frost_risk": {
+            "value": 0.8,
+            "ideal": "<= 0",
+            "unit": "freeze days in season (light freezes count half)"
+          },
+          "rainfall": {
+            "value": 545,
+            "ideal": "430-620",
+            "unit": "mm in season"
+          },
+          "local_history": {
+            "value": "676 acres in county (2022 Census)",
+            "ideal": "Grown locally"
+          }
+        },
+        "avg_yield": {
+          "value": 374.0,
+          "unit": "CWT / ACRE",
+          "level": "state"
+        },
+        "price": {
+          "low": 20.6,
+          "high": 24.4,
+          "unit": "$ / CWT"
+        },
+        "limited_by": [],
+        "flags": [
+          "Soil pH 5.3 is below the ideal 5.5-6.8: lime may be needed",
+          "About 1.2 freezing nights in season, 0.4 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+        ]
+      },
+      {
         "id": "cotton",
         "name": "Cotton",
         "score": 92,
@@ -53,7 +112,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 682,
@@ -109,9 +168,9 @@
             "unit": "C avg"
           },
           "frost_risk": {
-            "value": 0.5,
+            "value": 0.4,
             "ideal": "<= 1",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 553,
@@ -169,7 +228,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 598,
@@ -197,74 +256,15 @@
         ]
       },
       {
-        "id": "watermelon",
-        "name": "Watermelon",
-        "score": 92,
-        "season_label": "Spring: plant Feb-Apr, harvest May-Jul",
-        "factors": {
-          "soil_ph": 80,
-          "drainage": 100,
-          "season_temp": 100,
-          "frost_risk": 88,
-          "rainfall": 100,
-          "local_history": 91
-        },
-        "factor_details": {
-          "soil_ph": {
-            "value": 5.3,
-            "ideal": "5.5-6.8",
-            "unit": "pH"
-          },
-          "drainage": {
-            "value": "Well drained",
-            "ideal": "Somewhat excessively drained to moderately well drained"
-          },
-          "season_temp": {
-            "value": 21.9,
-            "ideal": "20-30",
-            "unit": "C avg"
-          },
-          "frost_risk": {
-            "value": 1.2,
-            "ideal": "<= 0",
-            "unit": "freeze days in season"
-          },
-          "rainfall": {
-            "value": 545,
-            "ideal": "430-620",
-            "unit": "mm in season"
-          },
-          "local_history": {
-            "value": "676 acres in county (2022 Census)",
-            "ideal": "Grown locally"
-          }
-        },
-        "avg_yield": {
-          "value": 374.0,
-          "unit": "CWT / ACRE",
-          "level": "state"
-        },
-        "price": {
-          "low": 20.6,
-          "high": 24.4,
-          "unit": "$ / CWT"
-        },
-        "limited_by": [],
-        "flags": [
-          "Soil pH 5.3 is below the ideal 5.5-6.8: lime may be needed",
-          "About 1.2 freeze days expected in season (crop tolerates 0): plan frost protection or a later planting"
-        ]
-      },
-      {
         "id": "potato",
         "name": "Potato",
-        "score": 88,
+        "score": 90,
         "season_label": "Spring: plant Jan-Feb, harvest Apr-May",
         "factors": {
           "soil_ph": 100,
           "drainage": 100,
           "season_temp": 100,
-          "frost_risk": 59,
+          "frost_risk": 75,
           "rainfall": 100,
           "local_history": 69
         },
@@ -284,9 +284,9 @@
             "unit": "C avg"
           },
           "frost_risk": {
-            "value": 6.1,
+            "value": 4.5,
             "ideal": "<= 2",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 393,
@@ -310,19 +310,19 @@
         },
         "limited_by": [],
         "flags": [
-          "About 6.1 freeze days expected in season (crop tolerates 2): plan frost protection or a later planting"
+          "About 6.1 freezing nights in season, 2.9 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting"
         ]
       },
       {
         "id": "snap_bean",
         "name": "Snap bean",
-        "score": 88,
+        "score": 89,
         "season_label": "Fall: plant Aug-Sep, harvest Oct-Nov",
         "factors": {
           "soil_ph": 58,
           "drainage": 100,
           "season_temp": 100,
-          "frost_risk": 91,
+          "frost_risk": 94,
           "rainfall": 96,
           "local_history": 92
         },
@@ -342,9 +342,9 @@
             "unit": "C avg"
           },
           "frost_risk": {
-            "value": 0.9,
+            "value": 0.6,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 259,
@@ -369,7 +369,7 @@
         "limited_by": [],
         "flags": [
           "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed",
-          "About 0.9 freeze days expected in season (crop tolerates 0): plan frost protection or a later planting",
+          "About 0.9 freezing nights in season, 0.3 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting",
           "Likely needs irrigation (259 mm rain expected, 270 mm needed)"
         ]
       },
@@ -404,7 +404,7 @@
           "frost_risk": {
             "value": 0.0,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 651,
@@ -434,13 +434,13 @@
       {
         "id": "sweet_corn",
         "name": "Sweet corn",
-        "score": 87,
+        "score": 88,
         "season_label": "Spring: plant Feb-Apr, harvest May-Jun",
         "factors": {
           "soil_ph": 58,
           "drainage": 100,
           "season_temp": 100,
-          "frost_risk": 84,
+          "frost_risk": 90,
           "rainfall": 100,
           "local_history": 89
         },
@@ -460,9 +460,9 @@
             "unit": "C avg"
           },
           "frost_risk": {
-            "value": 1.6,
+            "value": 1.1,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 480,
@@ -487,19 +487,19 @@
         "limited_by": [],
         "flags": [
           "Soil pH 5.3 is below the ideal 5.8-6.8: lime may be needed",
-          "About 1.6 freeze days expected in season (crop tolerates 0): plan frost protection or a later planting"
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
         ]
       },
       {
         "id": "tomato",
         "name": "Tomato",
-        "score": 82,
+        "score": 83,
         "season_label": "Spring: plant Feb-Apr, harvest May-Jun",
         "factors": {
           "soil_ph": 42,
           "drainage": 100,
           "season_temp": 100,
-          "frost_risk": 84,
+          "frost_risk": 90,
           "rainfall": 100,
           "local_history": 80
         },
@@ -519,9 +519,9 @@
             "unit": "C avg"
           },
           "frost_risk": {
-            "value": 1.6,
+            "value": 1.1,
             "ideal": "<= 0",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 480,
@@ -546,78 +546,19 @@
         "limited_by": [],
         "flags": [
           "Soil pH 5.3 is below the ideal 6-6.8: lime may be needed",
-          "About 1.6 freeze days expected in season (crop tolerates 0): plan frost protection or a later planting"
-        ]
-      },
-      {
-        "id": "bell_pepper",
-        "name": "Bell pepper",
-        "score": 76,
-        "season_label": "Fall: plant Jul-Sep, harvest Oct-Dec",
-        "factors": {
-          "soil_ph": 42,
-          "drainage": 100,
-          "season_temp": 100,
-          "frost_risk": 65,
-          "rainfall": 100,
-          "local_history": 63
-        },
-        "factor_details": {
-          "soil_ph": {
-            "value": 5.3,
-            "ideal": "6-6.5",
-            "unit": "pH"
-          },
-          "drainage": {
-            "value": "Well drained",
-            "ideal": "Somewhat excessively drained to somewhat poorly drained"
-          },
-          "season_temp": {
-            "value": 21.3,
-            "ideal": "17-30",
-            "unit": "C avg"
-          },
-          "frost_risk": {
-            "value": 3.5,
-            "ideal": "<= 0",
-            "unit": "freeze days in season"
-          },
-          "rainfall": {
-            "value": 448,
-            "ideal": "370-610",
-            "unit": "mm in season"
-          },
-          "local_history": {
-            "value": "2 acres in county (2022 Census)",
-            "ideal": "Grown locally"
-          }
-        },
-        "avg_yield": {
-          "value": 280.0,
-          "unit": "CWT / ACRE",
-          "level": "state"
-        },
-        "price": {
-          "low": 43.0,
-          "high": 67.5,
-          "unit": "$ / CWT"
-        },
-        "limited_by": [],
-        "flags": [
-          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
-          "About 3.5 freeze days expected in season (crop tolerates 0): plan frost protection or a later planting"
+          "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
         ]
       },
       {
         "id": "cabbage",
         "name": "Cabbage",
-        "score": 74,
+        "score": 79,
         "season_label": "Fall-winter: plant Sep-Jan, harvest Dec-Apr",
         "factors": {
           "soil_ph": 42,
           "drainage": 100,
           "season_temp": 100,
-          "frost_risk": 50,
+          "frost_risk": 87,
           "rainfall": 100,
           "local_history": 65
         },
@@ -637,9 +578,9 @@
             "unit": "C avg"
           },
           "frost_risk": {
-            "value": 15.0,
+            "value": 11.3,
             "ideal": "<= 10",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 697,
@@ -664,7 +605,66 @@
         "limited_by": [],
         "flags": [
           "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
-          "About 15.0 freeze days expected in season (crop tolerates 10): plan frost protection or a later planting"
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 10: plan frost protection or a later planting"
+        ]
+      },
+      {
+        "id": "bell_pepper",
+        "name": "Bell pepper",
+        "score": 77,
+        "season_label": "Fall: plant Jul-Sep, harvest Oct-Dec",
+        "factors": {
+          "soil_ph": 42,
+          "drainage": 100,
+          "season_temp": 100,
+          "frost_risk": 75,
+          "rainfall": 100,
+          "local_history": 63
+        },
+        "factor_details": {
+          "soil_ph": {
+            "value": 5.3,
+            "ideal": "6-6.5",
+            "unit": "pH"
+          },
+          "drainage": {
+            "value": "Well drained",
+            "ideal": "Somewhat excessively drained to somewhat poorly drained"
+          },
+          "season_temp": {
+            "value": 21.3,
+            "ideal": "17-30",
+            "unit": "C avg"
+          },
+          "frost_risk": {
+            "value": 2.5,
+            "ideal": "<= 0",
+            "unit": "freeze days in season (light freezes count half)"
+          },
+          "rainfall": {
+            "value": 448,
+            "ideal": "370-610",
+            "unit": "mm in season"
+          },
+          "local_history": {
+            "value": "2 acres in county (2022 Census)",
+            "ideal": "Grown locally"
+          }
+        },
+        "avg_yield": {
+          "value": 280.0,
+          "unit": "CWT / ACRE",
+          "level": "state"
+        },
+        "price": {
+          "low": 43.0,
+          "high": 67.5,
+          "unit": "$ / CWT"
+        },
+        "limited_by": [],
+        "flags": [
+          "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+          "About 3.5 freezing nights in season, 1.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
         ]
       },
       {
@@ -676,7 +676,7 @@
           "soil_ph": 83,
           "drainage": 100,
           "season_temp": 100,
-          "frost_risk": 0,
+          "frost_risk": 17,
           "rainfall": 100,
           "local_history": 30
         },
@@ -696,9 +696,9 @@
             "unit": "C avg"
           },
           "frost_risk": {
-            "value": 15.0,
+            "value": 11.3,
             "ideal": "<= 3",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 564,
@@ -725,7 +725,7 @@
         ],
         "flags": [
           "Limited by freeze risk",
-          "About 15.0 freeze days expected in season (crop tolerates 3): plan frost protection or a later planting",
+          "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 3: plan frost protection or a later planting",
           "Not reported in this county: confirm local buyers and markets",
           "Soil pH 5.3 is below the ideal 5.5-6.5: lime may be needed"
         ]
@@ -759,9 +759,9 @@
             "unit": "C avg"
           },
           "frost_risk": {
-            "value": 15.9,
+            "value": 11.9,
             "ideal": "<= 2",
-            "unit": "freeze days in season"
+            "unit": "freeze days in season (light freezes count half)"
           },
           "rainfall": {
             "value": 1281,
@@ -788,7 +788,7 @@
         ],
         "flags": [
           "Limited by freeze risk",
-          "About 15.9 freeze days expected in season (crop tolerates 2): plan frost protection or a later planting",
+          "About 15.9 freezing nights in season, 8.0 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting",
           "Not reported in this county: confirm local buyers and markets",
           "Season averages 20.1 C, cooler than the ideal 24-37 C: slower growth"
         ]
@@ -815,6 +815,171 @@
     }
   },
   "crops": {
+    "watermelon": {
+      "id": "watermelon",
+      "name": "Watermelon",
+      "score": 93,
+      "season_label": "Spring: plant Feb-Apr, harvest May-Jul",
+      "factors": {
+        "soil_ph": 80,
+        "drainage": 100,
+        "season_temp": 100,
+        "frost_risk": 92,
+        "rainfall": 100,
+        "local_history": 91
+      },
+      "factor_details": {
+        "soil_ph": {
+          "value": 5.3,
+          "ideal": "5.5-6.8",
+          "unit": "pH"
+        },
+        "drainage": {
+          "value": "Well drained",
+          "ideal": "Somewhat excessively drained to moderately well drained"
+        },
+        "season_temp": {
+          "value": 21.9,
+          "ideal": "20-30",
+          "unit": "C avg"
+        },
+        "frost_risk": {
+          "value": 0.8,
+          "ideal": "<= 0",
+          "unit": "freeze days in season (light freezes count half)"
+        },
+        "rainfall": {
+          "value": 545,
+          "ideal": "430-620",
+          "unit": "mm in season"
+        },
+        "local_history": {
+          "value": "676 acres in county (2022 Census)",
+          "ideal": "Grown locally"
+        }
+      },
+      "avg_yield": {
+        "value": 374.0,
+        "unit": "CWT / ACRE",
+        "level": "state"
+      },
+      "price": {
+        "low": 20.6,
+        "high": 24.4,
+        "unit": "$ / CWT"
+      },
+      "limited_by": [],
+      "flags": [
+        "Soil pH 5.3 is below the ideal 5.5-6.8: lime may be needed",
+        "About 1.2 freezing nights in season, 0.4 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
+      ],
+      "requirements": {
+        "id": "watermelon",
+        "name": "Watermelon",
+        "nass_commodity": "MELONS",
+        "nass_class": "WATERMELON",
+        "nass": {
+          "acres_descs": [
+            "MELONS, WATERMELON - ACRES HARVESTED"
+          ],
+          "yield_desc": "MELONS, WATERMELON - YIELD, MEASURED IN CWT / ACRE",
+          "price_desc": "MELONS, WATERMELON - PRICE RECEIVED, MEASURED IN $ / CWT"
+        },
+        "fl_windows": [
+          {
+            "label": "Spring: plant Feb-Apr, harvest May-Jul",
+            "start": "02-20",
+            "end": "07-15",
+            "months": [
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ]
+          },
+          {
+            "label": "Winter (South FL): plant Dec-Jan, harvest Mar-Apr",
+            "start": "12-01",
+            "end": "04-15",
+            "months": [
+              12,
+              1,
+              2,
+              3,
+              4
+            ]
+          }
+        ],
+        "ph_min": 4.5,
+        "ph_ideal_min": 5.5,
+        "ph_ideal_max": 6.8,
+        "ph_max": 8.0,
+        "drainage": [
+          "Somewhat excessively drained",
+          "Moderately well drained"
+        ],
+        "muck_suitable": false,
+        "temp_min_c": 15.0,
+        "temp_ideal_min_c": 20.0,
+        "temp_ideal_max_c": 30.0,
+        "temp_max_c": 35.0,
+        "max_freeze_days": 0.0,
+        "rain_mm_per_month": [
+          90.0,
+          130.0
+        ],
+        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
+        "needs_review": false
+      },
+      "general_guidance": "Watermelons favor well-drained sandy soils and warm weather. Most Florida acreage is planted in late winter for May-June harvest, ahead of other states. Use raised beds with plastic mulch and drip irrigation, plan for pollinizer plants with seedless varieties, and rotate fields to reduce Fusarium wilt.",
+      "extension_links": [
+        {
+          "title": "Chapter 7. Cucurbit Production",
+          "url": "https://edis.ifas.ufl.edu/publication/CV123"
+        }
+      ],
+      "conditions": {
+        "soil_ph": 5.3,
+        "organic_matter_pct": 0.8,
+        "sand_pct": 81.0,
+        "clay_pct": 10.0,
+        "texture": "loamy sand",
+        "drainage": "Well drained",
+        "annual_precip_mm": 1281.4,
+        "frost_free_days": 271.6,
+        "last_spring_frost": "02-27",
+        "first_fall_frost": "11-30",
+        "avg_summer_high_c": 32.7,
+        "avg_winter_low_c": 5.9
+      },
+      "location": {
+        "lat": 30.8,
+        "lon": -85.25,
+        "county": "Jackson",
+        "county_fips": "12063",
+        "state": "FL"
+      },
+      "scoring": {
+        "weights": {
+          "soil_ph": 0.2,
+          "drainage": 0.15,
+          "season_temp": 0.2,
+          "frost_risk": 0.15,
+          "rainfall": 0.1,
+          "local_history": 0.2
+        },
+        "critical_factors": [
+          "soil_ph",
+          "drainage",
+          "season_temp",
+          "frost_risk"
+        ],
+        "critical_threshold": 25,
+        "critical_cap": 45
+      }
+    },
     "cotton": {
       "id": "cotton",
       "name": "Cotton",
@@ -846,7 +1011,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 682,
@@ -1009,9 +1174,9 @@
           "unit": "C avg"
         },
         "frost_risk": {
-          "value": 0.5,
+          "value": 0.4,
           "ideal": "<= 1",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 553,
@@ -1174,7 +1339,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 598,
@@ -1311,181 +1476,16 @@
         "critical_cap": 45
       }
     },
-    "watermelon": {
-      "id": "watermelon",
-      "name": "Watermelon",
-      "score": 92,
-      "season_label": "Spring: plant Feb-Apr, harvest May-Jul",
-      "factors": {
-        "soil_ph": 80,
-        "drainage": 100,
-        "season_temp": 100,
-        "frost_risk": 88,
-        "rainfall": 100,
-        "local_history": 91
-      },
-      "factor_details": {
-        "soil_ph": {
-          "value": 5.3,
-          "ideal": "5.5-6.8",
-          "unit": "pH"
-        },
-        "drainage": {
-          "value": "Well drained",
-          "ideal": "Somewhat excessively drained to moderately well drained"
-        },
-        "season_temp": {
-          "value": 21.9,
-          "ideal": "20-30",
-          "unit": "C avg"
-        },
-        "frost_risk": {
-          "value": 1.2,
-          "ideal": "<= 0",
-          "unit": "freeze days in season"
-        },
-        "rainfall": {
-          "value": 545,
-          "ideal": "430-620",
-          "unit": "mm in season"
-        },
-        "local_history": {
-          "value": "676 acres in county (2022 Census)",
-          "ideal": "Grown locally"
-        }
-      },
-      "avg_yield": {
-        "value": 374.0,
-        "unit": "CWT / ACRE",
-        "level": "state"
-      },
-      "price": {
-        "low": 20.6,
-        "high": 24.4,
-        "unit": "$ / CWT"
-      },
-      "limited_by": [],
-      "flags": [
-        "Soil pH 5.3 is below the ideal 5.5-6.8: lime may be needed",
-        "About 1.2 freeze days expected in season (crop tolerates 0): plan frost protection or a later planting"
-      ],
-      "requirements": {
-        "id": "watermelon",
-        "name": "Watermelon",
-        "nass_commodity": "MELONS",
-        "nass_class": "WATERMELON",
-        "nass": {
-          "acres_descs": [
-            "MELONS, WATERMELON - ACRES HARVESTED"
-          ],
-          "yield_desc": "MELONS, WATERMELON - YIELD, MEASURED IN CWT / ACRE",
-          "price_desc": "MELONS, WATERMELON - PRICE RECEIVED, MEASURED IN $ / CWT"
-        },
-        "fl_windows": [
-          {
-            "label": "Spring: plant Feb-Apr, harvest May-Jul",
-            "start": "02-20",
-            "end": "07-15",
-            "months": [
-              2,
-              3,
-              4,
-              5,
-              6,
-              7
-            ]
-          },
-          {
-            "label": "Winter (South FL): plant Dec-Jan, harvest Mar-Apr",
-            "start": "12-01",
-            "end": "04-15",
-            "months": [
-              12,
-              1,
-              2,
-              3,
-              4
-            ]
-          }
-        ],
-        "ph_min": 4.5,
-        "ph_ideal_min": 5.5,
-        "ph_ideal_max": 6.8,
-        "ph_max": 8.0,
-        "drainage": [
-          "Somewhat excessively drained",
-          "Moderately well drained"
-        ],
-        "muck_suitable": false,
-        "temp_min_c": 15.0,
-        "temp_ideal_min_c": 20.0,
-        "temp_ideal_max_c": 30.0,
-        "temp_max_c": 35.0,
-        "max_freeze_days": 0.0,
-        "rain_mm_per_month": [
-          90.0,
-          130.0
-        ],
-        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
-        "needs_review": false
-      },
-      "general_guidance": "Watermelons favor well-drained sandy soils and warm weather. Most Florida acreage is planted in late winter for May-June harvest, ahead of other states. Use raised beds with plastic mulch and drip irrigation, plan for pollinizer plants with seedless varieties, and rotate fields to reduce Fusarium wilt.",
-      "extension_links": [
-        {
-          "title": "Chapter 7. Cucurbit Production",
-          "url": "https://edis.ifas.ufl.edu/publication/CV123"
-        }
-      ],
-      "conditions": {
-        "soil_ph": 5.3,
-        "organic_matter_pct": 0.8,
-        "sand_pct": 81.0,
-        "clay_pct": 10.0,
-        "texture": "loamy sand",
-        "drainage": "Well drained",
-        "annual_precip_mm": 1281.4,
-        "frost_free_days": 271.6,
-        "last_spring_frost": "02-27",
-        "first_fall_frost": "11-30",
-        "avg_summer_high_c": 32.7,
-        "avg_winter_low_c": 5.9
-      },
-      "location": {
-        "lat": 30.8,
-        "lon": -85.25,
-        "county": "Jackson",
-        "county_fips": "12063",
-        "state": "FL"
-      },
-      "scoring": {
-        "weights": {
-          "soil_ph": 0.2,
-          "drainage": 0.15,
-          "season_temp": 0.2,
-          "frost_risk": 0.15,
-          "rainfall": 0.1,
-          "local_history": 0.2
-        },
-        "critical_factors": [
-          "soil_ph",
-          "drainage",
-          "season_temp",
-          "frost_risk"
-        ],
-        "critical_threshold": 25,
-        "critical_cap": 45
-      }
-    },
     "potato": {
       "id": "potato",
       "name": "Potato",
-      "score": 88,
+      "score": 90,
       "season_label": "Spring: plant Jan-Feb, harvest Apr-May",
       "factors": {
         "soil_ph": 100,
         "drainage": 100,
         "season_temp": 100,
-        "frost_risk": 59,
+        "frost_risk": 75,
         "rainfall": 100,
         "local_history": 69
       },
@@ -1505,9 +1505,9 @@
           "unit": "C avg"
         },
         "frost_risk": {
-          "value": 6.1,
+          "value": 4.5,
           "ideal": "<= 2",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 393,
@@ -1531,7 +1531,7 @@
       },
       "limited_by": [],
       "flags": [
-        "About 6.1 freeze days expected in season (crop tolerates 2): plan frost protection or a later planting"
+        "About 6.1 freezing nights in season, 2.9 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting"
       ],
       "requirements": {
         "id": "potato",
@@ -1643,13 +1643,13 @@
     "snap_bean": {
       "id": "snap_bean",
       "name": "Snap bean",
-      "score": 88,
+      "score": 89,
       "season_label": "Fall: plant Aug-Sep, harvest Oct-Nov",
       "factors": {
         "soil_ph": 58,
         "drainage": 100,
         "season_temp": 100,
-        "frost_risk": 91,
+        "frost_risk": 94,
         "rainfall": 96,
         "local_history": 92
       },
@@ -1669,9 +1669,9 @@
           "unit": "C avg"
         },
         "frost_risk": {
-          "value": 0.9,
+          "value": 0.6,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 259,
@@ -1696,7 +1696,7 @@
       "limited_by": [],
       "flags": [
         "Soil pH 5.3 is below the ideal 5.8-6.5: lime may be needed",
-        "About 0.9 freeze days expected in season (crop tolerates 0): plan frost protection or a later planting",
+        "About 0.9 freezing nights in season, 0.3 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting",
         "Likely needs irrigation (259 mm rain expected, 270 mm needed)"
       ],
       "requirements": {
@@ -1846,7 +1846,7 @@
         "frost_risk": {
           "value": 0.0,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 651,
@@ -1982,13 +1982,13 @@
     "sweet_corn": {
       "id": "sweet_corn",
       "name": "Sweet corn",
-      "score": 87,
+      "score": 88,
       "season_label": "Spring: plant Feb-Apr, harvest May-Jun",
       "factors": {
         "soil_ph": 58,
         "drainage": 100,
         "season_temp": 100,
-        "frost_risk": 84,
+        "frost_risk": 90,
         "rainfall": 100,
         "local_history": 89
       },
@@ -2008,9 +2008,9 @@
           "unit": "C avg"
         },
         "frost_risk": {
-          "value": 1.6,
+          "value": 1.1,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 480,
@@ -2035,7 +2035,7 @@
       "limited_by": [],
       "flags": [
         "Soil pH 5.3 is below the ideal 5.8-6.8: lime may be needed",
-        "About 1.6 freeze days expected in season (crop tolerates 0): plan frost protection or a later planting"
+        "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
       ],
       "requirements": {
         "id": "sweet_corn",
@@ -2158,13 +2158,13 @@
     "tomato": {
       "id": "tomato",
       "name": "Tomato",
-      "score": 82,
+      "score": 83,
       "season_label": "Spring: plant Feb-Apr, harvest May-Jun",
       "factors": {
         "soil_ph": 42,
         "drainage": 100,
         "season_temp": 100,
-        "frost_risk": 84,
+        "frost_risk": 90,
         "rainfall": 100,
         "local_history": 80
       },
@@ -2184,9 +2184,9 @@
           "unit": "C avg"
         },
         "frost_risk": {
-          "value": 1.6,
+          "value": 1.1,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 480,
@@ -2211,7 +2211,7 @@
       "limited_by": [],
       "flags": [
         "Soil pH 5.3 is below the ideal 6-6.8: lime may be needed",
-        "About 1.6 freeze days expected in season (crop tolerates 0): plan frost protection or a later planting"
+        "About 1.6 freezing nights in season, 0.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
       ],
       "requirements": {
         "id": "tomato",
@@ -2333,16 +2333,171 @@
         "critical_cap": 45
       }
     },
+    "cabbage": {
+      "id": "cabbage",
+      "name": "Cabbage",
+      "score": 79,
+      "season_label": "Fall-winter: plant Sep-Jan, harvest Dec-Apr",
+      "factors": {
+        "soil_ph": 42,
+        "drainage": 100,
+        "season_temp": 100,
+        "frost_risk": 87,
+        "rainfall": 100,
+        "local_history": 65
+      },
+      "factor_details": {
+        "soil_ph": {
+          "value": 5.3,
+          "ideal": "6-6.5",
+          "unit": "pH"
+        },
+        "drainage": {
+          "value": "Well drained",
+          "ideal": "Well drained to poorly drained"
+        },
+        "season_temp": {
+          "value": 16.2,
+          "ideal": "15-24",
+          "unit": "C avg"
+        },
+        "frost_risk": {
+          "value": 11.3,
+          "ideal": "<= 10",
+          "unit": "freeze days in season (light freezes count half)"
+        },
+        "rainfall": {
+          "value": 697,
+          "ideal": "520-820",
+          "unit": "mm in season"
+        },
+        "local_history": {
+          "value": "3 acres in county (2022 Census)",
+          "ideal": "Grown locally"
+        }
+      },
+      "avg_yield": {
+        "value": 370.0,
+        "unit": "CWT / ACRE",
+        "level": "state"
+      },
+      "price": {
+        "low": 12.5,
+        "high": 19.8,
+        "unit": "$ / CWT"
+      },
+      "limited_by": [],
+      "flags": [
+        "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
+        "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 10: plan frost protection or a later planting"
+      ],
+      "requirements": {
+        "id": "cabbage",
+        "name": "Cabbage",
+        "nass_commodity": "CABBAGE",
+        "nass_class": null,
+        "nass": {
+          "acres_descs": [
+            "CABBAGE, HEAD - ACRES HARVESTED"
+          ],
+          "yield_desc": "CABBAGE - YIELD, MEASURED IN CWT / ACRE",
+          "price_desc": "CABBAGE, FRESH MARKET - PRICE RECEIVED, MEASURED IN $ / CWT"
+        },
+        "fl_windows": [
+          {
+            "label": "Fall-winter: plant Sep-Jan, harvest Dec-Apr",
+            "start": "09-15",
+            "end": "04-30",
+            "months": [
+              9,
+              10,
+              11,
+              12,
+              1,
+              2,
+              3,
+              4
+            ]
+          }
+        ],
+        "ph_min": 4.8,
+        "ph_ideal_min": 6.0,
+        "ph_ideal_max": 6.5,
+        "ph_max": 8.0,
+        "drainage": [
+          "Well drained",
+          "Poorly drained"
+        ],
+        "muck_suitable": true,
+        "temp_min_c": 7.0,
+        "temp_ideal_min_c": 15.0,
+        "temp_ideal_max_c": 24.0,
+        "temp_max_c": 32.0,
+        "max_freeze_days": 10.0,
+        "rain_mm_per_month": [
+          70.0,
+          110.0
+        ],
+        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 10: no frost injury until 10-16 F below freezing (UF/IFAS TR006).",
+        "needs_review": false
+      },
+      "general_guidance": "Cabbage is a cool-season crop planted in fall and winter, with major acreage around Hastings in Northeast Florida. It tolerates light freezes but bolts or splits in warm weather, so avoid late-spring harvests. Provide steady moisture and nitrogen, and scout for diamondback moth and other caterpillars.",
+      "extension_links": [
+        {
+          "title": "Chapter 6. Cole Crop Production",
+          "url": "https://edis.ifas.ufl.edu/publication/CV122"
+        }
+      ],
+      "conditions": {
+        "soil_ph": 5.3,
+        "organic_matter_pct": 0.8,
+        "sand_pct": 81.0,
+        "clay_pct": 10.0,
+        "texture": "loamy sand",
+        "drainage": "Well drained",
+        "annual_precip_mm": 1281.4,
+        "frost_free_days": 271.6,
+        "last_spring_frost": "02-27",
+        "first_fall_frost": "11-30",
+        "avg_summer_high_c": 32.7,
+        "avg_winter_low_c": 5.9
+      },
+      "location": {
+        "lat": 30.8,
+        "lon": -85.25,
+        "county": "Jackson",
+        "county_fips": "12063",
+        "state": "FL"
+      },
+      "scoring": {
+        "weights": {
+          "soil_ph": 0.2,
+          "drainage": 0.15,
+          "season_temp": 0.2,
+          "frost_risk": 0.15,
+          "rainfall": 0.1,
+          "local_history": 0.2
+        },
+        "critical_factors": [
+          "soil_ph",
+          "drainage",
+          "season_temp",
+          "frost_risk"
+        ],
+        "critical_threshold": 25,
+        "critical_cap": 45
+      }
+    },
     "bell_pepper": {
       "id": "bell_pepper",
       "name": "Bell pepper",
-      "score": 76,
+      "score": 77,
       "season_label": "Fall: plant Jul-Sep, harvest Oct-Dec",
       "factors": {
         "soil_ph": 42,
         "drainage": 100,
         "season_temp": 100,
-        "frost_risk": 65,
+        "frost_risk": 75,
         "rainfall": 100,
         "local_history": 63
       },
@@ -2362,9 +2517,9 @@
           "unit": "C avg"
         },
         "frost_risk": {
-          "value": 3.5,
+          "value": 2.5,
           "ideal": "<= 0",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 448,
@@ -2389,7 +2544,7 @@
       "limited_by": [],
       "flags": [
         "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
-        "About 3.5 freeze days expected in season (crop tolerates 0): plan frost protection or a later planting"
+        "About 3.5 freezing nights in season, 1.5 of them hard (-2 C or colder); crop tolerates about 0: plan frost protection or a later planting"
       ],
       "requirements": {
         "id": "bell_pepper",
@@ -2511,161 +2666,6 @@
         "critical_cap": 45
       }
     },
-    "cabbage": {
-      "id": "cabbage",
-      "name": "Cabbage",
-      "score": 74,
-      "season_label": "Fall-winter: plant Sep-Jan, harvest Dec-Apr",
-      "factors": {
-        "soil_ph": 42,
-        "drainage": 100,
-        "season_temp": 100,
-        "frost_risk": 50,
-        "rainfall": 100,
-        "local_history": 65
-      },
-      "factor_details": {
-        "soil_ph": {
-          "value": 5.3,
-          "ideal": "6-6.5",
-          "unit": "pH"
-        },
-        "drainage": {
-          "value": "Well drained",
-          "ideal": "Well drained to poorly drained"
-        },
-        "season_temp": {
-          "value": 16.2,
-          "ideal": "15-24",
-          "unit": "C avg"
-        },
-        "frost_risk": {
-          "value": 15.0,
-          "ideal": "<= 10",
-          "unit": "freeze days in season"
-        },
-        "rainfall": {
-          "value": 697,
-          "ideal": "520-820",
-          "unit": "mm in season"
-        },
-        "local_history": {
-          "value": "3 acres in county (2022 Census)",
-          "ideal": "Grown locally"
-        }
-      },
-      "avg_yield": {
-        "value": 370.0,
-        "unit": "CWT / ACRE",
-        "level": "state"
-      },
-      "price": {
-        "low": 12.5,
-        "high": 19.8,
-        "unit": "$ / CWT"
-      },
-      "limited_by": [],
-      "flags": [
-        "Soil pH 5.3 is below the ideal 6-6.5: lime may be needed",
-        "About 15.0 freeze days expected in season (crop tolerates 10): plan frost protection or a later planting"
-      ],
-      "requirements": {
-        "id": "cabbage",
-        "name": "Cabbage",
-        "nass_commodity": "CABBAGE",
-        "nass_class": null,
-        "nass": {
-          "acres_descs": [
-            "CABBAGE, HEAD - ACRES HARVESTED"
-          ],
-          "yield_desc": "CABBAGE - YIELD, MEASURED IN CWT / ACRE",
-          "price_desc": "CABBAGE, FRESH MARKET - PRICE RECEIVED, MEASURED IN $ / CWT"
-        },
-        "fl_windows": [
-          {
-            "label": "Fall-winter: plant Sep-Jan, harvest Dec-Apr",
-            "start": "09-15",
-            "end": "04-30",
-            "months": [
-              9,
-              10,
-              11,
-              12,
-              1,
-              2,
-              3,
-              4
-            ]
-          }
-        ],
-        "ph_min": 4.8,
-        "ph_ideal_min": 6.0,
-        "ph_ideal_max": 6.5,
-        "ph_max": 8.0,
-        "drainage": [
-          "Well drained",
-          "Poorly drained"
-        ],
-        "muck_suitable": true,
-        "temp_min_c": 7.0,
-        "temp_ideal_min_c": 15.0,
-        "temp_ideal_max_c": 24.0,
-        "temp_max_c": 32.0,
-        "max_freeze_days": 10.0,
-        "rain_mm_per_month": [
-          70.0,
-          110.0
-        ],
-        "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 10: no frost injury until 10-16 F below freezing (UF/IFAS TR006).",
-        "needs_review": false
-      },
-      "general_guidance": "Cabbage is a cool-season crop planted in fall and winter, with major acreage around Hastings in Northeast Florida. It tolerates light freezes but bolts or splits in warm weather, so avoid late-spring harvests. Provide steady moisture and nitrogen, and scout for diamondback moth and other caterpillars.",
-      "extension_links": [
-        {
-          "title": "Chapter 6. Cole Crop Production",
-          "url": "https://edis.ifas.ufl.edu/publication/CV122"
-        }
-      ],
-      "conditions": {
-        "soil_ph": 5.3,
-        "organic_matter_pct": 0.8,
-        "sand_pct": 81.0,
-        "clay_pct": 10.0,
-        "texture": "loamy sand",
-        "drainage": "Well drained",
-        "annual_precip_mm": 1281.4,
-        "frost_free_days": 271.6,
-        "last_spring_frost": "02-27",
-        "first_fall_frost": "11-30",
-        "avg_summer_high_c": 32.7,
-        "avg_winter_low_c": 5.9
-      },
-      "location": {
-        "lat": 30.8,
-        "lon": -85.25,
-        "county": "Jackson",
-        "county_fips": "12063",
-        "state": "FL"
-      },
-      "scoring": {
-        "weights": {
-          "soil_ph": 0.2,
-          "drainage": 0.15,
-          "season_temp": 0.2,
-          "frost_risk": 0.15,
-          "rainfall": 0.1,
-          "local_history": 0.2
-        },
-        "critical_factors": [
-          "soil_ph",
-          "drainage",
-          "season_temp",
-          "frost_risk"
-        ],
-        "critical_threshold": 25,
-        "critical_cap": 45
-      }
-    },
     "strawberry": {
       "id": "strawberry",
       "name": "Strawberry",
@@ -2675,7 +2675,7 @@
         "soil_ph": 83,
         "drainage": 100,
         "season_temp": 100,
-        "frost_risk": 0,
+        "frost_risk": 17,
         "rainfall": 100,
         "local_history": 30
       },
@@ -2695,9 +2695,9 @@
           "unit": "C avg"
         },
         "frost_risk": {
-          "value": 15.0,
+          "value": 11.3,
           "ideal": "<= 3",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 564,
@@ -2724,7 +2724,7 @@
       ],
       "flags": [
         "Limited by freeze risk",
-        "About 15.0 freeze days expected in season (crop tolerates 3): plan frost protection or a later planting",
+        "About 15.0 freezing nights in season, 7.7 of them hard (-2 C or colder); crop tolerates about 3: plan frost protection or a later planting",
         "Not reported in this county: confirm local buyers and markets",
         "Soil pH 5.3 is below the ideal 5.5-6.5: lime may be needed"
       ],
@@ -2854,9 +2854,9 @@
           "unit": "C avg"
         },
         "frost_risk": {
-          "value": 15.9,
+          "value": 11.9,
           "ideal": "<= 2",
-          "unit": "freeze days in season"
+          "unit": "freeze days in season (light freezes count half)"
         },
         "rainfall": {
           "value": 1281,
@@ -2883,7 +2883,7 @@
       ],
       "flags": [
         "Limited by freeze risk",
-        "About 15.9 freeze days expected in season (crop tolerates 2): plan frost protection or a later planting",
+        "About 15.9 freezing nights in season, 8.0 of them hard (-2 C or colder); crop tolerates about 2: plan frost protection or a later planting",
         "Not reported in this county: confirm local buyers and markets",
         "Season averages 20.1 C, cooler than the ideal 24-37 C: slower growth"
       ],

@@ -19,7 +19,7 @@ NUM = (int, float)
 OPT_NUM = (int, float, type(None))
 OPT_STR = (str, type(None))
 FACTORS = ("soil_ph", "drainage", "season_temp", "frost_risk", "rainfall", "local_history")
-FACTOR_UNITS = {"soil_ph": "pH", "season_temp": "C avg", "frost_risk": "freeze days in season",
+FACTOR_UNITS = {"soil_ph": "pH", "season_temp": "C avg", "frost_risk": "freeze days in season (light freezes count half)",
                 "rainfall": "mm in season"}  # drainage and local_history have no unit
 
 LOCATION = {"lat": NUM, "lon": NUM, "county": OPT_STR, "county_fips": OPT_STR, "state": (str,)}

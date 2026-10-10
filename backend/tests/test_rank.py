@@ -99,3 +99,13 @@ def test_rank_sorts_by_score_then_name() -> None:
     ranked = rank_crops([crop("Tomato", 80), crop("Cabbage", 80), crop("Potato", 95), crop("Bean", None),
                          crop("Apple", 10)])
     assert [c["name"] for c in ranked] == ["Potato", "Cabbage", "Tomato", "Apple", "Bean"]
+
+
+def test_muck_caps_crops_not_grown_on_muck() -> None:
+    muck = {"soil_ph": 6.0, "drainage": "Very poorly drained", "texture": "muck"}
+    result = score_crop(CROP, muck, summer_weather(), None)
+    assert result["factors"]["drainage"] == 15
+    assert result["limited_by"] == ["drainage"]
+    assert result["score"] == CRITICAL_CAP
+    on_muck = score_crop(make_crop(muck_suitable=True), muck, summer_weather(), None)
+    assert on_muck["limited_by"] == [] and on_muck["score"] > CRITICAL_CAP
