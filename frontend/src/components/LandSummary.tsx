@@ -39,6 +39,8 @@ export default function LandSummary({ response, place }: { response: RecommendRe
   ];
   const cached = response.warnings?.find((warning) => warning.startsWith("Showing cached data"));
   const otherWarnings = response.warnings?.filter((warning) => warning !== cached) ?? [];
+  const confidence = response.confidence;
+  const sources = response.provenance?.sources ?? [];
   return (
     <div>
       {response.provenance?.mode === "demo" && <p className="mb-4 text-sm text-soil">Saved demo recommendations; soil and climate are not live measurements for your property.</p>}
@@ -65,6 +67,35 @@ export default function LandSummary({ response, place }: { response: RecommendRe
           </ul>
         </aside>
       )}
+      {(confidence || sources.length > 0) && <section className="card mt-4 rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="data-confidence-title">
+        <h2 id="data-confidence-title" className="section-title">Data confidence and sources</h2>
+        {confidence && <div className="mt-4 text-sm leading-relaxed">
+          <p><span className="font-semibold">Confidence:</span> {formatDisplayText(confidence.level)} · {confidence.available_factors} of {confidence.total_factors} factors available{confidence.partial ? " · partial result" : ""}</p>
+          {confidence.data_status && <p className="mt-1"><span className="font-semibold">Data:</span> {formatDisplayText(confidence.data_status)}</p>}
+          {confidence.county_history_status && <p className="mt-1"><span className="font-semibold">County history:</span> {formatDisplayText(confidence.county_history_status)}</p>}
+          {!!confidence.available_factor_names?.length && <p className="mt-1"><span className="font-semibold">Available:</span> {confidence.available_factor_names.map(formatDisplayText).join(", ")}</p>}
+          {!!confidence.missing_factor_names?.length && <p className="mt-1"><span className="font-semibold">Missing:</span> {confidence.missing_factor_names.map(formatDisplayText).join(", ")}</p>}
+        </div>}
+        {sources.length > 0 && <ul className="mt-4 grid gap-3 sm:grid-cols-2" aria-label="Data sources">{sources.map((source) => {
+          const safeUrl = extensionUrl(source.url ?? null);
+          return <li key={source.name} className="rounded-lg bg-sand p-4 text-sm">
+            <p className="font-semibold">{safeUrl ? <a href={safeUrl} target="_blank" rel="noopener noreferrer" className="text-field underline underline-offset-4">{source.name}</a> : source.name}</p>
+            <p className="mt-1">{formatDisplayText(source.data_status ?? source.status)} · {formatDisplayText(source.status)}</p>
+            {source.data_period && <p className="mt-1">Period: {formatDisplayText(source.data_period)}</p>}
+            {source.geographic_level && <p className="mt-1">Area: {formatDisplayText(source.geographic_level)}</p>}
+            {source.detail && <p className="mt-1 text-ink/75">{formatDisplayText(source.detail)}</p>}
+            {!!source.limitations?.length && <p className="mt-1 text-ink/75">Limits: {source.limitations.map(formatDisplayText).join("; ")}</p>}
+          </li>;
+        })}</ul>}
+      </section>}
     </div>
   );
+}
+
+function extensionUrl(value: string | null): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:" ? url.href : null;
+  } catch { return null; }
 }

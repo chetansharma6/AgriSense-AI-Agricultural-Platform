@@ -148,6 +148,20 @@ export default function CropDetailClient() {
         <h2 id="watch-out" className="section-title">Watch out for</h2>
         <ul className="mt-3 list-disc space-y-2 pl-5">{crop.flags.map((flag, i) => <li key={i}>{formatDisplayText(flag)}</li>)}</ul>
       </section>}
+      {!!crop.risk_notes?.length && <section className="card rounded-xl border border-clay/25 bg-white/50 p-5" aria-labelledby="climate-risks">
+        <h2 id="climate-risks" className="section-title">Climate risks to monitor</h2>
+        <ul className="mt-3 list-disc space-y-2 pl-5">{crop.risk_notes.map((note, i) => <li key={i}>{formatDisplayText(note)}</li>)}</ul>
+      </section>}
+      {crop.action_plan && <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="action-plan">
+        <h2 id="action-plan" className="section-title">Your beginner action plan</h2>
+        <ol className="mt-4 space-y-4">{[
+          ["Check before planting", crop.action_plan.check_before_planting],
+          ["First test", crop.action_plan.first_test],
+          ["Planting window", crop.action_plan.planting_window],
+          ["Risk to monitor", crop.action_plan.major_risk],
+        ].map(([label, value], i) => <li key={label} className="flex gap-3"><span className="font-semibold text-field">{i + 1}.</span><p><span className="font-semibold">{label}:</span> {formatDisplayText(value)}</p></li>)}</ol>
+        {extensionUrl(crop.action_plan.uf_ifas_follow_up.url) && <a href={extensionUrl(crop.action_plan.uf_ifas_follow_up.url)!} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-11 items-center text-field underline underline-offset-4">5. Follow up with {crop.action_plan.uf_ifas_follow_up.title ?? "UF/IFAS Extension"}</a>}
+      </section>}
       <section aria-labelledby="growing-it">
         <h2 id="growing-it" className="section-title">Growing it</h2>
         <p className="mt-4 whitespace-pre-line leading-relaxed">{formatDisplayText(crop.general_guidance ?? "Growing guidance is unavailable.")}</p>
@@ -166,6 +180,22 @@ export default function CropDetailClient() {
           const url = extensionUrl(source.url);
           return url ? <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-sm text-field underline underline-offset-4">{source.title}</a> : null;
         })}</div>
+      </section>}
+      {crop.water_plan && <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="water-planning">
+        <h2 id="water-planning" className="section-title">Water planning</h2>
+        <dl className="mt-4 grid gap-4 sm:grid-cols-3">
+          <div><dt className="text-sm text-soil">Ideal monthly water</dt><dd className="mt-1 font-semibold">{formatWhole(crop.water_plan.ideal_monthly_low_mm)}–{formatWhole(crop.water_plan.ideal_monthly_high_mm)} mm</dd></div>
+          <div><dt className="text-sm text-soil">Season status</dt><dd className="mt-1 font-semibold">{formatDisplayText(crop.water_plan.season_status)}</dd></div>
+          <div><dt className="text-sm text-soil">Sensitivity</dt><dd className="mt-1 font-semibold">{formatDisplayText(crop.water_plan.irrigation_sensitivity)}</dd></div>
+        </dl>
+        <p className="mt-4 leading-relaxed">{formatDisplayText(crop.water_plan.note)}</p>
+        {extensionUrl(crop.water_plan.source.url) && <a href={extensionUrl(crop.water_plan.source.url)!} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-11 items-center text-sm text-field underline underline-offset-4">{crop.water_plan.source.title ?? "UF/IFAS water guidance"}</a>}
+      </section>}
+      {crop.management_guidance && <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="soil-health">
+        <h2 id="soil-health" className="section-title">Soil health and crop rotation</h2>
+        <ul className="mt-4 space-y-3">{crop.management_guidance.soil_health_practices.map((practice, i) => <li key={i} className="flex items-start gap-3"><span aria-hidden="true" className="text-field">✓</span><span>{formatDisplayText(practice)}</span></li>)}</ul>
+        <p className="mt-4"><span className="font-semibold">Rotation:</span> {formatDisplayText(crop.management_guidance.rotation_guidance)}</p>
+        {extensionUrl(crop.management_guidance.source.url) && <a href={extensionUrl(crop.management_guidance.source.url)!} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-11 items-center text-sm text-field underline underline-offset-4">{crop.management_guidance.source.title ?? "UF/IFAS crop guidance"}</a>}
       </section>}
       <aside className="card report-disclaimer rounded-xl border border-soil/25 bg-sand p-5 text-sm leading-relaxed">General guidance only. Confirm fertilizer and pesticide decisions with your county UF/IFAS Extension office and always follow product labels.</aside>
     </div>
