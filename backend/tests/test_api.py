@@ -113,6 +113,13 @@ def test_outside_bounding_box() -> None:
     assert response.json() == {"detail": "Location must be in Florida"}
 
 
+@pytest.mark.parametrize("lat,lon", [(float("nan"), -81.5), (28.0, float("inf")), (24.2, -81.5)])
+def test_non_finite_or_outside_coordinates_are_rejected(lat: float, lon: float) -> None:
+    response = client.get("/api/recommend", params={"lat": lat, "lon": lon})
+    assert response.status_code == 400
+    assert response.json() == {"detail": "Location must be in Florida"}
+
+
 def test_crop_detail(sources: dict[str, Any]) -> None:
     body = client.get("/api/crops/potato", params={"lat": 29.71, "lon": -81.50}).json()
     assert body["id"] == "potato"
