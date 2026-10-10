@@ -1,11 +1,24 @@
-"""Climate summaries from NASA POWER daily weather."""
+"""Climate summaries from NASA POWER daily weather.
+
+NASA POWER is a ~50 km grid, so freeze counts and frost dates are
+approximate for a specific farm: low-lying fields can freeze more often than
+the grid cell average suggests.
+
+Pure computation (DataFrame in, dict out) lives here; the HTTP call and its
+cache are in app.clients.power. Run `python -m app.climate` from backend/ to
+print the demo farms.
+"""
 
 from dataclasses import dataclass
 from datetime import date
+from typing import Any
 
 import pandas as pd
 
+from app.clients.power import get_daily_weather
+
 FREEZE_C = 0.0
+SOURCE = "NASA POWER"
 
 
 @dataclass
@@ -49,8 +62,14 @@ def season_stats(weather: pd.DataFrame, start: str, end: str) -> SeasonStats | N
     )
 
 
-def summarize(weather: pd.DataFrame) -> dict[str, float | int | str | None]:
-    """Climate fields of the API 'conditions' object."""
+def get_climate(lat: float, lon: float) -> dict[str, Any]:
+    """Climate summary for a point (daily data is cached by the POWER client,
+    so only the first call for a grid cell touches the network)."""
+    return summarize(get_daily_weather(lat, lon))
+
+
+def summarize(weather: pd.DataFrame) -> dict[str, Any]:
+    """Monthly normals plus the climate fields of the API 'conditions' object."""
     years = weather[weather.index.year.isin(_complete_years(weather))]
     yearly_precip = years["precip_mm"].groupby(years.index.year).sum()
 
@@ -65,23 +84,51 @@ def summarize(weather: pd.DataFrame) -> dict[str, float | int | str | None]:
             spring.append(last_spring)
         if first_fall is not None:
             fall.append(first_fall)
-        # Frost-free days lie strictly between the two freezes; a year with no
-        # freeze at all counts as 365.
+        # Frost-free days lie strictly between the two freezes; with no spring
+        # freeze the season starts Jan 1, with no fall freeze it ends Dec 31,
+        # and a year with no freeze at all counts as 365.
         after = last_spring if last_spring is not None else pd.Timestamp(year - 1, 12, 31)
         before = first_fall if first_fall is not None else pd.Timestamp(year + 1, 1, 1)
         frost_free.append(min(365, (before - after).days - 1))
 
-    n_years = len(yearly_precip)
     summer = years[years.index.month.isin([6, 7, 8])]
     winter = years[years.index.month.isin([12, 1, 2])]
     return {
-        "annual_precip_mm": round(float(yearly_precip.mean())),
-        "frost_free_days": round(sum(frost_free) / n_years),
-        "last_spring_frost": _typical_date(spring, n_years),
-        "first_fall_frost": _typical_date(fall, n_years),
-        "avg_summer_high_c": round(float(summer["t_max_c"].mean()), 1),
-        "avg_winter_low_c": round(float(winter["t_min_c"].mean()), 1),
+        "monthly": monthly_normals(years),
+        "annual_precip_mm": _round(yearly_precip.mean()),
+        "frost_free_days": _round(sum(frost_free) / len(frost_free)),
+        "last_spring_frost": _typical_date(spring, len(frost_free)),
+        "first_fall_frost": _typical_date(fall, len(frost_free)),
+        "avg_summer_high_c": _round(summer["t_max_c"].mean()),
+        "avg_winter_low_c": _round(winter["t_min_c"].mean()),
+        "source": SOURCE,
     }
+
+
+def monthly_normals(weather: pd.DataFrame) -> list[dict[str, Any]]:
+    """One entry per month: mean temperatures, and the average monthly total
+    of rain and of freeze days across years."""
+    by_month_year = weather.groupby([weather.index.month, weather.index.year])
+    totals = pd.DataFrame({
+        "precip_mm": by_month_year["precip_mm"].sum(),
+        "freeze_days": by_month_year["t_min_c"].apply(lambda t: int((t <= FREEZE_C).sum())),
+    }).groupby(level=0).mean()
+    means = weather.groupby(weather.index.month)[["t_max_c", "t_min_c", "t_mean_c"]].mean()
+    return [
+        {
+            "month": int(month),
+            "tmax_c": _round(means.loc[month, "t_max_c"]),
+            "tmin_c": _round(means.loc[month, "t_min_c"]),
+            "tmean_c": _round(means.loc[month, "t_mean_c"]),
+            "precip_mm": _round(totals.loc[month, "precip_mm"]),
+            "freeze_days": _round(totals.loc[month, "freeze_days"]),
+        }
+        for month in means.index
+    ]
+
+
+def _round(value: float) -> float | None:
+    return None if pd.isna(value) else round(float(value), 1)
 
 
 def _complete_years(weather: pd.DataFrame) -> list[int]:
@@ -97,3 +144,24 @@ def _typical_date(dates: list[pd.Timestamp], n_years: int) -> str | None:
     offsets = sorted((d - pd.Timestamp(d.year, 7, 1)).days % 365 for d in dates)
     median = offsets[len(offsets) // 2]
     return (pd.Timestamp(2001, 7, 1) + pd.Timedelta(days=median)).strftime("%m-%d")
+
+
+if __name__ == "__main__":
+    import time
+
+    DEMO_FARMS = {
+        "marianna": (30.80, -85.25),
+        "hastings": (29.71, -81.50),
+        "plant_city": (28.03, -82.15),
+        "belle_glade": (26.68, -80.68),
+    }
+    started = time.perf_counter()
+    for name, (lat, lon) in DEMO_FARMS.items():
+        climate = get_climate(lat, lon)
+        print(f"{name}:")
+        for key, value in climate.items():
+            if key != "monthly":
+                print(f"  {key}: {value}")
+        for month in climate["monthly"]:
+            print(f"  {month}")
+    print(f"elapsed: {time.perf_counter() - started:.2f} s")
