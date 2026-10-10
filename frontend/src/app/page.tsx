@@ -37,13 +37,13 @@ export default function Home() {
     <div className="min-h-screen">
       <header className="border-b border-field/15">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-5 sm:px-8">
-          <Link href="/" className="text-2xl font-bold tracking-tight text-field">AgriSense</Link>
-          <Link href="/about" className="text-sm font-medium underline decoration-field/30 underline-offset-4 hover:text-field">About the data</Link>
+          <Link href="/" className="inline-flex min-h-11 items-center text-2xl font-bold tracking-tight text-field">AgriSense</Link>
+          <Link href="/about" className="inline-flex min-h-11 items-center text-sm font-medium underline decoration-field/30 underline-offset-4 hover:text-field">About the data</Link>
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:py-14">
         <section className="mb-9 max-w-3xl">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-widest text-soil">Florida land. Local possibilities.</p>
+          <p className="mb-3 text-sm font-semibold uppercase tracking-widest text-soil">Florida land. Local possibilities.</p>
           <h1 className="text-4xl leading-tight font-semibold tracking-tight sm:text-5xl">Find the crops your Florida land is built for</h1>
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-ink/75 sm:text-lg">Pick a spot on the map. We check soil, climate and local harvest history, then rank 13 Florida crops by how well they fit.</p>
         </section>
@@ -63,7 +63,7 @@ export default function Home() {
                   <button key={demo.name} type="button" onClick={() => selectPoint(demo.lat, demo.lon)} aria-pressed={selected}
                     className={`rounded-lg border p-3 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field ${selected ? "border-field bg-field text-white" : "border-field/20 bg-sand/50 hover:border-field hover:bg-leaf/15"}`}>
                     <span className="block text-sm font-semibold">{demo.name}</span>
-                    <span className={`mt-1 block whitespace-nowrap text-[11px] sm:text-xs ${selected ? "text-white/85" : "text-soil"}`}>{demo.caption}</span>
+                    <span className={`mt-1 block whitespace-nowrap text-sm ${selected ? "text-white/85" : "text-soil"}`}>{demo.caption}</span>
                   </button>
                 );
               })}
@@ -76,7 +76,7 @@ export default function Home() {
                     {label}
                     <input type="number" step="any" inputMode="decimal" value={input} onChange={(event) => update(event.target.value)}
                       placeholder={label === 'Latitude' ? '27.8000' : '-83.0000'} aria-describedby="location-message" aria-invalid={complete && !valid}
-                      className="mt-2 w-full min-w-0 rounded-lg border border-field/25 bg-white px-3 py-2.5 focus:border-field focus:outline-2 focus:outline-field/25" />
+                      className="mt-2 w-full min-w-0 rounded-lg border border-field/25 bg-white px-3 min-h-11 py-2.5 focus:border-field focus:outline-2 focus:outline-field" />
                   </label>
                 ))}
               </div>
@@ -88,7 +88,7 @@ export default function Home() {
           </form>
         </div>
       </main>
-      <footer className="mx-auto w-full max-w-6xl px-5 pb-8 text-xs leading-relaxed text-soil sm:px-8">Data: USDA NRCS, NASA POWER, USDA NASS. General guidance only.</footer>
+      <footer className="mx-auto w-full max-w-6xl px-5 pb-8 text-sm leading-relaxed text-soil sm:px-8">Data: USDA NRCS, NASA POWER, USDA NASS. General guidance only.</footer>
     </div>
   );
 }

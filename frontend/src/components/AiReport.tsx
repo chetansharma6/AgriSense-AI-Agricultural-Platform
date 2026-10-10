@@ -66,7 +66,7 @@ export default function AiReport({ crop, verdictSlot }: { crop: CropDetail; verd
             <button type="button" onClick={() => { setError(null); setResult(null); setAttempt((n) => n + 1); }} className="mt-3 rounded-lg bg-field px-4 py-2 text-sm font-semibold text-white">Try again</button>
           </div>
         ) : !result ? (
-          <div className="mt-5 space-y-5" role="status" aria-label="Loading crop summary">
+          <div className="mt-5 space-y-5" role="status" aria-live="polite" aria-label="Loading crop summary">
             <Shimmer className="h-5 w-full" /><Shimmer className="h-5 w-4/5" />
             <div className="grid gap-5 sm:grid-cols-2"><Shimmer className="h-28 w-full" /><Shimmer className="h-28 w-full" /></div>
             <Shimmer className="h-20 w-full" />
@@ -83,10 +83,10 @@ export default function AiReport({ crop, verdictSlot }: { crop: CropDetail; verd
             </div>
             <h3 className="mt-6 font-semibold">First steps</h3>
             <ol className="mt-3 list-decimal space-y-2 pl-5 text-sm leading-relaxed">{result.report.first_steps.map((step, i) => <li key={i}>{step}</li>)}</ol>
-            {result.source === "fallback" && <p className="mt-5 text-xs text-soil">Summary generated from the scores (AI unavailable)</p>}
+            {result.source === "fallback" && <p className="mt-5 text-sm text-soil">Summary generated from the scores (AI unavailable)</p>}
           </div>
         )}
-        <p className="mt-5 text-xs leading-relaxed text-soil">Written by AI from the numbers on this page. Scores are calculated, not generated.</p>
+        <p className="mt-5 text-sm leading-relaxed text-soil">Written by AI from the numbers on this page. Scores are calculated, not generated.</p>
       </section>
     </>
   );

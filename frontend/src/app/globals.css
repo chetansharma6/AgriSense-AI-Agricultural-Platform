@@ -6,7 +6,7 @@
   --color-soil: #7a5c3e;
   --color-sand: #f4ecd8;
   --color-sun: #e9a23b;
-  --color-clay: #c4553a;
+  --color-clay: #a8432b;
   --color-ink: #1f2a1f;
 }
 
@@ -32,4 +32,36 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .report-shimmer { animation: none; }
+}
+
+/* Visible keyboard focus everywhere, including controls without their own ring. */
+:focus-visible {
+  outline: 2px solid var(--color-field);
+  outline-offset: 2px;
+}
+
+/* Map controls and attribution: readable text and 44px tap targets. */
+.leaflet-container .leaflet-bar a[role="button"] {
+  width: 44px;
+  height: 44px;
+  line-height: 44px;
+  font-size: 22px;
+}
+
+.leaflet-container .leaflet-control-attribution {
+  font-size: 14px;
+}
+
+.leaflet-container .leaflet-control-attribution a {
+  display: inline-block;
+  padding-block: 0.85rem;
+}
+
+.leaflet-container .leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--color-ink);
+}
+
+.leaflet-container .leaflet-control-attribution a {
+  color: #005a80;
 }
