@@ -4,6 +4,7 @@ import { parseAcres } from "@/lib/acreage";
 import Link from "next/link";
 import AiReport from "@/components/AiReport";
 import FactorChart from "@/components/FactorChart";
+import FertilizerRecommendations from "@/components/FertilizerRecommendations";
 import { placeLabel } from "@/lib/presentation";
 import { explanationFor, weightsFor } from "@/lib/weights";
 import { useParams, useSearchParams } from "next/navigation";
@@ -181,6 +182,7 @@ export default function CropDetailClient() {
           return url ? <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center text-sm text-field underline underline-offset-4">{source.title}</a> : null;
         })}</div>
       </section>}
+      <FertilizerRecommendations key={`${key}:fertilizer`} crop={crop} acres={landAcres} />
       {crop.water_plan && <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="water-planning">
         <h2 id="water-planning" className="section-title">Water planning</h2>
         <dl className="mt-4 grid gap-4 sm:grid-cols-3">
