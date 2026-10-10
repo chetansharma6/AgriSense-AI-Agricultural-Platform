@@ -60,3 +60,9 @@ def test_load_market_runs_all_queries(monkeypatch) -> None:
     assert len(market.county_rows) == 2
 
     assert market_module.load_market(None).county_rows is None
+
+
+def test_prices_rounded_to_cents() -> None:
+    state = [row(PRICE, 2020, "0.232", "MARKETING YEAR"), row(PRICE, 2021, "0.2734", "MARKETING YEAR")]
+    market = Market(county_rows=[], state_rows=state, county_yield_rows=[])
+    assert price_range(market, POTATO) == {"low": 0.23, "high": 0.27, "unit": "$ / CWT"}

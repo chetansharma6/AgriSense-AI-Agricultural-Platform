@@ -32,7 +32,8 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@app.get("/api/recommend", response_model=RecommendResponse)
+# exclude_unset: optional keys the service never set (e.g. "unit" on drainage) stay absent, as in the contract.
+@app.get("/api/recommend", response_model=RecommendResponse, response_model_exclude_unset=True)
 def get_recommend(lat: float = Query(...), lon: float = Query(...)) -> dict[str, Any]:
     _require_florida(lat, lon)
     try:
@@ -41,7 +42,7 @@ def get_recommend(lat: float = Query(...), lon: float = Query(...)) -> dict[str,
         raise HTTPException(status_code=400, detail=NOT_IN_FLORIDA) from None
 
 
-@app.get("/api/crops/{crop_id}", response_model=CropDetail)
+@app.get("/api/crops/{crop_id}", response_model=CropDetail, response_model_exclude_unset=True)
 def get_crop(crop_id: str, lat: float = Query(...), lon: float = Query(...)) -> dict[str, Any]:
     if crop_id not in load_crops():
         raise HTTPException(status_code=404, detail="Unknown crop")

@@ -54,6 +54,10 @@ def test_recommend_matches_contract(sources: dict[str, Any]) -> None:
     for crop in body["crops"]:
         assert set(crop) == CROP_KEYS
         assert set(crop["factors"]) == FACTORS == set(crop["factor_details"])
+        # Drainage and local history have no unit; the key must be absent, not null.
+        assert set(crop["factor_details"]["drainage"]) == {"value", "ideal"}
+        assert set(crop["factor_details"]["local_history"]) == {"value", "ideal"}
+        assert crop["factor_details"]["soil_ph"]["unit"] == "pH"
         assert all(0 <= v <= 100 for v in crop["factors"].values() if v is not None)
     assert body["warnings"] == []
 
