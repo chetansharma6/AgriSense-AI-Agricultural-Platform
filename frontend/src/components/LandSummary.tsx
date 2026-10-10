@@ -20,7 +20,7 @@ export function LandSummarySkeleton({ slow = false }: { slow?: boolean }) {
   );
 }
 
-export default function LandSummary({ response }: { response: RecommendResponse }) {
+export default function LandSummary({ response, place }: { response: RecommendResponse; place?: string }) {
   const c = response.conditions;
   const frost = c?.frost_free_days;
   const rain = c?.annual_precip_mm;
@@ -44,7 +44,7 @@ export default function LandSummary({ response }: { response: RecommendResponse 
       {cached && <p role="status" aria-live="polite" className="mb-4 rounded-lg border border-sun/60 bg-sun/20 p-4 font-semibold">{cached}</p>}
       <section className="rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="land-summary-title">
         <h2 id="land-summary-title" className="text-2xl font-semibold">Your land at a glance</h2>
-        <p className="mt-2 text-soil">{response.location?.county ? `${response.location.county} County, Florida` : "County: No data"}</p>
+        <p className="mt-2 text-soil">{place || (response.location?.county ? `${response.location.county} County, Florida` : "County: No data")}</p>
         <dl className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {tiles.map((tile) => (
             <div key={tile.label} className="min-w-0 rounded-lg bg-sand p-4">

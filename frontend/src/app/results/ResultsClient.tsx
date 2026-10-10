@@ -86,7 +86,7 @@ export default function ResultsClient() {
   const otherCrops = matching.filter(({ rank }) => rank > 3);
   return (
     <div>
-      <LandSummary response={state.data} />
+      <LandSummary response={state.data} place={params.get("place")?.trim() || undefined} />
       <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter crops">
         {filters.map((label) => (
           <button key={label} type="button" aria-pressed={filter === label} onClick={() => setFilter(label)}

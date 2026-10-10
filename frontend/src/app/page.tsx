@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import LocationSearch from "@/components/LocationSearch";
 import MapLoader from "@/components/MapLoader";
 
 const demos = [
@@ -16,6 +17,7 @@ export default function Home() {
   const router = useRouter();
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
+  const [place, setPlace] = useState("");
   const lat = Number(latitude);
   const lon = Number(longitude);
   const complete = latitude.trim() !== "" && longitude.trim() !== "";
@@ -24,13 +26,18 @@ export default function Home() {
   const value = finite ? { lat, lon } : null;
 
   function selectPoint(lat: number, lon: number) {
+    setPlace("");
     setLatitude(lat.toFixed(4));
     setLongitude(lon.toFixed(4));
   }
 
   function analyze(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (valid) router.push(`/results?lat=${lat.toFixed(4)}&lon=${lon.toFixed(4)}`);
+    if (valid) {
+      const query = new URLSearchParams({ lat: lat.toFixed(4), lon: lon.toFixed(4) });
+      if (place) query.set("place", place);
+      router.push(`/results?${query}`);
+    }
   }
 
   return (
@@ -49,6 +56,10 @@ export default function Home() {
         </section>
         <div className="grid min-w-0 gap-6 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
           <section className="min-w-0" aria-label="Farm location map">
+            <LocationSearch selectedLabel={place} onSelect={(result) => {
+              selectPoint(result.lat, result.lon);
+              setPlace(result.label);
+            }} />
             <div className="overflow-hidden rounded-xl border border-field/20">
               <MapLoader value={value} onChange={selectPoint} demoPins={demos} />
             </div>
@@ -68,19 +79,22 @@ export default function Home() {
                 );
               })}
             </div>
-            <fieldset className="mt-6">
-              <legend className="text-sm font-semibold">Or enter coordinates</legend>
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                {([['Latitude', latitude, setLatitude], ['Longitude', longitude, setLongitude]] as const).map(([label, input, update]) => (
-                  <label key={label} className="block text-sm">
-                    {label}
-                    <input type="number" step="any" inputMode="decimal" value={input} onChange={(event) => update(event.target.value)}
-                      placeholder={label === 'Latitude' ? '27.8000' : '-83.0000'} aria-describedby="location-message" aria-invalid={complete && !valid}
-                      className="mt-2 w-full min-w-0 rounded-lg border border-field/25 bg-white px-3 min-h-11 py-2.5 focus:border-field focus:outline-2 focus:outline-field" />
-                  </label>
-                ))}
-              </div>
-            </fieldset>
+            <details className="mt-6">
+              <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold">Enter coordinates instead</summary>
+              <fieldset className="mt-2">
+                <legend className="text-sm font-semibold">Or enter coordinates</legend>
+                <div className="mt-3 grid grid-cols-2 gap-3">
+                  {([['Latitude', latitude, setLatitude], ['Longitude', longitude, setLongitude]] as const).map(([label, input, update]) => (
+                    <label key={label} className="block text-sm">
+                      {label}
+                      <input type="number" step="any" inputMode="decimal" value={input} onChange={(event) => { update(event.target.value); setPlace(""); }}
+                        placeholder={label === 'Latitude' ? '27.8000' : '-83.0000'} aria-describedby="location-message" aria-invalid={complete && !valid}
+                        className="mt-2 w-full min-w-0 rounded-lg border border-field/25 bg-white px-3 min-h-11 py-2.5 focus:border-field focus:outline-2 focus:outline-field" />
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            </details>
             <p id="location-message" aria-live="polite" className={`mt-3 text-sm ${complete && !valid ? 'text-clay' : 'text-soil'}`}>
               {complete && !valid ? 'Location must be in Florida: latitude 24.3–31.1, longitude −87.7–−79.9.' : 'Choose a location in Florida to analyze your land.'}
             </p>
