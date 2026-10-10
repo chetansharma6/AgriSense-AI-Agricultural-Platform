@@ -138,3 +138,21 @@ def test_demo_mode_still_serves_cache(monkeypatch: pytest.MonkeyPatch) -> None:
     cache.write_cache("fcc", {"lat": 29.71, "lon": -81.5}, county)
     monkeypatch.setattr(config, "DEMO_MODE", True)
     assert fcc.lookup_county(29.71, -81.50) == county
+
+
+@pytest.mark.parametrize("farm", config.DEMO_FARMS)
+def test_exact_demo_coordinates_never_call_live_sources(monkeypatch: pytest.MonkeyPatch, farm: str) -> None:
+    monkeypatch.setattr(config, "DEMO_MODE", True)
+    calls = []
+
+    def unexpected(*args: Any, **kwargs: Any) -> None:
+        calls.append(True)
+        raise AssertionError("exact demo coordinates must use saved data")
+
+    monkeypatch.setattr(service, "_build_recommendation", unexpected)
+    lat, lon = config.DEMO_FARMS[farm]
+    response = client.get("/api/recommend", params={"lat": lat, "lon": lon})
+    assert response.status_code == 200
+    assert response.json()["provenance"]["mode"] == "demo"
+    assert response.json()["confidence"]["total_factors"] == 6
+    assert calls == []

@@ -34,7 +34,9 @@ GET /api/recommend?lat=<float>&lon=<float> ->
                 "frost_risk": 0.15, "rainfall": 0.10, "local_history": 0.20},
     "critical_factors": ["soil_ph", "drainage", "season_temp", "frost_risk"],
     "critical_threshold": 25,
-    "critical_cap": 45}
+    "critical_cap": 45},
+  "provenance": {"mode": "live", "sources": [{"name": "USDA SSURGO", "status": "live", "detail": null}]},
+  "confidence": {"level": "high", "available_factors": 6, "total_factors": 6, "notes": []}
 }
 Rules: crops sorted by score descending, then name ascending; every factor
 0-100; any value may be null if a source failed (and a message is added to
@@ -47,6 +49,9 @@ frost_risk value: weighted freeze days in the growing window. Nights at or
 below -2 C count 1, nights between -2 and 0 C count 0.5.
 flags: at most 4, deduplicated, most critical first ("Limited by" flags, then
 flags of the lowest-scoring factors).
+`provenance` identifies live versus saved demo data and lists the source status.
+`confidence` reports how many of the six scoring factors had data; it does not
+alter the suitability score.
 
 GET /api/crops/{crop_id}?lat=&lon= -> the same crop object plus:
   "requirements": {raw fields from crops.json},

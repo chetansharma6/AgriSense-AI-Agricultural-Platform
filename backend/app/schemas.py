@@ -80,6 +80,24 @@ class ScoringRules(Strict):
     critical_cap: int
 
 
+class SourceStatus(Strict):
+    name: str
+    status: str
+    detail: str | None = None
+
+
+class Provenance(Strict):
+    mode: str
+    sources: list[SourceStatus]
+
+
+class Confidence(Strict):
+    level: str
+    available_factors: int
+    total_factors: int
+    notes: list[str]
+
+
 class CropResult(Strict):
     id: str
     name: str
@@ -99,6 +117,8 @@ class RecommendResponse(Strict):
     crops: list[CropResult]
     warnings: list[str]
     scoring: ScoringRules
+    provenance: Provenance | None = None
+    confidence: Confidence | None = None
 
 
 class ExtensionLink(Strict):
@@ -113,3 +133,5 @@ class CropDetail(CropResult):
     conditions: Conditions
     location: Location
     scoring: ScoringRules
+    provenance: Provenance | None = None
+    confidence: Confidence | None = None

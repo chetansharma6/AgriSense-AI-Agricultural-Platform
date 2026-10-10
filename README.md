@@ -88,6 +88,13 @@ sources take over 6 s or fail, a point within 25 km of a demo farm gets that
 farm's saved response (backend/data/demo) and other points get a quick 503.
 More detail: [backend/README.md](backend/README.md).
 
+For a running API, verify the four judge paths with:
+
+```bash
+cd backend
+python -m scripts.smoke_test http://localhost:8000
+```
+
 ## Run the frontend
 
 ```bash

@@ -34,6 +34,7 @@ log = logging.getLogger(__name__)
 
 RESPONSE_CACHE_SIZE = 256
 RESPONSE_CACHE_TTL_S = 3600.0
+FACTOR_COUNT = 6
 _response_cache: OrderedDict[tuple[float, float], tuple[float, dict[str, Any]]] = OrderedDict()
 _response_cache_lock = threading.Lock()
 
@@ -86,6 +87,10 @@ def clear_response_cache() -> None:
 
 def recommend(lat: float, lon: float) -> dict[str, Any]:
     """Full /api/recommend response for a Florida point, from memory when possible."""
+    if config.DEMO_MODE:
+        exact = _exact_demo_response(lat, lon)
+        if exact is not None:
+            return exact
     key = _cache_key(lat, lon)
     now = time.monotonic()
     with _response_cache_lock:
@@ -163,7 +168,40 @@ def _demo_fallback(lat: float, lon: float, reason: str) -> dict[str, Any] | None
     response = copy.deepcopy(_demo_response(farm))
     name = farm.replace("_", " ").title()
     response["warnings"].insert(0, f"Showing cached data for {name} ({reason})")
+    response["provenance"] = _provenance("demo", "Fallback saved response")
+    response["confidence"] = _confidence(response)
     return response
+
+
+def _exact_demo_response(lat: float, lon: float) -> dict[str, Any] | None:
+    """Serve committed demo data immediately for an official demo coordinate."""
+    for farm, point in config.DEMO_FARMS.items():
+        if (lat, lon) == point:
+            response = copy.deepcopy(_demo_response(farm))
+            response["provenance"] = _provenance("demo", f"Saved {farm.replace('_', ' ').title()} response")
+            response["confidence"] = _confidence(response)
+            return response
+    return None
+
+
+def _provenance(mode: str, detail: str | None = None) -> dict[str, Any]:
+    sources = [
+        {"name": "USDA SSURGO", "status": "saved" if mode == "demo" else "live", "detail": detail},
+        {"name": "NASA POWER", "status": "saved" if mode == "demo" else "live", "detail": detail},
+        {"name": "USDA NASS", "status": "saved" if mode == "demo" else "live", "detail": detail},
+        {"name": "UF/IFAS FAWN", "status": "saved" if mode == "demo" else "live", "detail": detail},
+    ]
+    return {"mode": mode, "sources": sources}
+
+
+def _confidence(response: dict[str, Any]) -> dict[str, Any]:
+    factors = [factor for crop in response.get("crops", []) for factor in crop.get("factors", {}).values()]
+    available = round(sum(value is not None for value in factors) / max(len(factors), 1) * FACTOR_COUNT)
+    level = "high" if available >= 5 else "medium" if available >= 3 else "low"
+    notes = []
+    if response.get("warnings"):
+        notes.append("One or more data sources reported a warning")
+    return {"level": level, "available_factors": available, "total_factors": FACTOR_COUNT, "notes": notes}
 
 
 @lru_cache(maxsize=None)
@@ -227,6 +265,8 @@ def _build_recommendation(lat: float, lon: float) -> tuple[dict[str, Any], bool]
         "warnings": warnings,
         "scoring": scoring_rules(),
     }
+    response["provenance"] = _provenance("live")
+    response["confidence"] = _confidence(response)
     return response, not failed
 
 

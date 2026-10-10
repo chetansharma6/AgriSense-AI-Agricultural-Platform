@@ -37,3 +37,14 @@ The frontend can use mock data when `NEXT_PUBLIC_USE_MOCKS=true`. With backend `
 ## Limits
 
 Public mapped soil and gridded climate data are not on-field measurements. County and state records are not individual farm yields or sale prices. The score has not been validated as a predictor of farm outcomes and does not model profit, hurricanes, pests, labor, or irrigation infrastructure comprehensively. Review missing-data warnings, confirm conditions with soil tests, and consult county UF/IFAS Extension before planting.
+## How to judge a result
+
+Suitability is calculated by the backend from the six displayed factors. The
+optional language model only turns those calculated values into a short report;
+it cannot change the score, yield, price, or crop ranking. Each response also
+reports whether it used live or saved demo data and how many scoring factors
+had usable values.
+
+If a source is unavailable, its factor is shown as missing, a warning is
+returned, and the score is calculated from the remaining factors. Missing data
+never becomes a fabricated zero or an invented estimate.
