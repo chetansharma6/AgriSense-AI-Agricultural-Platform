@@ -38,6 +38,14 @@ def _parse_md(month_day: str) -> tuple[int, int]:
     return int(month), int(day)
 
 
+def with_station_minimums(weather: pd.DataFrame, station_min_c: pd.Series) -> pd.DataFrame:
+    """Daily minimums from a nearby FAWN station, with NASA POWER filling station gaps.
+    Only the minimum is replaced: it drives freeze counts, where the POWER grid is biased."""
+    merged = weather.copy()
+    merged["t_min_c"] = station_min_c.reindex(merged.index).combine_first(merged["t_min_c"])
+    return merged
+
+
 def season_stats(weather: pd.DataFrame, start: str, end: str) -> SeasonStats | None:
     """Average a growing window over every complete season in the data."""
     start_m, start_d = _parse_md(start)

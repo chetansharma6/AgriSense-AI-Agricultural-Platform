@@ -18,7 +18,8 @@ from functools import lru_cache
 from typing import Any, Callable, TypeVar
 
 from app import config
-from app.climate import summarize
+from app.climate import summarize, with_station_minimums
+from app.clients import fawn
 from app.clients.fcc import lookup_county
 from app.clients.power import get_daily_weather
 from app.clients.soil import SoilNotFound, get_soil
@@ -180,12 +181,19 @@ def _build_recommendation(lat: float, lon: float) -> tuple[dict[str, Any], bool]
     """The response, and whether every source answered."""
     warnings: list[str] = []
     failed: list[str] = []
-    with ThreadPoolExecutor(max_workers=3) as pool:
+    with ThreadPoolExecutor(max_workers=4) as pool:
         county_job = pool.submit(_attempt, lambda: lookup_county(lat, lon), "County lookup (FCC)", warnings, failed)
         soil_job = pool.submit(_attempt, lambda: get_soil(lat, lon), "Soil data (USDA SSURGO)", warnings, failed)
         weather_job = pool.submit(_attempt, lambda: get_daily_weather(lat, lon), "Weather data (NASA POWER)",
                                   warnings, failed)
+        station = fawn.nearest_station(lat, lon)
+        station_job = (pool.submit(_attempt, lambda: fawn.daily_min_c(station[0]["id"]),
+                                   "Freeze records (FAWN station)", warnings, failed) if station else None)
         county, soil, weather = county_job.result(), soil_job.result(), weather_job.result()
+        station_min = station_job.result() if station_job else None
+    if weather is not None and station_min is not None and station is not None:
+        weather = with_station_minimums(weather, station_min)
+        log.info("freezes from FAWN %s (%.0f km away)", station[0]["name"], station[1])
 
     fcc_failed = "County lookup (FCC)" in failed
     # FCC answered but found no county: open water beyond Florida's county lines.
