@@ -17,6 +17,7 @@ NASS_URL = "https://quickstats.nass.usda.gov/api/api_GET/"
 KEEP_FIELDS = (
     "short_desc", "commodity_desc", "class_desc", "statisticcat_desc", "domain_desc",
     "agg_level_desc", "source_desc", "reference_period_desc", "year", "Value",
+    "county_name", "county_ansi",
 )
 
 
