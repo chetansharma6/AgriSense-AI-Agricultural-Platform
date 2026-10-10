@@ -15,6 +15,9 @@ type RequestState = {
   error?: string;
 };
 
+const filters = ["All", "Strong fit (75+)", "Summer crops", "Fall/Winter crops", "Needs irrigation"] as const;
+type CropFilter = typeof filters[number];
+
 export default function ResultsClient() {
   const params = useSearchParams();
   const rawLat = params.get("lat");
@@ -25,6 +28,7 @@ export default function ResultsClient() {
     && Number.isFinite(lat) && Number.isFinite(lon)
     && lat >= 24.3 && lat <= 31.1 && lon >= -87.7 && lon <= -79.9;
   const key = `${lat},${lon}`;
+  const [filter, setFilter] = useState<CropFilter>("All");
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<RequestState | null>(null);
 
@@ -61,24 +65,45 @@ export default function ResultsClient() {
   );
   if (!state.data) return <LandSummarySkeleton />;
   const crops = [...(state.data.crops ?? [])].sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
+  const ranked = crops.map((crop, i) => ({ crop, rank: i + 1 }));
+  const matching = ranked.filter(({ crop }) => {
+    const coolSeason = /fall|winter|spring/i.test(crop.season_label ?? "");
+    switch (filter) {
+      case "Strong fit (75+)": return crop.score !== null && crop.score >= 75;
+      case "Summer crops": return crop.season_label !== null && !coolSeason;
+      case "Fall/Winter crops": return coolSeason;
+      case "Needs irrigation": return crop.flags?.some((flag) => /irrigation/i.test(flag)) ?? false;
+      default: return true;
+    }
+  });
+  const bestFits = matching.filter(({ rank }) => rank <= 3);
+  const otherCrops = matching.filter(({ rank }) => rank > 3);
   return (
     <div>
       <LandSummary response={state.data} />
-      {crops.length === 0 ? (
-        <p className="mt-8 text-soil">No crop recommendations are available for this spot.</p>
+      <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter crops">
+        {filters.map((label) => (
+          <button key={label} type="button" aria-pressed={filter === label} onClick={() => setFilter(label)}
+            className={`rounded-full border px-4 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field ${filter === label ? "border-field bg-field text-white" : "border-field/25 bg-white/60 hover:bg-leaf/15"}`}>
+            {label}
+          </button>
+        ))}
+      </div>
+      {matching.length === 0 ? (
+        <p className="mt-8 text-soil">No crops match this filter</p>
       ) : (
         <>
-          <section className="mt-10" aria-labelledby="best-fits-title">
+          {bestFits.length > 0 && <section className="mt-10" aria-labelledby="best-fits-title">
             <h2 id="best-fits-title" className="mb-5 text-2xl font-semibold">Best fits for this spot</h2>
             <div className="grid gap-4 lg:grid-cols-3">
-              {crops.slice(0, 3).map((crop, i) => <CropCard key={crop.id ?? i} crop={crop} rank={i + 1} lat={lat} lon={lon} />)}
+              {bestFits.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} />)}
             </div>
-          </section>
-          {crops.length > 3 && (
+          </section>}
+          {otherCrops.length > 0 && (
             <section className="mt-10" aria-labelledby="other-crops-title">
               <h2 id="other-crops-title" className="mb-5 text-2xl font-semibold">Other crops</h2>
               <div className="space-y-3">
-                {crops.slice(3).map((crop, i) => <CropCard key={crop.id ?? i} crop={crop} rank={i + 4} lat={lat} lon={lon} compact />)}
+                {otherCrops.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} compact />)}
               </div>
             </section>
           )}
