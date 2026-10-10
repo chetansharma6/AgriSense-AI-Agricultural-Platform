@@ -9,6 +9,38 @@ AgriSense helps small and mid-scale Florida farmers decide what to plant by rank
 
 ## Run the backend
 
+Needs Python 3.11 or newer. Get a free NASS Quick Stats key at
+https://quickstats.nass.usda.gov/api.
+
+macOS / Linux:
+
+```bash
+cd backend
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+cp .env.example .env
+# edit .env and set NASS_API_KEY=your_key
+uvicorn app.main:app --reload --port 8000
+```
+
+Windows (PowerShell):
+
+```powershell
+cd backend
+python -m venv .venv
+.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+Copy-Item .env.example .env
+# edit .env and set NASS_API_KEY=your_key
+uvicorn app.main:app --reload --port 8000
+```
+
+Check http://localhost:8000/api/health returns `{"status":"ok"}`, and run the
+tests with `pytest`. Set `DEMO_MODE=true` in `.env` to serve only cached data
+(the four demo farms are cached in the repo) without calling any outside API.
+More detail: [backend/README.md](backend/README.md).
+
 ## Run the frontend
 
 ```bash
