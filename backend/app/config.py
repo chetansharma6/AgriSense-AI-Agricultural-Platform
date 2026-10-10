@@ -2,6 +2,7 @@
 
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 from dotenv import load_dotenv
 
@@ -23,13 +24,20 @@ DEMO_FALLBACK_KM = 25.0
 
 # Comma-separated browser origins allowed to call the API. In Codespaces, add
 # the forwarded frontend URL (https://<name>-3000.app.github.dev).
-CORS_ORIGINS = [
-    origin.strip()
-    for origin in os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
-    if origin.strip()
-]
-# Vercel deployments (production and preview URLs).
-CORS_ORIGIN_REGEX = r"^https://[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.vercel\.app$"
+def _explicit_origins(raw: str) -> list[str]:
+    origins = []
+    for candidate in raw.split(","):
+        origin = candidate.strip()
+        parsed = urlparse(origin)
+        if origin and "*" not in origin and parsed.scheme in {"http", "https"} and parsed.netloc:
+            origins.append(origin.rstrip("/"))
+    return origins or ["http://localhost:3000"]
+
+
+CORS_ORIGINS = _explicit_origins(os.getenv("CORS_ORIGINS", "http://localhost:3000"))
+# Origins are explicit by design; never broaden production access to every
+# deployment on a shared hosting domain such as *.vercel.app.
+CORS_ORIGIN_REGEX = None
 
 FL_BBOX = (24.3, 31.1, -87.7, -79.9)  # lat_min, lat_max, lon_min, lon_max
 DEMO_FARMS = {  # name -> (lat, lon), as in AGENTS.md

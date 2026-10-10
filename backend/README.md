@@ -14,7 +14,20 @@ echo "NASS_API_KEY=your_key" > .env   # free key from quickstats.nass.usda.gov
 ```
 
 `CORS_ORIGINS` (comma-separated, in `.env`) sets which browser origins may call
-the API; the default is `http://localhost:3000`.
+the API; the default is `http://localhost:3000`. Set this explicitly in Render
+to the exact Vercel production URL, for example
+`https://agrisense.vercel.app`. Do not use `*`, a `*.vercel.app` wildcard, or
+preview URLs unless each exact preview origin is intentionally added.
+
+## Deployment settings
+
+Render requires `NASS_API_KEY` as a secret and should use `DEMO_MODE=true` for
+the bounded demo fallback. Set `CORS_ORIGINS` to the exact public Vercel URL.
+Vercel requires the server-side `ANTHROPIC_API_KEY` only for the optional report
+route; `ANTHROPIC_MODEL` is optional. Never prefix these secrets with
+`NEXT_PUBLIC_`, commit `.env` files, or expose them in browser code. Missing
+keys degrade safely: NASS data becomes unavailable with a warning and the
+report route uses its local fallback. Production debug mode is not enabled.
 
 ## How a recommendation is built
 
