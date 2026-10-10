@@ -2,11 +2,32 @@ import { locationSearchUnavailable, type LocationResult } from "@/lib/location";
 
 export const runtime = "nodejs";
 
-const cache = new Map<string, LocationResult[]>();
+const CACHE_MAX_ENTRIES = 256;
+const CACHE_TTL_MS = 5 * 60_000;
+type CacheEntry = { results: LocationResult[]; expiresAt: number };
+const cache = new Map<string, CacheEntry>();
 const pending = new Map<string, Promise<LocationResult[]>>();
 let cityQueue: Promise<void> = Promise.resolve();
 let lastCityRequest = 0;
 const userAgent = "AgriSense-hackathon/1.0 (https://github.com/chetansharma6/AgriSense-AI-Agricultural-Platform)";
+
+function cachedResults(key: string): LocationResult[] | undefined {
+  const entry = cache.get(key);
+  if (!entry) return undefined;
+  if (entry.expiresAt <= Date.now()) {
+    cache.delete(key);
+    return undefined;
+  }
+  cache.delete(key);
+  cache.set(key, entry);
+  return entry.results;
+}
+
+function rememberResults(key: string, results: LocationResult[]): void {
+  cache.delete(key);
+  cache.set(key, { results, expiresAt: Date.now() + CACHE_TTL_MS });
+  while (cache.size > CACHE_MAX_ENTRIES) cache.delete(cache.keys().next().value as string);
+}
 
 type ZipResponse = {
   places: { "place name": string; "state abbreviation": string; latitude: string; longitude: string }[];
@@ -86,13 +107,13 @@ export async function GET(request: Request): Promise<Response> {
     return Response.json({ detail: "Enter a city or ZIP code of 1 to 100 characters." }, { status: 400 });
   }
   const key = q.toLowerCase();
-  const cached = cache.get(key);
+  const cached = cachedResults(key);
   if (cached) return Response.json({ results: cached });
   try {
     let lookup = pending.get(key);
     if (!lookup) {
       lookup = (/^\d{5}$/.test(q) ? findZip(q) : findCity(q)).then((results) => {
-        cache.set(key, results);
+        rememberResults(key, results);
         return results;
       }).finally(() => pending.delete(key));
       pending.set(key, lookup);
