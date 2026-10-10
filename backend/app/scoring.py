@@ -64,22 +64,29 @@ def relative_range_score(value: float, low: float, high: float) -> int:
     return 100
 
 
+def is_missing(value: float | None) -> bool:
+    """None or NaN (NASA POWER and SSURGO gaps arrive as NaN)."""
+    return value is None or math.isnan(value)
+
+
 def score_ph(crop: Crop, ph: float | None) -> Factor:
     low, high = crop.ph_ideal_min, crop.ph_ideal_max
-    detail = {"value": ph, "ideal": f"{low:g}-{high:g}", "unit": "pH"}
-    if ph is None:
+    ideal = f"{low:g}-{high:g}"
+    detail = {"value": None if is_missing(ph) else ph, "ideal": ideal, "unit": "pH"}
+    if is_missing(ph):
         return None, detail, []
     flags = []
     if ph < low:
-        flags.append("Soil is more acidic than ideal: lime may be needed")
+        flags.append(f"Soil pH {ph:g} is below the ideal {ideal}: lime may be needed")
     elif ph > high:
-        flags.append("Soil pH is above ideal: sulfur or acid-forming fertilizer may help")
+        flags.append(f"Soil pH {ph:g} is above the ideal {ideal}: sulfur or acid-forming fertilizer may help")
     return trapezoid_score(ph, crop.ph_min, low, high, crop.ph_max), detail, flags
 
 
 def score_drainage(crop: Crop, drainage: str | None, texture: str | None) -> Factor:
     driest, wettest = crop.drainage
-    detail = {"value": drainage, "ideal": f"{driest} to {wettest.lower()}"}
+    ideal = f"{driest} to {wettest.lower()}"
+    detail = {"value": drainage, "ideal": ideal}
     if texture == "muck":
         if crop.muck_suitable:
             return MUCK_SUITABLE_SCORE, detail, ["Muck soil: needs managed drainage and water table control"]
@@ -90,14 +97,15 @@ def score_drainage(crop: Crop, drainage: str | None, texture: str | None) -> Fac
     low, high = DRAINAGE_CLASSES.index(driest), DRAINAGE_CLASSES.index(wettest)
     flags = []
     if index > high:
-        flags.append("Wetter soil than ideal: use raised beds or improve drainage")
+        flags.append(f"{drainage} soil is wetter than ideal ({ideal.lower()}): use raised beds or improve drainage")
     elif index < low:
-        flags.append("Droughty soil: plan for irrigation and organic matter")
+        flags.append(f"{drainage} soil is drier than ideal ({ideal.lower()}): plan for irrigation and organic matter")
     return range_score(index, low, high, DRAINAGE_PENALTY_PER_CLASS), detail, flags
 
 
 def score_climate(crop: Crop, stats: SeasonStats | None) -> dict[str, Factor]:
-    """Season temperature, frost risk and rainfall for one growing window."""
+    """Season temperature, frost risk and rainfall for one growing window.
+    A missing (NaN) statistic leaves that factor unscored."""
     t_low, t_high = crop.temp_ideal_min_c, crop.temp_ideal_max_c
     # Season rainfall ideal, rounded to 10 mm so it reads cleanly.
     r_low = round(crop.rain_mm_per_month[0] * stats.months, -1) if stats else None
@@ -105,35 +113,43 @@ def score_climate(crop: Crop, stats: SeasonStats | None) -> dict[str, Factor]:
     temp_detail = {"value": None, "ideal": f"{t_low:g}-{t_high:g}", "unit": "C avg"}
     frost_detail = {"value": None, "ideal": f"<= {crop.max_freeze_days:g}", "unit": "freeze days in season"}
     rain_detail = {"value": None, "ideal": f"{r_low:.0f}-{r_high:.0f}" if stats else None, "unit": "mm in season"}
+    result: dict[str, Factor] = {"season_temp": (None, temp_detail, []), "frost_risk": (None, frost_detail, []),
+                                 "rainfall": (None, rain_detail, [])}
     if stats is None:
-        return {"season_temp": (None, temp_detail, []), "frost_risk": (None, frost_detail, []),
-                "rainfall": (None, rain_detail, [])}
+        return result
 
-    temp_detail["value"] = round(stats.mean_temp_c, 1)
-    frost_detail["value"] = round(stats.freeze_days, 1)
-    rain_detail["value"] = round(stats.precip_mm)
+    if not is_missing(stats.mean_temp_c):
+        temp = stats.mean_temp_c
+        temp_detail["value"] = round(temp, 1)
+        temp_flags = []
+        if temp > t_high:
+            temp_flags.append(f"Season averages {temp:.1f} C, warmer than the ideal {t_low:g}-{t_high:g} C: heat stress risk")
+        elif temp < t_low:
+            temp_flags.append(f"Season averages {temp:.1f} C, cooler than the ideal {t_low:g}-{t_high:g} C: slower growth")
+        result["season_temp"] = (trapezoid_score(temp, crop.temp_min_c, t_low, t_high, crop.temp_max_c),
+                                 temp_detail, temp_flags)
 
-    temp_flags = []
-    if stats.mean_temp_c > t_high:
-        temp_flags.append("Season is warmer than ideal: heat stress risk")
-    elif stats.mean_temp_c < t_low:
-        temp_flags.append("Season is cooler than ideal: slower growth")
-    frost_flags = []
-    excess_freezes = stats.freeze_days - crop.max_freeze_days
-    if excess_freezes > 0:
-        frost_flags.append("Freeze risk in season: plan frost protection or a later planting")
-    rain_flags = []
-    if stats.precip_mm < r_low:
-        rain_flags.append("May need supplemental irrigation")
-    elif stats.precip_mm > r_high:
-        rain_flags.append("Season rainfall above ideal: watch for disease and waterlogging")
+    if not is_missing(stats.freeze_days):
+        frost_detail["value"] = round(stats.freeze_days, 1)
+        excess_freezes = stats.freeze_days - crop.max_freeze_days
+        frost_flags = []
+        if excess_freezes > 0:
+            frost_flags.append(f"About {stats.freeze_days:.1f} freeze days expected in season (crop tolerates "
+                               f"{crop.max_freeze_days:g}): plan frost protection or a later planting")
+        result["frost_risk"] = (max(0, round(100 - FREEZE_PENALTY_PER_DAY * max(0.0, excess_freezes))),
+                                frost_detail, frost_flags)
 
-    return {
-        "season_temp": (trapezoid_score(stats.mean_temp_c, crop.temp_min_c, t_low, t_high, crop.temp_max_c),
-                        temp_detail, temp_flags),
-        "frost_risk": (max(0, round(100 - FREEZE_PENALTY_PER_DAY * max(0.0, excess_freezes))), frost_detail, frost_flags),
-        "rainfall": (relative_range_score(stats.precip_mm, r_low, r_high), rain_detail, rain_flags),
-    }
+    if not is_missing(stats.precip_mm):
+        rain = stats.precip_mm
+        rain_detail["value"] = round(rain)
+        rain_flags = []
+        if rain < r_low:
+            rain_flags.append(f"Likely needs irrigation ({rain:.0f} mm rain expected, {r_low:.0f} mm needed)")
+        elif rain > r_high:
+            rain_flags.append(f"Season rainfall {rain:.0f} mm is above the ideal {r_low:.0f}-{r_high:.0f} mm: "
+                              "watch for disease and leaching")
+        result["rainfall"] = (relative_range_score(rain, r_low, r_high), rain_detail, rain_flags)
+    return result
 
 
 def score_local_history(acreage: CountyAcreage | None) -> Factor:
