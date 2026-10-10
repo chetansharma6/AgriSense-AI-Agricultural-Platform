@@ -8,6 +8,7 @@ import pytest
 from app import cache, config, service
 from app.clients import fawn, fcc
 from app.market import Market
+from app.schemas import RecommendResponse
 from app.utils import haversine_km
 from tests.test_api import COUNTY, SOIL, fake_weather
 
@@ -133,17 +134,38 @@ def test_demo_mode_still_serves_cache(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.mark.parametrize("farm", config.DEMO_FARMS)
-def test_exact_demo_coordinates_never_call_live_sources(monkeypatch: pytest.MonkeyPatch, farm: str) -> None:
+def test_exact_demo_coordinates_are_instant_contract_valid_and_offline(
+    monkeypatch: pytest.MonkeyPatch, farm: str
+) -> None:
     monkeypatch.setattr(config, "DEMO_MODE", True)
-    calls = []
+    calls: list[str] = []
 
-    def unexpected(*args: Any, **kwargs: Any) -> None:
-        calls.append(True)
-        raise AssertionError("exact demo coordinates must use saved data")
+    def unexpected(name: str) -> Any:
+        def fail(*args: Any, **kwargs: Any) -> None:
+            calls.append(name)
+            raise AssertionError(f"exact demo coordinates called {name}")
+        return fail
 
-    monkeypatch.setattr(service, "_build_recommendation", unexpected)
+    for name in ("lookup_county", "get_soil", "get_daily_weather", "load_market"):
+        monkeypatch.setattr(service, name, unexpected(name))
+    monkeypatch.setattr(fawn, "nearest_station", unexpected("FAWN station lookup"))
+    monkeypatch.setattr(fawn, "daily_min_c", unexpected("FAWN daily data"))
     lat, lon = config.DEMO_FARMS[farm]
+    started = time.perf_counter()
     body = service.recommend(lat, lon)
+    elapsed = time.perf_counter() - started
+    RecommendResponse.model_validate(body)
+    assert elapsed < 0.5
+    assert len(body["crops"]) == 13
     assert body["provenance"]["mode"] == "demo"
     assert body["confidence"]["total_factors"] == 6
     assert calls == []
+
+
+def test_arbitrary_florida_coordinates_keep_live_behavior(demo: pytest.MonkeyPatch) -> None:
+    demo.setattr(config, "DEMO_MODE", False)
+    body = service.recommend(**ORLANDO)
+    RecommendResponse.model_validate(body)
+    assert body["provenance"]["mode"] == "live"
+    assert body["location"]["lat"] == ORLANDO["lat"]
+    assert len(body["crops"]) == 13
