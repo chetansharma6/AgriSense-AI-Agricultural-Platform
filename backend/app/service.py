@@ -12,7 +12,7 @@ import logging
 import threading
 import time
 from collections import OrderedDict
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import Future, ThreadPoolExecutor, wait
 from functools import lru_cache
 from typing import Any, Callable, TypeVar
 
@@ -115,11 +115,80 @@ def _remember(key: tuple[float, float], result: dict[str, Any]) -> None:
 
 
 def _build_with_deadline(lat: float, lon: float) -> tuple[dict[str, Any], bool]:
-    """DEMO_MODE serves saved data deterministically and never waits on providers."""
+    """Use saved data nearby; otherwise return bounded live/partial data."""
     fallback = _demo_fallback(lat, lon, "DEMO_MODE uses the saved demo response")
-    if fallback is None:
-        raise SourcesTooSlow
-    return fallback, False
+    if fallback is not None:
+        return fallback, False
+    return _build_recommendation_bounded(lat, lon, config.DEMO_DEADLINE_S)
+
+
+def _bounded_fetches(fetches: dict[str, Callable[[], Any]], timeout_s: float,
+                    warnings: list[str], failed: list[str]) -> dict[str, Any | None]:
+    """Fetch independent providers without letting one occupy the request."""
+    pool = ThreadPoolExecutor(max_workers=len(fetches), thread_name_prefix="bounded_source")
+    futures: dict[str, Future[Any]] = {
+        name: pool.submit(_attempt, fetch, name, warnings, failed)
+        for name, fetch in fetches.items()
+    }
+    done, pending = wait(futures.values(), timeout=max(timeout_s, 0.0))
+    for name, future in futures.items():
+        if future in pending:
+            failed.append(name)
+            warnings.append(f"{name} timed out; related values are null")
+    results = {name: (future.result() if future in done else None)
+               for name, future in futures.items()}
+    # A timed-out provider may still be inside an upstream HTTP call. Do not
+    # wait for it and do not reuse its worker for another request.
+    pool.shutdown(wait=False, cancel_futures=True)
+    return results
+
+
+def _build_recommendation_bounded(lat: float, lon: float, timeout_s: float) -> tuple[dict[str, Any], bool]:
+    """Build a valid live response within the demo deadline, allowing nulls."""
+    started = time.perf_counter()
+    warnings: list[str] = []
+    failed: list[str] = []
+    station = fawn.nearest_station(lat, lon)
+    source_names = {
+        "County lookup (FCC)": lambda: lookup_county(lat, lon),
+        "Soil data (USDA SSURGO)": lambda: get_soil(lat, lon),
+        "Weather data (NASA POWER)": lambda: get_daily_weather(lat, lon),
+    }
+    if station:
+        source_names["Freeze records (FAWN station)"] = lambda: fawn.daily_min_c(station[0]["id"])
+    results = _bounded_fetches(source_names, timeout_s, warnings, failed)
+    county = results.get("County lookup (FCC)")
+    soil = results.get("Soil data (USDA SSURGO)")
+    weather = results.get("Weather data (NASA POWER)")
+    station_min = results.get("Freeze records (FAWN station)")
+    if weather is not None and station_min is not None and station is not None:
+        weather = with_station_minimums(weather, station_min)
+    if county is not None and county["state"] != "FL":
+        raise OutsideFlorida
+    if soil is not None and soil["soil_ph"] is None:
+        warnings.append("Soil survey reports no pH for this soil; the pH factor is skipped")
+
+    remaining = timeout_s - (time.perf_counter() - started)
+    market = None
+    if county is not None and remaining > 0:
+        market_result = _bounded_fetches(
+            {"Yield and price data (USDA NASS)": lambda: load_market(county["county_fips"])},
+            remaining, warnings, failed)
+        market = market_result["Yield and price data (USDA NASS)"]
+    climate = _attempt(lambda: summarize(weather), "Climate summary", warnings, failed) if weather is not None else None
+    conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
+    conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
+    crops = rank_crops([score_crop(crop, soil, weather, market) for crop in load_crops().values()])
+    response = {
+        "location": {"lat": lat, "lon": lon,
+                     "county": county["county"] if county else None,
+                     "county_fips": county["county_fips"] if county else None,
+                     "state": "FL"},
+        "conditions": conditions, "crops": crops, "warnings": warnings,
+        "scoring": scoring_rules(), "provenance": _provenance("live"),
+        "confidence": _confidence({"crops": crops, "warnings": warnings}),
+    }
+    return response, not failed
 
 
 def _demo_fallback(lat: float, lon: float, reason: str) -> dict[str, Any] | None:
