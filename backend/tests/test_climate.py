@@ -6,7 +6,7 @@ from app.climate import season_stats, summarize
 def weather(t_min: float = 10.0, freeze_dates: tuple[str, ...] = ()) -> pd.DataFrame:
     days = pd.date_range("2021-01-01", "2023-12-31", freq="D")
     frame = pd.DataFrame(
-        {"t_mean_c": 20.0, "t_max_c": 28.0, "t_min_c": t_min, "precip_mm": 3.0, "solar_kwh_m2": 5.0},
+        {"t_mean_c": 20.0, "t_max_c": 28.0, "t_min_c": t_min, "precip_mm": 3.0},
         index=days,
     )
     for day in freeze_dates:
@@ -37,3 +37,21 @@ def test_summarize_frost_dates() -> None:
     assert summary["last_spring_frost"] == "02-12"
     assert summary["first_fall_frost"] == "12-07"
     assert 290 < summary["frost_free_days"] < 300
+
+
+def test_jan_and_dec_freeze_gives_about_335_frost_free_days() -> None:
+    freezes = ("2021-01-15", "2021-12-15", "2022-01-15", "2022-12-15", "2023-01-15", "2023-12-15")
+    summary = summarize(weather(freeze_dates=freezes))
+    assert summary["frost_free_days"] == 333.0  # Jan 16 to Dec 14
+    assert summary["source"] == "NASA POWER"
+
+
+def test_monthly_normals() -> None:
+    summary = summarize(weather(freeze_dates=("2021-01-15", "2022-01-20")))
+    monthly = summary["monthly"]
+    assert [m["month"] for m in monthly] == list(range(1, 13))
+    january = monthly[0]
+    assert january["precip_mm"] == 93.0  # 31 days x 3 mm
+    assert january["freeze_days"] == round(2 / 3, 1)
+    assert january["tmax_c"] == 28.0
+    assert monthly[1]["freeze_days"] == 0.0

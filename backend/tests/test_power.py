@@ -10,7 +10,6 @@ PARAMETER = {
     "T2M_MAX": {"20240101": 21.0, "20240102": 22.0},
     "T2M_MIN": {"20240101": 9.0, "20240102": 10.0},
     "PRECTOTCORR": {"20240101": 0.0, "20240102": 12.5},
-    "ALLSKY_SFC_SW_DWN": {"20240101": 3.1, "20240102": 2.4},
 }
 
 
@@ -26,3 +25,19 @@ def test_daily_weather_frame_and_cache(monkeypatch: pytest.MonkeyPatch) -> None:
 
     power.get_daily_weather(29.74, -81.53)  # rounds to the same 0.1 degree cell
     assert fake.calls == 1
+
+
+def test_retries_once_on_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
+    import httpx
+
+    class FlakyClient(FakeClient):
+        def get(self, url: str, **kwargs: object) -> object:
+            self.calls += 1
+            if self.calls == 1:
+                raise httpx.ReadTimeout("slow")
+            return super().get(url, **kwargs)
+
+    fake = FlakyClient({"properties": {"parameter": PARAMETER}})
+    monkeypatch.setattr(power, "http", lambda: fake)
+    assert len(power.get_daily_weather(29.71, -81.50)) == 2
+    assert fake.calls == 3  # FakeClient.get also counts the successful call
