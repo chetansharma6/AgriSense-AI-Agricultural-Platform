@@ -1,0 +1,451 @@
+{
+  "peanut": [
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "too_small",
+        "note": "Usually grown on 100+ acres; hard to make work on {acres} acres. Land size caps the score at 40."
+      },
+      "cap": 40
+    },
+    {
+      "below": 25.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "too_small",
+        "note": "Usually grown on 100+ acres; hard to make work on {acres} acres. Land size caps the score at 40."
+      },
+      "cap": 40
+    },
+    {
+      "below": 100.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 100+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "cotton": [
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 500.0,
+        "fit": "too_small",
+        "note": "Usually grown on 500+ acres; hard to make work on {acres} acres. Land size caps the score at 40."
+      },
+      "cap": 40
+    },
+    {
+      "below": 100.0,
+      "scale": {
+        "min_practical_acres": 500.0,
+        "fit": "too_small",
+        "note": "Usually grown on 500+ acres; hard to make work on {acres} acres. Land size caps the score at 40."
+      },
+      "cap": 40
+    },
+    {
+      "below": 500.0,
+      "scale": {
+        "min_practical_acres": 500.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 500+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 500.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "field_corn": [
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "too_small",
+        "note": "Usually grown on 100+ acres; hard to make work on {acres} acres. Land size caps the score at 40."
+      },
+      "cap": 40
+    },
+    {
+      "below": 25.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "too_small",
+        "note": "Usually grown on 100+ acres; hard to make work on {acres} acres. Land size caps the score at 40."
+      },
+      "cap": 40
+    },
+    {
+      "below": 100.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 100+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "soybean": [
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "too_small",
+        "note": "Usually grown on 100+ acres; hard to make work on {acres} acres. Land size caps the score at 40."
+      },
+      "cap": 40
+    },
+    {
+      "below": 25.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "too_small",
+        "note": "Usually grown on 100+ acres; hard to make work on {acres} acres. Land size caps the score at 40."
+      },
+      "cap": 40
+    },
+    {
+      "below": 100.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 100+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 100.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "sugarcane": [
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 500.0,
+        "fit": "too_small",
+        "note": "Usually grown on 500+ acres; hard to make work on {acres} acres. Land size caps the score at 40."
+      },
+      "cap": 40
+    },
+    {
+      "below": 100.0,
+      "scale": {
+        "min_practical_acres": 500.0,
+        "fit": "too_small",
+        "note": "Usually grown on 500+ acres; hard to make work on {acres} acres. Land size caps the score at 40."
+      },
+      "cap": 40
+    },
+    {
+      "below": 500.0,
+      "scale": {
+        "min_practical_acres": 500.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 500+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 500.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "tomato": [
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "good",
+        "note": "Garden-scale planting on {acres} acres: use beds and check spacing; commercial yield and price data may not apply. Score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 5.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 5+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "watermelon": [
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres: allow room for spacing and rotation; score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 5.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 5+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "strawberry": [
+    {
+      "below": 0.25,
+      "scale": {
+        "min_practical_acres": 1.0,
+        "fit": "good",
+        "note": "Garden-scale planting on {acres} acres: use beds and check spacing; commercial yield and price data may not apply. Score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 1.0,
+        "fit": "good",
+        "note": "Garden-scale planting on {acres} acres: use beds and check spacing; commercial yield and price data may not apply. Score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 1.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "potato": [
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres: allow room for spacing and rotation; score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 5.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 5+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "sweet_corn": [
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres: allow room for spacing and rotation; score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 5.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 5+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 5.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "snap_bean": [
+    {
+      "below": 0.5,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "good",
+        "note": "Garden-scale planting on {acres} acres: use beds and check spacing; commercial yield and price data may not apply. Score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "good",
+        "note": "Garden-scale planting on {acres} acres: use beds and check spacing; commercial yield and price data may not apply. Score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 2.0,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 2+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "bell_pepper": [
+    {
+      "below": 0.5,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "good",
+        "note": "Garden-scale planting on {acres} acres: use beds and check spacing; commercial yield and price data may not apply. Score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "good",
+        "note": "Garden-scale planting on {acres} acres: use beds and check spacing; commercial yield and price data may not apply. Score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 2.0,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 2+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ],
+  "cabbage": [
+    {
+      "below": 0.5,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "good",
+        "note": "Garden-scale planting on {acres} acres: use beds and check spacing; commercial yield and price data may not apply. Score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 1.0,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "good",
+        "note": "Garden-scale planting on {acres} acres: use beds and check spacing; commercial yield and price data may not apply. Score capped at 74 for land size."
+      },
+      "cap": 74
+    },
+    {
+      "below": 2.0,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "small",
+        "note": "Small planting of {acres} acres; commercial scale is usually 2+ acres. Land size caps the score at 74."
+      },
+      "cap": 74
+    },
+    {
+      "below": 10001.0,
+      "scale": {
+        "min_practical_acres": 2.0,
+        "fit": "good",
+        "note": null
+      },
+      "cap": 100
+    }
+  ]
+}

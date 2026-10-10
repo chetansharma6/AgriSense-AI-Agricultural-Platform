@@ -40,7 +40,7 @@ export default function AiReport({ crop, acres, verdictSlot }: { crop: CropDetai
           method: "POST", headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ crop, acres }), signal: controller.signal,
         });
-        if (!response.ok) throw new Error("The summary is unavailable. Your crop scores are still shown above.");
+        if (!response.ok) throw new Error(`The summary is unavailable (HTTP ${response.status}). Your crop scores are still shown above.`);
         const body: unknown = await response.json();
         if (!isReportResponse(body)) throw new Error("The summary could not be read. Please try again.");
         if (!controller.signal.aborted) setResult(body);
@@ -60,7 +60,8 @@ export default function AiReport({ crop, acres, verdictSlot }: { crop: CropDetai
     <>
       {verdictSlot && createPortal(verdict, verdictSlot)}
       <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="ai-summary-title" aria-busy={!result && !error}>
-        <h2 id="ai-summary-title" className="section-title">AI summary of the data above</h2>
+        <h2 id="ai-summary-title" className="section-title">Summary of the data above</h2>
+        {crop.provenance?.mode === "demo" && <p className="mt-3 text-sm text-soil">Based on saved demo data, not live measurements for your property.</p>}
         {error ? (
           <div role="alert" className="mt-4">
             <p className="text-sm text-soil">{error}</p>
@@ -87,7 +88,7 @@ export default function AiReport({ crop, acres, verdictSlot }: { crop: CropDetai
             {result.source === "fallback" && <p className="mt-5 text-sm text-soil">Summary generated from the scores (AI unavailable)</p>}
           </div>
         )}
-        <p className="mt-5 text-sm leading-relaxed text-soil">Written by AI from the numbers on this page. Scores are calculated, not generated.</p>
+        <p className="mt-5 text-sm leading-relaxed text-soil">{result?.source === "fallback" ? "Written from the supplied scores." : "Written by AI from the numbers on this page."} Scores are calculated, not generated.</p>
       </section>
     </>
   );

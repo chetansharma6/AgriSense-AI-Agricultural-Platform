@@ -122,7 +122,8 @@ export function formatDisplayText(text: string): string {
         return `${a.toFixed(1)}–${b.toFixed(1)}°C (${Math.round(celsiusToF(a))}–${Math.round(celsiusToF(b))}°F)`.replace(/-(?=\d)/g, "−");
       })
     .replace(/([−-]?\d+(?:\.\d+)?)\s*°?\s*C\b(?!\s*\([^)]*°F\))/g, (_, c: string) => formatTemperature(Number(c.replace("−", "-"))))
-    .replace(/([\d,]+(?:\.\d+)?)\s+(days?|freezing nights|acres|mm)\b/gi, (_, value: string, unit: string) => `${formatWhole(Number(value.replace(/,/g, "")))} ${unit.toLowerCase()}`)
+    .replace(/([\d,]+(?:\.\d+)?)\s+acres\b/gi, (_, value: string) => `${Number(value.replace(/,/g, "")).toLocaleString("en-US", { maximumFractionDigits: 20 })} acres`)
+    .replace(/([\d,]+(?:\.\d+)?)\s+(days?|freezing nights|mm)\b/gi, (_, value: string, unit: string) => `${formatWhole(Number(value.replace(/,/g, "")))} ${unit.toLowerCase()}`)
     .replace(/(\d+\.\d+) of them hard/gi, (_, value: string) => `${formatWhole(Number(value.replace(/,/g, "")))} of them hard`)
     .replace(/<=/g, "≤").replace(/>=/g, "≥");
 }

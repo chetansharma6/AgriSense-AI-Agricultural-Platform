@@ -3,11 +3,13 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
 import ts from 'typescript';
-function loadRoute(ai = false) {
+function loadRoute(ai = false, fail = false) {
   const calls = [];
   class Anthropic {
+    static APIError = class extends Error {};
     messages = { create: async input => {
       calls.push(input);
+      if (fail) throw new Anthropic.APIError("sensitive provider message");
       return { content: [{ type: 'text', text: JSON.stringify({ verdict: 'Cotton is impractical for this lot.', summary: 'Choose a garden crop.', pros: ['a', 'b', 'c'], cons: ['a', 'b', 'c'], first_steps: ['a', 'b', 'c'] }) }] };
     } };
   }
@@ -37,4 +39,17 @@ test('fallback explains missing acreage and discourages undersized field product
   const missing = await (await route.post(crop)).json();
   assert.match(missing.report.summary, /recommendation confidence/);
   assert.equal((await route.post(crop, 0.09)).status, 400);
+});
+
+test('provider failure returns a usable report and saved provenance reaches the prompt', async () => {
+  const route = loadRoute(true, true);
+  const saved = { ...crop, provenance: { mode: 'demo', sources: [], fawn_station: null } };
+  const response = await route.post(saved, 0.25);
+  assert.equal(response.status, 200);
+  const body = await response.json();
+  assert.equal(body.source, 'fallback');
+  assert.doesNotMatch(JSON.stringify(body), /sensitive provider message/);
+  const prompt = JSON.parse(route.calls[0].messages[0].content.split('\n\n')[0]);
+  assert.equal(prompt.acres, 0.25);
+  assert.equal(prompt.crop.provenance.mode, 'demo');
 });
