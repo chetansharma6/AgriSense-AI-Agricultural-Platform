@@ -16,6 +16,8 @@ COUNTY = {"county": "St. Johns", "county_fips": "12109", "state": "FL"}
 SOIL = {"soil_ph": 5.6, "organic_matter_pct": 1.8, "sand_pct": 88.0, "clay_pct": 4.0,
         "texture": "sand", "drainage": "Poorly drained", "map_unit": "Test sand"}
 FACTORS = {"soil_ph", "drainage", "season_temp", "frost_risk", "rainfall", "local_history"}
+CROP_KEYS = {"id", "name", "score", "season_label", "factors", "factor_details", "avg_yield", "price",
+             "limited_by", "flags"}
 
 
 def fake_weather(lat: float, lon: float) -> pd.DataFrame:
@@ -39,7 +41,8 @@ def sources(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
 
 def test_recommend_matches_contract(sources: dict[str, Any]) -> None:
     body = client.get("/api/recommend", params={"lat": 29.71, "lon": -81.50}).json()
-    assert set(body) == {"location", "conditions", "crops", "warnings"}
+    assert set(body) == {"location", "conditions", "crops", "warnings", "scoring"}
+    assert set(body["scoring"]) == {"weights", "critical_factors", "critical_threshold", "critical_cap"}
     assert body["location"] == {"lat": 29.71, "lon": -81.5, "county": "St. Johns",
                                 "county_fips": "12109", "state": "FL"}
     assert body["conditions"]["texture"] == "sand"
@@ -48,6 +51,7 @@ def test_recommend_matches_contract(sources: dict[str, Any]) -> None:
     scores = [crop["score"] for crop in body["crops"]]
     assert scores == sorted(scores, reverse=True)
     for crop in body["crops"]:
+        assert set(crop) == CROP_KEYS
         assert set(crop["factors"]) == FACTORS == set(crop["factor_details"])
         assert all(0 <= v <= 100 for v in crop["factors"].values() if v is not None)
     assert body["warnings"] == []
@@ -104,6 +108,8 @@ def test_crop_detail(sources: dict[str, Any]) -> None:
     assert body["extension_links"][0]["url"].startswith("https://edis.ifas.ufl.edu/")
     assert body["location"]["county"] == "St. Johns"
     assert "soil_ph" in body["conditions"]
+    assert body["scoring"]["weights"]["soil_ph"] == 0.20
+    assert body["limited_by"] == []
 
 
 def test_unknown_crop() -> None:

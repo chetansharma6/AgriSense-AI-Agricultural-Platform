@@ -13,7 +13,7 @@ from app.clients.power import get_daily_weather
 from app.clients.soil import SoilNotFound, get_soil
 from app.crops import load_crops
 from app.market import load_market
-from app.scoring import score_crop
+from app.scoring import rank_crops, score_crop, scoring_rules
 
 T = TypeVar("T")
 
@@ -62,8 +62,7 @@ def recommend(lat: float, lon: float) -> dict[str, Any]:
     conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
     conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
 
-    crops = [score_crop(crop, soil, weather, market) for crop in load_crops().values()]
-    crops.sort(key=lambda crop: crop["score"] if crop["score"] is not None else -1, reverse=True)
+    crops = rank_crops([score_crop(crop, soil, weather, market) for crop in load_crops().values()])
 
     return {
         "location": {
@@ -76,6 +75,7 @@ def recommend(lat: float, lon: float) -> dict[str, Any]:
         "conditions": conditions,
         "crops": crops,
         "warnings": warnings,
+        "scoring": scoring_rules(),
     }
 
 
@@ -93,4 +93,5 @@ def crop_detail(crop_id: str, lat: float, lon: float) -> dict[str, Any] | None:
         "extension_links": [link.model_dump() for link in crop.extension_links],
         "conditions": result["conditions"],
         "location": result["location"],
+        "scoring": result["scoring"],
     }

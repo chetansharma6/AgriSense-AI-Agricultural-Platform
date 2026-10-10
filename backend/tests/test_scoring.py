@@ -272,7 +272,7 @@ def test_local_history_not_grown_flags_market() -> None:
 def test_weighted_score_skips_missing_factors() -> None:
     factors = {"soil_ph": None, "drainage": 100, "season_temp": 100, "frost_risk": 100,
                "rainfall": 100, "local_history": 0}
-    assert weighted_score(factors) == round(100 * 0.60 / 0.85)
+    assert weighted_score(factors) == round(100 * 0.60 / 0.80)
     assert weighted_score(dict.fromkeys(factors)) is None
 
 

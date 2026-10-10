@@ -1,9 +1,11 @@
 """Deterministic, explainable crop scores.
 
 Each factor is 0-100. The crop score is the weighted mean of the factors
-that have data, so a missing source lowers confidence, not the score.
-Climate factors are scored for every Florida growing window of the crop and
-the best window is used.
+that have data, so a missing source lowers confidence, not the score. If a
+critical factor scores below CRITICAL_THRESHOLD, the crop score is capped at
+CRITICAL_CAP: a crop the soil or climate rules out cannot rank high on the
+strength of its other factors. Climate factors are scored for every Florida
+growing window of the crop and the best window is used.
 """
 
 import math
@@ -16,14 +18,26 @@ from app.crops import DRAINAGE_CLASSES, Crop, GrowingWindow
 from app.market import CountyAcreage, Market, average_yield, county_acreage, price_range
 
 WEIGHTS = {
-    "soil_ph": 0.15,
+    "soil_ph": 0.20,
     "drainage": 0.15,
     "season_temp": 0.20,
     "frost_risk": 0.15,
     "rainfall": 0.10,
-    "local_history": 0.25,
+    "local_history": 0.20,
 }
 CLIMATE_FACTORS = ("season_temp", "frost_risk", "rainfall")
+CRITICAL_FACTORS = ("soil_ph", "drainage", "season_temp", "frost_risk")
+CRITICAL_THRESHOLD = 25
+CRITICAL_CAP = 45
+MAX_FLAGS = 4
+FACTOR_NAMES = {
+    "soil_ph": "soil pH",
+    "drainage": "drainage",
+    "season_temp": "season temperature",
+    "frost_risk": "freeze risk",
+    "rainfall": "rainfall",
+    "local_history": "local growing history",
+}
 
 DRAINAGE_PENALTY_PER_CLASS = 25
 FREEZE_PENALTY_PER_DAY = 10
@@ -202,14 +216,44 @@ def score_crop(crop: Crop, soil: dict[str, Any] | None, weather: pd.DataFrame | 
         "local_history": score_local_history(county_acreage(market, crop) if market else None),
     }
     scores = {name: f[0] for name, f in factors.items()}
+    score = weighted_score(scores)
+    limited_by = [name for name in CRITICAL_FACTORS
+                  if scores[name] is not None and scores[name] < CRITICAL_THRESHOLD]
+    if limited_by and score is not None:
+        score = min(score, CRITICAL_CAP)
     return {
         "id": crop.id,
         "name": crop.name,
-        "score": weighted_score(scores),
+        "score": score,
         "season_label": window.label,
         "factors": scores,
         "factor_details": {name: f[1] for name, f in factors.items()},
         "avg_yield": average_yield(market, crop) if market else None,
         "price": price_range(market, crop) if market else None,
-        "flags": [flag for f in factors.values() for flag in f[2]],
+        "limited_by": limited_by,
+        "flags": ordered_flags(factors, limited_by),
+    }
+
+
+def ordered_flags(factors: dict[str, Factor], limited_by: list[str]) -> list[str]:
+    """Most critical first: "Limited by" flags, then each factor's flags from the
+    lowest-scoring factor up (unscored factors last). Deduplicated, at most MAX_FLAGS."""
+    flags = [f"Limited by {FACTOR_NAMES[name]}" for name in limited_by]
+    by_severity = sorted(factors.items(), key=lambda item: 101 if item[1][0] is None else item[1][0])
+    flags += [flag for _, (_, _, factor_flags) in by_severity for flag in factor_flags]
+    return list(dict.fromkeys(flags))[:MAX_FLAGS]
+
+
+def rank_crops(crops: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Scored crops by score descending (unscored last), ties by name."""
+    return sorted(crops, key=lambda crop: (-(crop["score"] if crop["score"] is not None else -1), crop["name"]))
+
+
+def scoring_rules() -> dict[str, Any]:
+    """The rules the frontend shows next to the factor breakdown."""
+    return {
+        "weights": dict(WEIGHTS),
+        "critical_factors": list(CRITICAL_FACTORS),
+        "critical_threshold": CRITICAL_THRESHOLD,
+        "critical_cap": CRITICAL_CAP,
     }

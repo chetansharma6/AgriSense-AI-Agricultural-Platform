@@ -28,6 +28,12 @@ CORS_ORIGINS = [
 CORS_ORIGIN_REGEX = r"https://.*\.vercel\.app"
 
 FL_BBOX = (24.3, 31.1, -87.7, -79.9)  # lat_min, lat_max, lon_min, lon_max
+DEMO_FARMS = {  # name -> (lat, lon), as in AGENTS.md
+    "marianna": (30.80, -85.25),
+    "hastings": (29.71, -81.50),
+    "plant_city": (28.03, -82.15),
+    "belle_glade": (26.68, -80.68),
+}
 
 
 def in_florida(lat: float, lon: float) -> bool:
