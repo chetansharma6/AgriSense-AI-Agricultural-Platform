@@ -7,6 +7,7 @@ for the same spot skip all I/O and scoring.
 """
 
 import copy
+import inspect
 import json
 import logging
 import weakref
@@ -54,11 +55,17 @@ class _DaemonThreadPoolExecutor(ThreadPoolExecutor):
 
         if len(self._threads) < self._max_workers:
             name = f"{self._thread_name_prefix or self}_{len(self._threads)}"
+            if len(inspect.signature(_worker).parameters) == 3:
+                worker_args = (weakref.ref(self, weakref_cb),
+                               self._create_worker_context(), self._work_queue)
+            else:
+                worker_args = (weakref.ref(self, weakref_cb), self._work_queue,
+                               getattr(self, "_initializer", None),
+                               getattr(self, "_initargs", ()))
             thread = threading.Thread(
                 name=name,
                 target=_worker,
-                args=(weakref.ref(self, weakref_cb), self._work_queue,
-                      self._initializer, self._initargs),
+                args=worker_args,
                 daemon=True,
             )
             thread.start()

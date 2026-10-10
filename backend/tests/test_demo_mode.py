@@ -46,7 +46,10 @@ def test_nearby_location_uses_nearest_saved_demo(demo: pytest.MonkeyPatch) -> No
     body = service.recommend(**NEAR_HASTINGS)
     assert body["warnings"][0] == "Showing cached data for Hastings (DEMO_MODE uses the saved demo response)"
     saved = saved_demo("hastings")
-    assert body["crops"] == saved["crops"]
+    assert [(crop["id"], crop["score"]) for crop in body["crops"]] == [
+        (crop["id"], crop["score"]) for crop in saved["crops"]
+    ]
+    assert all("scale" in crop and "est_gross_value" in crop for crop in body["crops"])
     assert body["location"] == saved["location"]  # the farm the data is really for
 
 

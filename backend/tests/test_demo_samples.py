@@ -9,6 +9,7 @@ import pytest
 from app.config import DATA_DIR, DEMO_FARMS
 from app.crops import load_crops
 from app.schemas import CropDetail, RecommendResponse
+from app.service import _apply_acres
 
 
 def _assert_finite(value: object, path: str = "response") -> None:
@@ -49,7 +50,7 @@ def _assert_response_invariants(response: dict) -> None:
 def test_demo_sample_matches_contract(farm: str) -> None:
     sample = json.loads((DATA_DIR / "demo" / f"{farm}.json").read_text())
     assert set(sample) == {"recommend", "crops"}
-    recommend = RecommendResponse.model_validate(sample["recommend"])
+    recommend = RecommendResponse.model_validate(_apply_acres(sample["recommend"], None))
     assert (recommend.location.lat, recommend.location.lon) == DEMO_FARMS[farm]
     assert set(sample["crops"]) == set(load_crops()) == {crop.id for crop in recommend.crops}
     for crop_id, detail in sample["crops"].items():
