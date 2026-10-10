@@ -117,6 +117,11 @@ class SourceStatus(Strict):
     name: str
     status: str
     detail: str | None = None
+    url: str = ""
+    data_period: str = ""
+    data_status: str = "live"
+    geographic_level: str = ""
+    limitations: list[str] = []
 
 
 class FawnStation(Strict):
