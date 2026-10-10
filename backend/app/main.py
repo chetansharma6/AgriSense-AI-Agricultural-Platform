@@ -48,7 +48,7 @@ def get_recommend(lat: float = Query(...), lon: float = Query(...), acres: float
 
 @app.get("/api/crops/{crop_id}", response_model=CropDetail, response_model_exclude_unset=True)
 def get_crop(crop_id: str, lat: float = Query(...), lon: float = Query(...), acres: float | None = Query(None, gt=0.1, le=10000.0)) -> dict[str, Any]:
-    if crop_id not in load_crops():
+    if len(crop_id) > 64 or crop_id not in load_crops():
         raise HTTPException(status_code=404, detail="Unknown crop")
     _require_florida(lat, lon)
     try:
@@ -62,5 +62,7 @@ def get_crop(crop_id: str, lat: float = Query(...), lon: float = Query(...), acr
 
 
 def _require_florida(lat: float, lon: float) -> None:
-    if not math.isfinite(lat) or not math.isfinite(lon) or not in_florida(lat, lon):
+    if (not math.isfinite(lat) or not math.isfinite(lon)
+            or not 24.3 <= lat <= 31.1 or not -87.7 <= lon <= -79.9
+            or not in_florida(lat, lon)):
         raise HTTPException(status_code=400, detail=NOT_IN_FLORIDA)
