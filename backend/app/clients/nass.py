@@ -6,6 +6,7 @@ connections open between calls.
 """
 
 import logging
+import threading
 from typing import Any
 
 import httpx
@@ -20,12 +21,14 @@ TIMEOUT_S = 30.0
 logging.getLogger("httpx").setLevel(logging.WARNING)
 
 _client: httpx.Client | None = None
+_client_lock = threading.Lock()
 
 
 def _http() -> httpx.Client:
     global _client
-    if _client is None:
-        _client = httpx.Client(timeout=TIMEOUT_S)
+    with _client_lock:
+        if _client is None:
+            _client = httpx.Client(timeout=TIMEOUT_S)
     return _client
 
 
