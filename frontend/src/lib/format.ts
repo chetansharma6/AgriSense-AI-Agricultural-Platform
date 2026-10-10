@@ -69,3 +69,15 @@ export function formatPercent(value: number | null): string {
 export function formatScore(score: number | null): string {
   return score === null ? "No data" : `${numberFormat.format(score)} / 100`;
 }
+
+const limitingLabels: Record<string, string> = {
+  soil_ph: "soil pH",
+  drainage: "drainage",
+  season_temp: "season temperature",
+  frost_risk: "freeze risk",
+};
+
+/** "Limited by freeze risk" style text for the factors that capped a score. */
+export function limitedText(keys: string[]): string {
+  return `Limited by ${keys.map((key) => limitingLabels[key] ?? key.replace(/_/g, " ")).join(", ")}`;
+}
