@@ -197,23 +197,7 @@ def _to_numbers(row: dict[str, str | None]) -> dict[str, Any]:
     return {key: (float(value) if key in numeric and value not in (None, "") else value)
             for key, value in row.items()}
 
-
 def _round(value: float | None) -> float | None:
     return round(value, 1) if value is not None else None
 
 
-if __name__ == "__main__":
-    import time
-
-    DEMO_FARMS = {
-        "marianna": (30.80, -85.25),
-        "hastings": (29.71, -81.50),
-        "plant_city": (28.03, -82.15),
-        "belle_glade": (26.68, -80.68),
-    }
-    started = time.perf_counter()
-    for name, (lat, lon) in DEMO_FARMS.items():
-        soil = get_soil(lat, lon)
-        print(f"{name}: mukey {soil['mukey']}")
-        print(f"  {soil}")
-    print(f"elapsed: {time.perf_counter() - started:.2f} s")
