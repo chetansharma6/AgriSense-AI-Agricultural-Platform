@@ -19,3 +19,17 @@ body {
   color: var(--color-ink);
   font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
 }
+
+@keyframes report-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+
+.report-shimmer {
+  background-size: 200% 100%;
+  animation: report-shimmer 1.5s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .report-shimmer { animation: none; }
+}

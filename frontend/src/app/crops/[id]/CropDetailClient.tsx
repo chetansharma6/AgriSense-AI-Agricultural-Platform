@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import AiReport from "@/components/AiReport";
 import FactorChart from "@/components/FactorChart";
 import { FACTOR_WEIGHTS, SCORE_EXPLANATION } from "@/lib/weights";
 import { useParams, useSearchParams } from "next/navigation";
@@ -59,6 +60,7 @@ export default function CropDetailClient() {
     && Number.isFinite(lat) && Number.isFinite(lon)
     && lat >= 24.3 && lat <= 31.1 && lon >= -87.7 && lon <= -79.9;
   const key = `${id}:${lat},${lon}`;
+  const [verdictSlot, setVerdictSlot] = useState<HTMLDivElement | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<DetailState | null>(null);
   const backUrl = valid ? `/results?lat=${lat.toFixed(4)}&lon=${lon.toFixed(4)}` : "/";
@@ -111,9 +113,10 @@ export default function CropDetailClient() {
             <p className="text-xs font-semibold">{tone ? badges[tone].label : "No data"}</p>
           </div>
         </div>
-        <div id="ai-verdict" />
+        <div id="ai-verdict" ref={setVerdictSlot} />
       </header>
       <FactorChart factors={crop.factors} details={crop.factor_details} weights={FACTOR_WEIGHTS} explanation={SCORE_EXPLANATION} />
+      <AiReport key={key} crop={crop} verdictSlot={verdictSlot} />
       <section aria-labelledby="track-record">
         <h2 id="track-record" className="mb-4 text-2xl font-semibold">Local track record</h2>
         <dl className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
