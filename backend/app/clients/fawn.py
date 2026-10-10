@@ -22,9 +22,10 @@ from functools import lru_cache
 from typing import Any, TypedDict
 
 import pandas as pd
+import httpx
 
 from app.cache import read_cache, write_cache
-from app.clients.http import http
+from app.clients.http import TIMEOUT_S, http
 from app.clients.power import END, START
 from app.config import DATA_DIR
 from app.utils import haversine_km
@@ -46,6 +47,10 @@ class Station(TypedDict):
 
 class FawnError(RuntimeError):
     """FAWN returned something other than the expected CSV."""
+
+
+class FawnTimeout(FawnError):
+    """FAWN exceeded its finite request timeout."""
 
 
 @lru_cache(maxsize=1)
@@ -84,8 +89,13 @@ def _download(station_id: str) -> dict[date, float]:
         "toDate_m": end.month, "toDate_d": end.day, "toDate_y": end.year,
         "vars__AirTemp9": "on", "format": ".CSV (Excel)",
     }
-    response = http().post(REPORT_URL, data=form)
-    response.raise_for_status()
+    response = http().post(REPORT_URL, data=form, timeout=TIMEOUT_S)
+    try:
+        response.raise_for_status()
+    except httpx.TimeoutException:
+        raise FawnTimeout("FAWN request timed out") from None
+    except httpx.HTTPError:
+        raise FawnError(f"FAWN HTTP {response.status_code}") from None
     return parse_report(response.text)
 
 

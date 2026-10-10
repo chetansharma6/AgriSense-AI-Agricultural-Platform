@@ -8,7 +8,7 @@ import re
 from typing import Any
 
 from app.cache import read_cache, write_cache
-from app.clients.http import http
+from app.clients.http import TIMEOUT_S, http
 from app.config import nass_api_key
 
 NASS_URL = "https://quickstats.nass.usda.gov/api/api_GET/"
@@ -42,11 +42,19 @@ def query(params: dict[str, Any], invalid_means_empty: bool = False) -> list[dic
     if cached is not None:
         return cached
 
-    response = http().get(NASS_URL, params={**params, "key": nass_api_key(), "format": "JSON"})
+    response = http().get(NASS_URL, params={**params, "key": nass_api_key(), "format": "JSON"}, timeout=TIMEOUT_S)
     if response.status_code == 200:
-        rows: list[dict[str, Any]] = [
-            {field: row[field] for field in KEEP_FIELDS if field in row} for row in response.json().get("data", [])
-        ]
+        try:
+            payload = response.json()
+            data = payload.get("data", [])
+            if not isinstance(data, list):
+                raise TypeError("data is not a list")
+            rows: list[dict[str, Any]] = [
+                {field: row[field] for field in KEEP_FIELDS if field in row}
+                for row in data if isinstance(row, dict)
+            ]
+        except (TypeError, ValueError, KeyError):
+            raise NassError("NASS response malformed") from None
     elif response.status_code == 400 and _is_empty_answer(response.text, invalid_means_empty):
         rows = []
     else:

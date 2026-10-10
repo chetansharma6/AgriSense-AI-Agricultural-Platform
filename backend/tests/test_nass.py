@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -40,3 +41,17 @@ def test_error_message_never_contains_key(monkeypatch: pytest.MonkeyPatch) -> No
         nass.query({"commodity_desc": "NOPE"})
     assert "secret-key" not in str(error.value)
     assert "invalid query" in str(error.value)
+
+
+def test_malformed_json_is_classified(monkeypatch: pytest.MonkeyPatch) -> None:
+    class Malformed(FakeClient):
+        def get(self, url: str, **kwargs: Any) -> Any:
+            self.calls += 1
+            response = super().get(url, **kwargs)
+            response.json = lambda: (_ for _ in ()).throw(ValueError("not json"))
+            return response
+
+    monkeypatch.setattr(nass, "nass_api_key", lambda: "test-key")
+    monkeypatch.setattr(nass, "http", lambda: Malformed({}))
+    with pytest.raises(nass.NassError, match="malformed"):
+        nass.query({"commodity_desc": "PEANUTS"})

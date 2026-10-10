@@ -41,3 +41,10 @@ def test_retries_once_on_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(power, "http", lambda: fake)
     assert len(power.get_daily_weather(29.71, -81.50)) == 2
     assert fake.calls == 3  # FakeClient.get also counts the successful call
+
+
+@pytest.mark.parametrize("payload", [{}, {"properties": {"parameter": {}}}, {"properties": {}}])
+def test_empty_or_malformed_response_is_classified(monkeypatch: pytest.MonkeyPatch, payload: object) -> None:
+    monkeypatch.setattr(power, "http", lambda: FakeClient(payload))
+    with pytest.raises(power.PowerError):
+        power.get_daily_weather(29.71, -81.50)

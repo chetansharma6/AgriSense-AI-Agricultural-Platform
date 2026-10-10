@@ -9,11 +9,12 @@ Run `python -m app.clients.soil` from backend/ to print the demo farms.
 """
 
 from typing import Any, TypedDict
+import time
 
 import httpx
 
 from app.cache import read_cache, write_cache
-from app.clients.http import http
+from app.clients.http import TIMEOUT_S, http
 
 SDA_URL = "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest"
 SOURCE = "USDA NRCS SSURGO"
@@ -45,6 +46,10 @@ class SoilServiceDown(RuntimeError):
     maintenance window, 12:30-12:45 AM US Central)."""
 
 
+class SoilMalformed(RuntimeError):
+    """SDA returned a payload that cannot be parsed safely."""
+
+
 class Soil(TypedDict):
     soil_ph: float | None
     organic_matter_pct: float | None
@@ -62,17 +67,25 @@ def sda_query(sql: str) -> list[dict[str, str | None]]:
     Retries once on a timeout or a 5xx response."""
     for attempt in (1, 2):
         try:
-            response = http().post(SDA_URL, json={"query": sql, "format": "JSON+COLUMNNAME"})
+            response = http().post(SDA_URL, json={"query": sql, "format": "JSON+COLUMNNAME"}, timeout=TIMEOUT_S)
         except httpx.TimeoutException:
             if attempt == 2:
                 raise
+            time.sleep(0.05)
             continue
         if response.status_code >= 500 and attempt == 1:
+            time.sleep(0.05)
             continue
         response.raise_for_status()
         if response.text.lstrip().startswith("<"):
             raise SoilServiceDown(response.text[:200])
-        return parse_table(response.json())
+        try:
+            payload = response.json()
+            if not isinstance(payload, dict):
+                raise TypeError("payload is not an object")
+            return parse_table(payload)
+        except (TypeError, ValueError, KeyError):
+            raise SoilMalformed("SSURGO response malformed") from None
     raise AssertionError("unreachable")
 
 
