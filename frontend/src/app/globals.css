@@ -124,6 +124,7 @@ main p { max-width: 70ch; }
 @page { size: A4; margin: 12mm; }
 @media print {
   html, body { background: white !important; color: #203b30; font-size: 10pt; scroll-behavior: auto; }
+  .crop-report details::details-content { content-visibility: visible; }
   .site-header, .site-footer, .no-print, button, .screen-only, .report-shimmer { display: none !important; }
   .print-only { display: block !important; }
   #main-content, .crop-report { width: 100%; max-width: none; margin: 0; padding: 0; }

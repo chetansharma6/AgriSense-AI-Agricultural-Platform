@@ -465,7 +465,7 @@ def crop_detail(crop_id: str, lat: float, lon: float, acres: float | None = None
             "Follow Florida agricultural Best Management Practices (FDACS)",
         ],
         "sources": [crop.nutrient_source.model_dump(),
-                    {"title": "UF/IFAS 4R nutrient management", "url": "https://edis.ifas.ufl.edu/publication/SS639"},
+                    {"title": "UF/IFAS: What is 4R nutrient stewardship?", "url": "https://edis.ifas.ufl.edu/hs1264"},
                     {"title": "FDACS Agricultural Best Management Practices", "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"}],
     }
     action_plan = _action_plan(crop, result["conditions"], scored)
