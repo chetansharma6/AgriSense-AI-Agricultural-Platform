@@ -37,8 +37,9 @@ uvicorn app.main:app --reload --port 8000
 ```
 
 Check http://localhost:8000/api/health returns `{"status":"ok"}`, and run the
-tests with `pytest`. Set `DEMO_MODE=true` in `.env` to serve only cached data
-(the four demo farms are cached in the repo) without calling any outside API.
+tests with `pytest`. Set `DEMO_MODE=true` in `.env` for a live demo: if the data
+sources take over 6 s or fail, a point within 25 km of a demo farm gets that
+farm's saved response (backend/data/demo) and other points get a quick 503.
 More detail: [backend/README.md](backend/README.md).
 
 ## Run the frontend
