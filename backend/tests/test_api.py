@@ -177,6 +177,13 @@ def test_repeat_request_served_from_memory(sources: dict[str, Any], monkeypatch:
     assert second["location"]["lat"] == 29.710001  # echoes this request, not the cached one
 
 
+def test_uncached_location_builds_response(sources: dict[str, Any]) -> None:
+    service.clear_response_cache()
+    response = service.recommend(28.03, -82.15)
+    assert len(response["crops"]) == 13
+    assert response["location"]["lat"] == 28.03
+
+
 def test_degraded_response_is_not_cached(sources: dict[str, Any], monkeypatch: pytest.MonkeyPatch) -> None:
     calls = []
 
