@@ -24,10 +24,15 @@ class FccTimeout(FccError):
     """FCC exceeded its finite request timeout."""
 
 
+def _valid_county(value: object) -> bool:
+    return value == {} or (isinstance(value, dict)
+                           and all(isinstance(value.get(key), str) for key in ("county", "county_fips", "state")))
+
+
 def lookup_county(lat: float, lon: float) -> County | None:
     """Return the county for a point, or None if the point is not in a county."""
     params = {"lat": round(lat, 4), "lon": round(lon, 4)}
-    cached = read_cache("fcc", params)
+    cached = read_cache("fcc", params, _valid_county)
     if cached is not None:
         return cached or None
 

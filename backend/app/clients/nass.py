@@ -16,6 +16,10 @@ from app.config import nass_api_key
 NASS_URL = "https://quickstats.nass.usda.gov/api/api_GET/"
 
 
+def _valid_rows(value: Any) -> bool:
+    return isinstance(value, list) and all(isinstance(row, dict) for row in value)
+
+
 # Quick Stats rows have ~40 fields; only these are kept (and cached).
 KEEP_FIELDS = (
     "short_desc", "commodity_desc", "class_desc", "statisticcat_desc", "domain_desc",
@@ -40,7 +44,7 @@ def query(params: dict[str, Any], invalid_means_empty: bool = False) -> list[dic
     occurs with the others, e.g. county yields for a county with no survey
     crops. Pass invalid_means_empty=True for such queries.
     """
-    cached = read_cache("nass", params)
+    cached = read_cache("nass", params, _valid_rows)
     if cached is not None:
         return cached
 

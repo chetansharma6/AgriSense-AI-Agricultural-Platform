@@ -62,6 +62,11 @@ class Soil(TypedDict):
     source: str
 
 
+def _valid_soil(value: object) -> bool:
+    return isinstance(value, dict) and isinstance(value.get("mukey"), str) and all(
+        key in value for key in ("soil_ph", "organic_matter_pct", "sand_pct", "clay_pct", "texture", "drainage"))
+
+
 def sda_query(sql: str) -> list[dict[str, str | None]]:
     """Run SQL on Soil Data Access and return rows as dicts of strings.
     Retries once on a timeout or a 5xx response."""
@@ -109,7 +114,7 @@ def get_mukey(lat: float, lon: float) -> str:
 def get_soil(lat: float, lon: float) -> Soil:
     """Top-30-cm soil properties at a point. Raises SoilNotFound."""
     params = {"lat": round(lat, 4), "lon": round(lon, 4)}
-    cached = read_cache("soil", params)
+    cached = read_cache("soil", params, _valid_soil)
     if cached:
         return cached
 
