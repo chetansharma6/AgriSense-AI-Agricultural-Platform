@@ -13,9 +13,13 @@ load_dotenv(BACKEND_DIR / ".env")
 
 NASS_API_KEY = os.getenv("NASS_API_KEY", "").strip()
 
-# DEMO_MODE=true serves only cached data and never calls an outside API, so
-# the demo cannot be slowed or broken by a network or service problem.
+# DEMO_MODE=true puts a deadline on every recommendation so a live demo never
+# hangs: if the data sources take longer than DEMO_DEADLINE_S (or one fails),
+# a point within DEMO_FALLBACK_KM of a demo farm gets that farm's saved
+# response from data/demo, and any other point gets a quick 503.
 DEMO_MODE = os.getenv("DEMO_MODE", "false").strip().lower() in {"1", "true", "yes"}
+DEMO_DEADLINE_S = 6.0
+DEMO_FALLBACK_KM = 25.0
 
 # Comma-separated browser origins allowed to call the API. In Codespaces, add
 # the forwarded frontend URL (https://<name>-3000.app.github.dev).

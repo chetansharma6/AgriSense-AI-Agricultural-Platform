@@ -7,13 +7,17 @@ for the same spot skip all I/O and scoring.
 """
 
 import copy
+import json
 import logging
 import threading
 import time
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import TimeoutError as FutureTimeout
+from functools import lru_cache
 from typing import Any, Callable, TypeVar
 
+from app import config
 from app.climate import summarize
 from app.clients.fcc import lookup_county
 from app.clients.power import get_daily_weather
@@ -21,6 +25,7 @@ from app.clients.soil import SoilNotFound, get_soil
 from app.crops import load_crops
 from app.market import load_market
 from app.scoring import rank_crops, score_crop, scoring_rules
+from app.utils import haversine_km
 
 T = TypeVar("T")
 
@@ -38,6 +43,15 @@ CLIMATE_FIELDS = ("annual_precip_mm", "frost_free_days", "last_spring_frost", "f
 
 class OutsideFlorida(ValueError):
     """The point is not in Florida."""
+
+
+class SourcesTooSlow(RuntimeError):
+    """DEMO_MODE: live data missed the deadline and no demo farm is close enough."""
+
+
+# Runs DEMO_MODE builds so the request can stop waiting at the deadline while
+# the build finishes in the background (and fills the caches for next time).
+_background = ThreadPoolExecutor(max_workers=8, thread_name_prefix="recommend")
 
 
 def _attempt(fetch: Callable[[], T], source: str, warnings: list[str], failed: list[str]) -> T | None:
@@ -81,16 +95,79 @@ def recommend(lat: float, lon: float) -> dict[str, Any]:
             return _with_location(copy.deepcopy(hit[1]), lat, lon)
 
     started = time.perf_counter()
-    result, complete = _build_recommendation(lat, lon)
-    log.info("recommend %s: built in %.0f ms%s", key, (time.perf_counter() - started) * 1000,
-             "" if complete else " (a source failed; not cached)")
+    if config.DEMO_MODE:
+        result, complete = _build_with_deadline(lat, lon)
+    else:
+        result, complete = _build_recommendation(lat, lon)
+    log.info("recommend %s: answered in %.0f ms%s", key, (time.perf_counter() - started) * 1000,
+             "" if complete else " (incomplete; not cached)")
     if complete:  # never pin a degraded answer: the next request retries the failed source
-        with _response_cache_lock:
-            _response_cache[key] = (now, copy.deepcopy(result))
-            _response_cache.move_to_end(key)
-            while len(_response_cache) > RESPONSE_CACHE_SIZE:
-                _response_cache.popitem(last=False)
+        _remember(key, result)
     return result
+
+
+def _remember(key: tuple[float, float], result: dict[str, Any]) -> None:
+    with _response_cache_lock:
+        _response_cache[key] = (time.monotonic(), copy.deepcopy(result))
+        _response_cache.move_to_end(key)
+        while len(_response_cache) > RESPONSE_CACHE_SIZE:
+            _response_cache.popitem(last=False)
+
+
+def _build_with_deadline(lat: float, lon: float) -> tuple[dict[str, Any], bool]:
+    """DEMO_MODE: live data if it arrives within DEMO_DEADLINE_S and is complete,
+    else the nearest demo farm's saved response (within DEMO_FALLBACK_KM)."""
+    future = _background.submit(_build_recommendation, lat, lon)
+    try:
+        result, complete = future.result(timeout=config.DEMO_DEADLINE_S)
+    except OutsideFlorida:
+        raise
+    except FutureTimeout as error:
+        # A late build is still worth keeping: the next request for this spot is instant.
+        future.add_done_callback(lambda done: _remember_late(lat, lon, done))
+        fallback = _demo_fallback(lat, lon, f"live data took longer than {config.DEMO_DEADLINE_S:g} s")
+        if fallback is None:
+            raise SourcesTooSlow from error
+        return fallback, False
+    except Exception:
+        fallback = _demo_fallback(lat, lon, "live data failed")
+        if fallback is None:
+            raise
+        return fallback, False
+    if not complete:
+        fallback = _demo_fallback(lat, lon, "a live data source failed")
+        if fallback is not None:
+            return fallback, False
+    return result, complete
+
+
+def _remember_late(lat: float, lon: float, done: Any) -> None:
+    if done.exception() is None:
+        result, complete = done.result()
+        if complete:
+            _remember(_cache_key(lat, lon), result)
+            log.info("recommend %s: late live result cached", _cache_key(lat, lon))
+
+
+def _demo_fallback(lat: float, lon: float, reason: str) -> dict[str, Any] | None:
+    """The nearest demo farm's saved response with a warning, or None if none is close."""
+    farm, distance = min(((name, haversine_km(lat, lon, *point)) for name, point in config.DEMO_FARMS.items()),
+                         key=lambda item: item[1])
+    if distance > config.DEMO_FALLBACK_KM:
+        log.warning("recommend (%.4f, %.4f): %s; nearest demo farm %s is %.0f km away, no fallback",
+                    lat, lon, reason, farm, distance)
+        return None
+    log.warning("recommend (%.4f, %.4f): %s; serving demo data for %s (%.1f km away)",
+                lat, lon, reason, farm, distance)
+    response = copy.deepcopy(_demo_response(farm))
+    name = farm.replace("_", " ").title()
+    response["warnings"].insert(0, f"Showing cached data for {name} ({reason})")
+    return response
+
+
+@lru_cache(maxsize=None)
+def _demo_response(farm: str) -> dict[str, Any]:
+    return json.loads((config.DATA_DIR / "demo" / f"{farm}.json").read_text())["recommend"]
 
 
 def _with_location(result: dict[str, Any], lat: float, lon: float) -> dict[str, Any]:
