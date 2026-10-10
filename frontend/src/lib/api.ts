@@ -1,0 +1,71 @@
+import { getMockCropDetail, getMockRecommend } from "../mocks";
+import type { CropDetail, RecommendResponse } from "./types";
+
+export class ApiError extends Error {
+  constructor(message: string, public readonly status: number) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
+const connectionMessage =
+  "Can't reach the AgriSense server. Check your connection and try again.";
+
+function mockDelay(): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, 500));
+}
+
+async function request<T>(path: string, lat: number, lon: number): Promise<T> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 20_000);
+  const query = new URLSearchParams({ lat: String(lat), lon: String(lon) });
+  const baseUrl = (process.env.NEXT_PUBLIC_API_URL ?? "").replace(/\/+$/, "");
+
+  try {
+    const response = await fetch(`${baseUrl}/api/${path}?${query}`, {
+      signal: controller.signal,
+    });
+    if (!response.ok) {
+      let message = `Request failed (${response.status})`;
+      try {
+        const body: unknown = await response.json();
+        if (typeof body === "object" && body !== null && "detail" in body
+          && typeof body.detail === "string") {
+          message = body.detail;
+        }
+      } catch {
+        // Preserve the HTTP status even when an error body is not valid JSON.
+      }
+      throw new ApiError(message, response.status);
+    }
+    return await response.json() as T;
+  } catch (error) {
+    if (error instanceof ApiError) throw error;
+    throw new ApiError(connectionMessage, 0);
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+export async function getRecommendations(lat: number, lon: number): Promise<RecommendResponse> {
+  if (process.env.NEXT_PUBLIC_USE_MOCKS === "true") {
+    await mockDelay();
+    return getMockRecommend(lat, lon);
+  }
+  return request<RecommendResponse>("recommend", lat, lon);
+}
+
+export async function getCropDetail(id: string, lat: number, lon: number): Promise<CropDetail> {
+  if (process.env.NEXT_PUBLIC_USE_MOCKS === "true") {
+    await mockDelay();
+    try {
+      return getMockCropDetail(id, lat, lon);
+    } catch (error) {
+      if (error instanceof Error && error.message === "Unknown crop") {
+        throw new ApiError(error.message, 404);
+      }
+      throw error;
+    }
+  }
+  return request<CropDetail>(`crops/${encodeURIComponent(id)}`, lat, lon);
+}
