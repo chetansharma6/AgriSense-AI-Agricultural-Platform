@@ -35,13 +35,13 @@
       "Moderately well drained"
     ],
     "muck_suitable": false,
-    "temp_min_c": 16,
+    "temp_min_c": 10,
     "temp_ideal_min_c": 22,
-    "temp_ideal_max_c": 30,
-    "temp_max_c": 35,
+    "temp_ideal_max_c": 32,
+    "temp_max_c": 45,
     "max_freeze_days": 0,
     "rain_mm_per_month": [
-      90,
+      120,
       150
     ],
     "general_guidance": "Peanuts do best on well-drained sandy or loamy sand soils in North Florida. Rotate with grasses such as bahiagrass or corn to limit diseases and nematodes, and avoid planting peanuts in the same field more than one year in three. Peanuts need calcium in the pegging zone, so soil-test and apply gypsum when calcium is low. Inoculate seed with rhizobia in fields without a recent peanut history.",
@@ -67,7 +67,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/SS163"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
     "needs_review": false
   },
   {
@@ -108,12 +108,12 @@
     ],
     "muck_suitable": false,
     "temp_min_c": 15,
-    "temp_ideal_min_c": 21,
-    "temp_ideal_max_c": 30,
-    "temp_max_c": 35,
+    "temp_ideal_min_c": 22,
+    "temp_ideal_max_c": 36,
+    "temp_max_c": 42,
     "max_freeze_days": 0,
     "rain_mm_per_month": [
-      90,
+      110,
       150
     ],
     "general_guidance": "Cotton is a North Florida crop planted from late April into early June once soils are warm. Most Florida soils have a compacted layer, so subsoiling or strip tillage helps roots. Plant seed shallow (1/2 to 1 inch), rotate with peanuts or grasses to manage nematodes, and use growth regulators to control plant height on fertile ground.",
@@ -135,7 +135,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/SS163"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
     "needs_review": false
   },
   {
@@ -174,12 +174,12 @@
     ],
     "muck_suitable": false,
     "temp_min_c": 12,
-    "temp_ideal_min_c": 18,
-    "temp_ideal_max_c": 28,
-    "temp_max_c": 33,
+    "temp_ideal_min_c": 20,
+    "temp_ideal_max_c": 27,
+    "temp_max_c": 45,
     "max_freeze_days": 1,
     "rain_mm_per_month": [
-      100,
+      110,
       160
     ],
     "general_guidance": "Field corn is planted in early spring in North and Central Florida; waiting until after March 1 reduces freeze risk. Yields on sandy soils depend heavily on irrigation and split nitrogen applications, since nitrogen leaches quickly. Rotating with peanuts, cotton or soybeans helps break nematode and disease cycles.",
@@ -201,7 +201,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/SS163"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP (Dent maize). Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
     "needs_review": false
   },
   {
@@ -240,13 +240,13 @@
       "Somewhat poorly drained"
     ],
     "muck_suitable": false,
-    "temp_min_c": 14,
+    "temp_min_c": 10,
     "temp_ideal_min_c": 20,
-    "temp_ideal_max_c": 30,
-    "temp_max_c": 35,
+    "temp_ideal_max_c": 33,
+    "temp_max_c": 38,
     "max_freeze_days": 0,
     "rain_mm_per_month": [
-      90,
+      110,
       150
     ],
     "general_guidance": "Soybeans are a summer crop in North Florida, often following a winter grain. Choose varieties adapted to Florida day length and planting date, inoculate seed in fields without recent soybeans, and scout for soybean rust and nematodes. Irrigation markedly raises and stabilizes yields on sandy soils.",
@@ -268,7 +268,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/SS163"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
     "needs_review": false
   },
   {
@@ -314,12 +314,12 @@
     ],
     "muck_suitable": true,
     "temp_min_c": 15,
-    "temp_ideal_min_c": 22,
-    "temp_ideal_max_c": 30,
-    "temp_max_c": 35,
+    "temp_ideal_min_c": 24,
+    "temp_ideal_max_c": 37,
+    "temp_max_c": 41,
     "max_freeze_days": 2,
     "rain_mm_per_month": [
-      90,
+      110,
       160
     ],
     "general_guidance": "Florida sugarcane is concentrated on the organic muck soils south of Lake Okeechobee, with some acreage on nearby sands. It is a multi-year crop: one planting is usually harvested for several seasons. Growers manage the water table to supply water and slow muck subsidence, and fertilizer needs on muck differ from sandy soils, so follow soil tests. A sugar mill within hauling distance is essential.",
@@ -341,7 +341,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/SS163"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates. Season temperature is the 12-month mean; freeze tolerance (2 days) is an estimate for a ratoon crop.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. Season temperature is the 12-month mean. max_freeze_days 2 is a judgement call: a 0 C night browns leaves and terminal buds; multi-night freezes cause losses (LSU AgCenter, SASRI, USDA NASS FL 2010).",
     "needs_review": true
   },
   {
@@ -405,10 +405,10 @@
       "Somewhat poorly drained"
     ],
     "muck_suitable": false,
-    "temp_min_c": 12,
-    "temp_ideal_min_c": 18,
+    "temp_min_c": 7,
+    "temp_ideal_min_c": 20,
     "temp_ideal_max_c": 27,
-    "temp_max_c": 32,
+    "temp_max_c": 35,
     "max_freeze_days": 0,
     "rain_mm_per_month": [
       60,
@@ -421,7 +421,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/CV137"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: injury 2 F below freezing (UF/IFAS TR014).",
     "needs_review": false
   },
   {
@@ -473,12 +473,12 @@
     ],
     "muck_suitable": false,
     "temp_min_c": 15,
-    "temp_ideal_min_c": 21,
+    "temp_ideal_min_c": 20,
     "temp_ideal_max_c": 30,
     "temp_max_c": 35,
     "max_freeze_days": 0,
     "rain_mm_per_month": [
-      60,
+      90,
       130
     ],
     "general_guidance": "Watermelons favor well-drained sandy soils and warm weather. Most Florida acreage is planted in late winter for May-June harvest, ahead of other states. Use raised beds with plastic mulch and drip irrigation, plan for pollinizer plants with seedless varieties, and rotate fields to reduce Fusarium wilt.",
@@ -488,7 +488,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/CV123"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
     "needs_review": false
   },
   {
@@ -529,13 +529,13 @@
       "Somewhat poorly drained"
     ],
     "muck_suitable": false,
-    "temp_min_c": 8,
-    "temp_ideal_min_c": 13,
-    "temp_ideal_max_c": 22,
-    "temp_max_c": 27,
+    "temp_min_c": 6,
+    "temp_ideal_min_c": 11,
+    "temp_ideal_max_c": 24,
+    "temp_max_c": 28,
     "max_freeze_days": 3,
     "rain_mm_per_month": [
-      50,
+      40,
       110
     ],
     "general_guidance": "Florida strawberries are planted as bare-root or plug transplants in October on plastic-mulched beds and picked from December to March, centered on the Plant City area. Overhead irrigation is used to establish transplants and to protect blooms and fruit on freezing nights. Picking is hand labor several times a week, so plan labor and market access early.",
@@ -545,7 +545,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/CV134"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates. max_freeze_days 3 assumes overhead-irrigation freeze protection.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 3: plants survive, flowers and fruit are damaged near 30 F and are protected with overhead irrigation (FAWN, UF/IFAS CV201, HS403).",
     "needs_review": true
   },
   {
@@ -596,13 +596,13 @@
       "Somewhat poorly drained"
     ],
     "muck_suitable": false,
-    "temp_min_c": 9,
+    "temp_min_c": 7,
     "temp_ideal_min_c": 15,
-    "temp_ideal_max_c": 24,
-    "temp_max_c": 29,
-    "max_freeze_days": 5,
+    "temp_ideal_max_c": 25,
+    "temp_max_c": 30,
+    "max_freeze_days": 2,
     "rain_mm_per_month": [
-      70,
+      90,
       130
     ],
     "general_guidance": "Florida potatoes are a winter-spring crop, centered on the Hastings area in the northeast and on South Florida farms. Use certified seed pieces, plant in raised beds, and manage the water table or irrigation carefully, since both drought and waterlogging hurt yield and quality. A slightly acidic soil helps limit common scab.",
@@ -612,7 +612,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/CV131"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates. pH upper limit 7.0 reflects common scab risk; South FL winter window dates are approximate.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 2: UF/IFAS HS183 says potato cannot handle temperatures below 32 F. pH upper limit 7.0 (common scab) is not confirmed by UF/IFAS.",
     "needs_review": true
   },
   {
@@ -674,13 +674,13 @@
       "Very poorly drained"
     ],
     "muck_suitable": true,
-    "temp_min_c": 10,
+    "temp_min_c": 12,
     "temp_ideal_min_c": 16,
-    "temp_ideal_max_c": 28,
-    "temp_max_c": 33,
+    "temp_ideal_max_c": 24,
+    "temp_max_c": 38,
     "max_freeze_days": 0,
     "rain_mm_per_month": [
-      60,
+      70,
       130
     ],
     "general_guidance": "Florida sweet corn is grown from fall through spring, with large acreage on the muck soils near Belle Glade and on sandy soils elsewhere. Plant blocks of a single type to avoid cross-pollination, keep the crop well watered at silking, and scout closely for fall armyworm and corn earworm. Harvest at peak quality and cool quickly.",
@@ -690,7 +690,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/CV135"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: little frost resistance (UF/IFAS TR013).",
     "needs_review": false
   },
   {
@@ -750,13 +750,13 @@
       "Very poorly drained"
     ],
     "muck_suitable": true,
-    "temp_min_c": 10,
+    "temp_min_c": 7,
     "temp_ideal_min_c": 16,
-    "temp_ideal_max_c": 27,
-    "temp_max_c": 30,
+    "temp_ideal_max_c": 25,
+    "temp_max_c": 32,
     "max_freeze_days": 0,
     "rain_mm_per_month": [
-      50,
+      80,
       110
     ],
     "general_guidance": "Snap beans are a short-season crop (about 55-65 days) grown in fall, winter and spring, including on South Florida muck. They are sensitive to frost and to high heat at bloom, so time plantings to avoid both. Fertilizer needs are modest, and steady soil moisture during flowering and pod fill is important.",
@@ -766,8 +766,8 @@
         "url": "https://edis.ifas.ufl.edu/publication/CV125"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates. Rainfall range for a 60-90 day season is an estimate.",
-    "needs_review": true
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP (Common bean). Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: freeze injury at 28 F for 30-45 minutes (UF/IFAS HS853).",
+    "needs_review": false
   },
   {
     "id": "bell_pepper",
@@ -830,13 +830,13 @@
       "Somewhat poorly drained"
     ],
     "muck_suitable": false,
-    "temp_min_c": 12,
-    "temp_ideal_min_c": 18,
-    "temp_ideal_max_c": 27,
-    "temp_max_c": 32,
+    "temp_min_c": 8,
+    "temp_ideal_min_c": 17,
+    "temp_ideal_max_c": 30,
+    "temp_max_c": 35,
     "max_freeze_days": 0,
     "rain_mm_per_month": [
-      60,
+      80,
       130
     ],
     "general_guidance": "Bell peppers are grown much like tomatoes in Florida: transplants on raised beds with plastic mulch and drip irrigation, in fall and spring seasons. Plants are sensitive to waterlogging and to heat during flowering. Scout for pepper weevil, thrips and the viruses they spread, and keep fertility steady through the long harvest period.",
@@ -846,7 +846,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/CV130"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates.",
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP (Sweet pepper). Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: injury 2 F below freezing (UF/IFAS TR010).",
     "needs_review": false
   },
   {
@@ -887,13 +887,13 @@
       "Poorly drained"
     ],
     "muck_suitable": true,
-    "temp_min_c": 5,
-    "temp_ideal_min_c": 12,
-    "temp_ideal_max_c": 21,
-    "temp_max_c": 27,
+    "temp_min_c": 7,
+    "temp_ideal_min_c": 15,
+    "temp_ideal_max_c": 24,
+    "temp_max_c": 32,
     "max_freeze_days": 10,
     "rain_mm_per_month": [
-      50,
+      70,
       110
     ],
     "general_guidance": "Cabbage is a cool-season crop planted in fall and winter, with major acreage around Hastings in Northeast Florida. It tolerates light freezes but bolts or splits in warm weather, so avoid late-spring harvests. Provide steady moisture and nitrogen, and scout for diamondback moth and other caterpillars.",
@@ -903,7 +903,7 @@
         "url": "https://edis.ifas.ufl.edu/publication/CV122"
       }
     ],
-    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides), FAO ECOCROP. Hard pH and temperature limits are estimates. max_freeze_days 10 is an estimate of light-freeze tolerance.",
-    "needs_review": true
+    "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 10: no frost injury until 10-16 F below freezing (UF/IFAS TR006).",
+    "needs_review": false
   }
 ]
