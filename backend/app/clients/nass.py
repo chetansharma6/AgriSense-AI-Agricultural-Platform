@@ -4,6 +4,7 @@ Every query is cached by its params (the key is never part of the cache
 name), so each distinct query hits NASS once.
 """
 
+import re
 from typing import Any
 
 from app.cache import read_cache, write_cache
@@ -23,6 +24,11 @@ KEEP_FIELDS = (
 
 class NassError(RuntimeError):
     """A NASS request failed. The message never contains the API key."""
+
+
+def _safe_error(text: str) -> str:
+    """Keep provider diagnostics useful without echoing credential-shaped data."""
+    return re.sub(r"(?i)(api[_-]?key|key|token|secret)([=:][^&\s]+)", r"\1=[redacted]", text[:200])
 
 
 def query(params: dict[str, Any], invalid_means_empty: bool = False) -> list[dict[str, Any]]:
@@ -45,7 +51,7 @@ def query(params: dict[str, Any], invalid_means_empty: bool = False) -> list[dic
         rows = []
     else:
         # Never raise httpx's own error: its message contains the URL and key.
-        raise NassError(f"NASS request failed ({response.status_code}): {response.text[:200]}")
+        raise NassError(f"NASS request failed ({response.status_code}): {_safe_error(response.text)}")
 
     write_cache("nass", params, rows)
     return rows

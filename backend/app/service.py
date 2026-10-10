@@ -13,7 +13,6 @@ import threading
 import time
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import TimeoutError as FutureTimeout
 from functools import lru_cache
 from typing import Any, Callable, TypeVar
 
@@ -34,6 +33,7 @@ log = logging.getLogger(__name__)
 
 RESPONSE_CACHE_SIZE = 256
 RESPONSE_CACHE_TTL_S = 3600.0
+FACTOR_COUNT = 6
 _response_cache: OrderedDict[tuple[float, float], tuple[float, dict[str, Any]]] = OrderedDict()
 _response_cache_lock = threading.Lock()
 
@@ -48,11 +48,6 @@ class OutsideFlorida(ValueError):
 
 class SourcesTooSlow(RuntimeError):
     """DEMO_MODE: live data missed the deadline and no demo farm is close enough."""
-
-
-# Runs DEMO_MODE builds so the request can stop waiting at the deadline while
-# the build finishes in the background (and fills the caches for next time).
-_background = ThreadPoolExecutor(max_workers=8, thread_name_prefix="recommend")
 
 
 def _attempt(fetch: Callable[[], T], source: str, warnings: list[str], failed: list[str]) -> T | None:
@@ -86,6 +81,10 @@ def clear_response_cache() -> None:
 
 def recommend(lat: float, lon: float) -> dict[str, Any]:
     """Full /api/recommend response for a Florida point, from memory when possible."""
+    if config.DEMO_MODE:
+        exact = _exact_demo_response(lat, lon)
+        if exact is not None:
+            return exact
     key = _cache_key(lat, lon)
     now = time.monotonic()
     with _response_cache_lock:
@@ -116,38 +115,11 @@ def _remember(key: tuple[float, float], result: dict[str, Any]) -> None:
 
 
 def _build_with_deadline(lat: float, lon: float) -> tuple[dict[str, Any], bool]:
-    """DEMO_MODE: live data if it arrives within DEMO_DEADLINE_S and is complete,
-    else the nearest demo farm's saved response (within DEMO_FALLBACK_KM)."""
-    future = _background.submit(_build_recommendation, lat, lon)
-    try:
-        result, complete = future.result(timeout=config.DEMO_DEADLINE_S)
-    except OutsideFlorida:
-        raise
-    except FutureTimeout as error:
-        # A late build is still worth keeping: the next request for this spot is instant.
-        future.add_done_callback(lambda done: _remember_late(lat, lon, done))
-        fallback = _demo_fallback(lat, lon, f"live data took longer than {config.DEMO_DEADLINE_S:g} s")
-        if fallback is None:
-            raise SourcesTooSlow from error
-        return fallback, False
-    except Exception:
-        fallback = _demo_fallback(lat, lon, "live data failed")
-        if fallback is None:
-            raise
-        return fallback, False
-    if not complete:
-        fallback = _demo_fallback(lat, lon, "a live data source failed")
-        if fallback is not None:
-            return fallback, False
-    return result, complete
-
-
-def _remember_late(lat: float, lon: float, done: Any) -> None:
-    if done.exception() is None:
-        result, complete = done.result()
-        if complete:
-            _remember(_cache_key(lat, lon), result)
-            log.info("recommend %s: late live result cached", _cache_key(lat, lon))
+    """DEMO_MODE serves saved data deterministically and never waits on providers."""
+    fallback = _demo_fallback(lat, lon, "DEMO_MODE uses the saved demo response")
+    if fallback is None:
+        raise SourcesTooSlow
+    return fallback, False
 
 
 def _demo_fallback(lat: float, lon: float, reason: str) -> dict[str, Any] | None:
@@ -163,7 +135,40 @@ def _demo_fallback(lat: float, lon: float, reason: str) -> dict[str, Any] | None
     response = copy.deepcopy(_demo_response(farm))
     name = farm.replace("_", " ").title()
     response["warnings"].insert(0, f"Showing cached data for {name} ({reason})")
+    response["provenance"] = _provenance("demo", "Fallback saved response")
+    response["confidence"] = _confidence(response)
     return response
+
+
+def _exact_demo_response(lat: float, lon: float) -> dict[str, Any] | None:
+    """Serve committed demo data immediately for an official demo coordinate."""
+    for farm, point in config.DEMO_FARMS.items():
+        if (lat, lon) == point:
+            response = copy.deepcopy(_demo_response(farm))
+            response["provenance"] = _provenance("demo", f"Saved {farm.replace('_', ' ').title()} response")
+            response["confidence"] = _confidence(response)
+            return response
+    return None
+
+
+def _provenance(mode: str, detail: str | None = None) -> dict[str, Any]:
+    sources = [
+        {"name": "USDA SSURGO", "status": "saved" if mode == "demo" else "live", "detail": detail},
+        {"name": "NASA POWER", "status": "saved" if mode == "demo" else "live", "detail": detail},
+        {"name": "USDA NASS", "status": "saved" if mode == "demo" else "live", "detail": detail},
+        {"name": "UF/IFAS FAWN", "status": "saved" if mode == "demo" else "live", "detail": detail},
+    ]
+    return {"mode": mode, "sources": sources}
+
+
+def _confidence(response: dict[str, Any]) -> dict[str, Any]:
+    factors = [factor for crop in response.get("crops", []) for factor in crop.get("factors", {}).values()]
+    available = round(sum(value is not None for value in factors) / max(len(factors), 1) * FACTOR_COUNT)
+    level = "high" if available >= 5 else "medium" if available >= 3 else "low"
+    notes = []
+    if response.get("warnings"):
+        notes.append("One or more data sources reported a warning")
+    return {"level": level, "available_factors": available, "total_factors": FACTOR_COUNT, "notes": notes}
 
 
 @lru_cache(maxsize=None)
@@ -181,6 +186,11 @@ def _build_recommendation(lat: float, lon: float) -> tuple[dict[str, Any], bool]
     """The response, and whether every source answered."""
     warnings: list[str] = []
     failed: list[str] = []
+    # Avoid nesting a thread pool inside the DEMO_MODE deadline worker. This
+    # keeps the synchronous ASGI test client and constrained free hosts from
+    # deadlocking while retaining parallel source fetches for normal requests.
+    if threading.current_thread().name.startswith("recommend_"):
+        return _build_recommendation_sequential(lat, lon, warnings, failed)
     with ThreadPoolExecutor(max_workers=4) as pool:
         county_job = pool.submit(_attempt, lambda: lookup_county(lat, lon), "County lookup (FCC)", warnings, failed)
         soil_job = pool.submit(_attempt, lambda: get_soil(lat, lon), "Soil data (USDA SSURGO)", warnings, failed)
@@ -227,6 +237,40 @@ def _build_recommendation(lat: float, lon: float) -> tuple[dict[str, Any], bool]
         "warnings": warnings,
         "scoring": scoring_rules(),
     }
+    response["provenance"] = _provenance("live")
+    response["confidence"] = _confidence(response)
+    return response, not failed
+
+
+def _build_recommendation_sequential(lat: float, lon: float, warnings: list[str],
+                                     failed: list[str]) -> tuple[dict[str, Any], bool]:
+    """Build a deadline-worker response without recursively creating pools."""
+    county = _attempt(lambda: lookup_county(lat, lon), "County lookup (FCC)", warnings, failed)
+    soil = _attempt(lambda: get_soil(lat, lon), "Soil data (USDA SSURGO)", warnings, failed)
+    weather = _attempt(lambda: get_daily_weather(lat, lon), "Weather data (NASA POWER)", warnings, failed)
+    station = fawn.nearest_station(lat, lon)
+    station_min = (_attempt(lambda: fawn.daily_min_c(station[0]["id"]), "Freeze records (FAWN station)", warnings, failed)
+                   if station else None)
+    if weather is not None and station_min is not None and station is not None:
+        weather = with_station_minimums(weather, station_min)
+    fcc_failed = "County lookup (FCC)" in failed
+    if county is None and not fcc_failed:
+        raise OutsideFlorida
+    if county is not None and county["state"] != "FL":
+        raise OutsideFlorida
+    if soil is not None and soil["soil_ph"] is None:
+        warnings.append("Soil survey reports no pH for this soil; the pH factor is skipped")
+    market = _attempt(lambda: load_market(county["county_fips"] if county else None),
+                      "Yield and price data (USDA NASS)", warnings, failed)
+    climate = _attempt(lambda: summarize(weather), "Climate summary", warnings, failed) if weather is not None else None
+    conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
+    conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
+    crops = rank_crops([score_crop(crop, soil, weather, market) for crop in load_crops().values()])
+    response = {"location": {"lat": lat, "lon": lon, "county": county["county"] if county else None,
+                              "county_fips": county["county_fips"] if county else None, "state": "FL"},
+                "conditions": conditions, "crops": crops, "warnings": warnings,
+                "scoring": scoring_rules(), "provenance": _provenance("live"),
+                "confidence": _confidence({"crops": crops, "warnings": warnings})}
     return response, not failed
 
 

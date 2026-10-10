@@ -68,12 +68,32 @@ export interface ScoringRules {
   critical_cap: number;
 }
 
+export interface SourceStatus {
+  name: string;
+  status: string;
+  detail: string | null;
+}
+
+export interface Provenance {
+  mode: string;
+  sources: SourceStatus[];
+}
+
+export interface Confidence {
+  level: string;
+  available_factors: number;
+  total_factors: number;
+  notes: string[];
+}
+
 export interface RecommendResponse {
   location: Location | null;
   conditions: Conditions | null;
   crops: CropResult[] | null;
   warnings: string[] | null;
   scoring: ScoringRules | null;
+  provenance?: Provenance | null;
+  confidence?: Confidence | null;
 }
 
 export interface ExtensionLink {
@@ -93,4 +113,6 @@ export interface CropDetail extends CropResult {
   conditions: Conditions | null;
   location: Location | null;
   scoring: ScoringRules | null;
+  provenance?: Provenance | null;
+  confidence?: Confidence | null;
 }

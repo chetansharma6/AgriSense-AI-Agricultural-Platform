@@ -20,3 +20,18 @@ Record the live app at https://agrisense-ai-cyan.vercel.app in a desktop window 
 - If the report says AI is unavailable, show that label and describe the local fallback honestly, or record again when AI is available.
 - Show the actual ranking: sugarcane need not rank first in Belle Glade.
 - Demo locations represent growing regions, not verified individual farm records.
+## Judge-proof walkthrough
+
+1. Choose Plant City and show the ranked crops.
+2. Open strawberry and point out the six factor scores, growing window, local
+   history, and UF/IFAS links.
+3. Explain that the ranking is deterministic and that the AI only writes the
+   bounded explanation.
+4. Choose Belle Glade and point out the muck-soil behavior and different crop
+   fit.
+5. Show the provenance and confidence metadata or the methodology page.
+6. If the AI provider is unavailable, show that the local report still gives
+   useful next steps.
+
+Closing line: “The model writes the explanation, but the recommendation is
+calculated from traceable data and deterministic rules.”

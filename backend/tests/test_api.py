@@ -7,6 +7,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app import service
+from app.clients import fawn
 from app.main import app
 from app.market import Market
 from app.schemas import CropDetail, RecommendResponse
@@ -35,6 +36,7 @@ def sources(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
     monkeypatch.setattr(service, "lookup_county", lambda lat, lon: fakes["county"])
     monkeypatch.setattr(service, "get_soil", lambda lat, lon: fakes["soil"])
     monkeypatch.setattr(service, "get_daily_weather", fake_weather)
+    monkeypatch.setattr(fawn, "nearest_station", lambda lat, lon: None)
     # Like the real load_market: no county rows when the county is unknown.
     monkeypatch.setattr(service, "load_market", lambda fips: Market(None if fips is None else [], [], []))
     return fakes
@@ -42,7 +44,7 @@ def sources(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
 
 def test_recommend_matches_contract(sources: dict[str, Any]) -> None:
     body = client.get("/api/recommend", params={"lat": 29.71, "lon": -81.50}).json()
-    assert set(body) == {"location", "conditions", "crops", "warnings", "scoring"}
+    assert set(body) == {"location", "conditions", "crops", "warnings", "scoring", "provenance", "confidence"}
     assert set(body["scoring"]) == {"weights", "critical_factors", "critical_threshold", "critical_cap"}
     assert body["location"] == {"lat": 29.71, "lon": -81.5, "county": "St. Johns",
                                 "county_fips": "12109", "state": "FL"}
@@ -60,6 +62,8 @@ def test_recommend_matches_contract(sources: dict[str, Any]) -> None:
         assert crop["factor_details"]["soil_ph"]["unit"] == "pH"
         assert all(0 <= v <= 100 for v in crop["factors"].values() if v is not None)
     assert body["warnings"] == []
+    assert body["provenance"]["mode"] == "live"
+    assert body["confidence"]["total_factors"] == 6
 
 
 def test_failed_source_becomes_warning(sources: dict[str, Any], monkeypatch: pytest.MonkeyPatch) -> None:
