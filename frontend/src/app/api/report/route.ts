@@ -16,7 +16,7 @@ const CROP_NAMES: Record<string, string> = {
   potato: "Potato", sweet_corn: "Sweet corn", snap_bean: "Snap bean", bell_pepper: "Bell pepper",
   cabbage: "Cabbage",
 };
-const CROP_FIELDS = new Set(["id", "name", "score", "season_label", "factors", "factor_details", "avg_yield", "price", "scale", "est_gross_value", "limited_by", "flags", "nutrient_plan", "requirements", "general_guidance", "extension_links", "conditions", "location", "scoring", "provenance", "confidence", "action_plan", "risk_notes"]);
+const CROP_FIELDS = new Set(["id", "name", "score", "season_label", "factors", "factor_details", "avg_yield", "price", "scale", "est_gross_value", "limited_by", "flags", "nutrient_plan", "requirements", "general_guidance", "extension_links", "conditions", "location", "scoring", "provenance", "confidence", "action_plan", "risk_notes", "water_plan", "management_guidance"]);
 
 type InputCrop = Record<string, unknown> & {
   id: string;
