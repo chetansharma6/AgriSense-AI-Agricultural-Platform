@@ -13,7 +13,6 @@ import threading
 import time
 from collections import OrderedDict
 from concurrent.futures import ThreadPoolExecutor
-from concurrent.futures import TimeoutError as FutureTimeout
 from functools import lru_cache
 from typing import Any, Callable, TypeVar
 
@@ -49,11 +48,6 @@ class OutsideFlorida(ValueError):
 
 class SourcesTooSlow(RuntimeError):
     """DEMO_MODE: live data missed the deadline and no demo farm is close enough."""
-
-
-# Runs DEMO_MODE builds so the request can stop waiting at the deadline while
-# the build finishes in the background (and fills the caches for next time).
-_background = ThreadPoolExecutor(max_workers=8, thread_name_prefix="recommend")
 
 
 def _attempt(fetch: Callable[[], T], source: str, warnings: list[str], failed: list[str]) -> T | None:
@@ -121,38 +115,11 @@ def _remember(key: tuple[float, float], result: dict[str, Any]) -> None:
 
 
 def _build_with_deadline(lat: float, lon: float) -> tuple[dict[str, Any], bool]:
-    """DEMO_MODE: live data if it arrives within DEMO_DEADLINE_S and is complete,
-    else the nearest demo farm's saved response (within DEMO_FALLBACK_KM)."""
-    future = _background.submit(_build_recommendation, lat, lon)
-    try:
-        result, complete = future.result(timeout=config.DEMO_DEADLINE_S)
-    except OutsideFlorida:
-        raise
-    except FutureTimeout as error:
-        # A late build is still worth keeping: the next request for this spot is instant.
-        future.add_done_callback(lambda done: _remember_late(lat, lon, done))
-        fallback = _demo_fallback(lat, lon, f"live data took longer than {config.DEMO_DEADLINE_S:g} s")
-        if fallback is None:
-            raise SourcesTooSlow from error
-        return fallback, False
-    except Exception:
-        fallback = _demo_fallback(lat, lon, "live data failed")
-        if fallback is None:
-            raise
-        return fallback, False
-    if not complete:
-        fallback = _demo_fallback(lat, lon, "a live data source failed")
-        if fallback is not None:
-            return fallback, False
-    return result, complete
-
-
-def _remember_late(lat: float, lon: float, done: Any) -> None:
-    if done.exception() is None:
-        result, complete = done.result()
-        if complete:
-            _remember(_cache_key(lat, lon), result)
-            log.info("recommend %s: late live result cached", _cache_key(lat, lon))
+    """DEMO_MODE serves saved data deterministically and never waits on providers."""
+    fallback = _demo_fallback(lat, lon, "DEMO_MODE uses the saved demo response")
+    if fallback is None:
+        raise SourcesTooSlow
+    return fallback, False
 
 
 def _demo_fallback(lat: float, lon: float, reason: str) -> dict[str, Any] | None:
