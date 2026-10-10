@@ -22,7 +22,7 @@ SOIL = {"soil_ph": 5.6, "organic_matter_pct": 1.8, "sand_pct": 88.0, "clay_pct":
         "texture": "sand", "drainage": "Poorly drained", "map_unit": "Test sand"}
 FACTORS = {"soil_ph", "drainage", "season_temp", "frost_risk", "rainfall", "local_history"}
 CROP_KEYS = {"id", "name", "score", "season_label", "factors", "factor_details", "avg_yield", "price",
-             "scale", "est_gross_value", "limited_by", "flags"}
+             "scale", "est_gross_value", "limited_by", "flags", "action_plan"}
 
 
 def fake_weather(lat: float, lon: float) -> pd.DataFrame:

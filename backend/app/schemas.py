@@ -98,6 +98,14 @@ class NutrientPlan(Strict):
     sources: list[ExtensionLink]
 
 
+class ActionPlan(Strict):
+    check_before_planting: str
+    first_test: str
+    planting_window: str
+    major_risk: str
+    uf_ifas_follow_up: ExtensionLink
+
+
 class ScoringRules(Strict):
     weights: dict[str, float]
     critical_factors: list[str]
@@ -142,6 +150,7 @@ class CropResult(Strict):
     est_gross_value: GrossValue | None
     limited_by: list[str]
     flags: list[str]
+    action_plan: ActionPlan
 
 
 class RecommendResponse(Strict):

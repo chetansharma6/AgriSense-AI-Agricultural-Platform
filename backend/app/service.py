@@ -419,8 +419,10 @@ def crop_detail(crop_id: str, lat: float, lon: float, acres: float | None = None
                     {"title": "UF/IFAS 4R nutrient management", "url": "https://edis.ifas.ufl.edu/publication/SS639"},
                     {"title": "FDACS Agricultural Best Management Practices", "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"}],
     }
+    action_plan = _action_plan(crop, result["conditions"], scored)
     return {
         **scored,
+        "action_plan": action_plan,
         "requirements": crop.requirements(),
         "general_guidance": crop.general_guidance,
         "extension_links": [link.model_dump() for link in crop.extension_links],
@@ -450,4 +452,31 @@ def _apply_acres(response: dict[str, Any], acres: float | None) -> dict[str, Any
     for crop in response["crops"]:
         crop.setdefault("scale", {"fit": None, "min_practical_acres": 0, "note": None})
         crop.setdefault("est_gross_value", None)
+        crop["action_plan"] = _action_plan(crops[crop["id"]], response.get("conditions", {}), crop)
     return response
+
+
+def _action_plan(crop: Any, conditions: dict[str, Any], result: dict[str, Any]) -> dict[str, Any]:
+    """Build plain-language next steps only from committed crop facts and conditions."""
+    drainage = conditions.get("drainage")
+    before = crop.scale_note
+    if drainage:
+        before = f"Confirm the field has {drainage.lower()} drainage for this crop; {before.lower()}"
+    elif not before:
+        before = f"Review the crop's {crop.ph_ideal_min:g}-{crop.ph_ideal_max:g} pH target before planting."
+    ph = conditions.get("soil_ph")
+    first_test = "Soil test for pH and nutrients before fertilizing"
+    if ph is None:
+        first_test += "; include pH so lime needs are known"
+    else:
+        first_test += f"; current reported pH is {ph:g}"
+    flags = result.get("flags") or []
+    risk = flags[0] if flags else f"Monitor soil pH against the {crop.ph_ideal_min:g}-{crop.ph_ideal_max:g} ideal range."
+    link = crop.extension_links[0]
+    return {
+        "check_before_planting": before,
+        "first_test": first_test,
+        "planting_window": f"Use the {result.get('season_label', 'Florida growing')} window: plant at the recommended time.",
+        "major_risk": risk,
+        "uf_ifas_follow_up": {"title": link.title, "url": link.url},
+    }
