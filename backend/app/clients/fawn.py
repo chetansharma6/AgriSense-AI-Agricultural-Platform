@@ -93,13 +93,13 @@ def _download(station_id: str) -> dict[date, float]:
         "toDate_m": end.month, "toDate_d": end.day, "toDate_y": end.year,
         "vars__AirTemp9": "on", "format": ".CSV (Excel)",
     }
-    response = http().post(REPORT_URL, data=form, timeout=TIMEOUT_S)
     try:
+        response = http().post(REPORT_URL, data=form, timeout=TIMEOUT_S)
         response.raise_for_status()
     except httpx.TimeoutException:
         raise FawnTimeout("FAWN request timed out") from None
     except httpx.HTTPError:
-        raise FawnError(f"FAWN HTTP {response.status_code}") from None
+        raise FawnError("FAWN request failed") from None
     return parse_report(response.text)
 
 
