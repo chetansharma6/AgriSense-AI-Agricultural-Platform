@@ -20,7 +20,7 @@ GET /api/recommend?lat=<float>&lon=<float> ->
        "drainage": {"value": "Poorly drained",
                     "ideal": "Well drained to somewhat poorly drained"},
        "season_temp": {"value": 19.5, "ideal": "15-24", "unit": "C avg"},
-       "frost_risk": {"value": 4, "ideal": "<= 5", "unit": "freeze days in season"},
+       "frost_risk": {"value": 1.5, "ideal": "<= 2", "unit": "freeze days in season (light freezes count half)"},
        "rainfall": {"value": 310, "ideal": "350-600", "unit": "mm in season"},
        "local_history": {"value": "Grown in county", "ideal": "Grown locally"}},
      "avg_yield": {"value": 290, "unit": "CWT / ACRE", "level": "county"},
@@ -43,6 +43,8 @@ Score: weighted average of the non-null factors (weights renormalized over
 the factors present). If any critical factor scores below critical_threshold,
 the score is capped at critical_cap and that factor's key is listed in
 limited_by (in critical_factors order), with a "Limited by <factor>" flag.
+frost_risk value: weighted freeze days in the growing window. Nights at or
+below -2 C count 1, nights between -2 and 0 C count 0.5.
 flags: at most 4, deduplicated, most critical first ("Limited by" flags, then
 flags of the lowest-scoring factors).
 
