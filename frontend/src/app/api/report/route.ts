@@ -27,8 +27,11 @@ type InputCrop = Record<string, unknown> & {
 type TrustedCrop = Pick<InputCrop, "id" | "name" | "score" | "factors">;
 type Report = { verdict: string; summary: string; pros: string[]; cons: string[]; first_steps: string[] };
 type Result = { report: Report; source: "ai" | "fallback" };
+const CACHE_MAX_ENTRIES = 256;
+const CACHE_TTL_MS = 5 * 60_000;
+type CacheEntry = { promise: Promise<Result>; expiresAt: number };
 // Cache promises as well as completed results so simultaneous clicks share one call.
-const cache = new Map<string, Promise<Result>>();
+const cache = new Map<string, CacheEntry>();
 
 function object(value: unknown): Record<string, unknown> | null {
   return typeof value === "object" && value !== null && !Array.isArray(value) ? value as Record<string, unknown> : null;
@@ -56,6 +59,28 @@ function validCrop(value: unknown): value is InputCrop {
 
 function trustedCrop(crop: InputCrop): TrustedCrop {
   return { id: crop.id, name: CROP_NAMES[crop.id], score: crop.score, factors: crop.factors };
+}
+
+function cachedResult(key: string): Promise<Result> | undefined {
+  const entry = cache.get(key);
+  if (!entry) return undefined;
+  if (entry.expiresAt <= Date.now()) {
+    cache.delete(key);
+    return undefined;
+  }
+  cache.delete(key);
+  cache.set(key, entry);
+  return entry.promise;
+}
+
+function rememberResult(key: string, promise: Promise<Result>): void {
+  cache.delete(key);
+  const entry: CacheEntry = { promise, expiresAt: Date.now() + CACHE_TTL_MS };
+  cache.set(key, entry);
+  while (cache.size > CACHE_MAX_ENTRIES) cache.delete(cache.keys().next().value as string);
+  promise.catch(() => {
+    if (cache.get(key) === entry) cache.delete(key);
+  });
 }
 
 function strings(value: unknown, min: number, max = min): value is string[] {
@@ -133,9 +158,8 @@ export async function POST(request: Request): Promise<Response> {
   if (acres !== undefined && (typeof acres !== "number" || !Number.isFinite(acres) || acres < 0.1 || acres > 10000)) {
     return Response.json({ detail: "acres must be between 0.1 and 10000" }, { status: 400 });
   }
-  const location = object(crop.location);
-  const key = JSON.stringify({ id: crop.id, lat: location?.lat, lon: location?.lon, crop, acres });
-  let pending = cache.get(key);
-  if (!pending) { pending = generate(crop, acres); cache.set(key, pending); }
+  const key = JSON.stringify({ crop: trustedCrop(crop), acres });
+  let pending = cachedResult(key);
+  if (!pending) { pending = generate(crop, acres); rememberResult(key, pending); }
   return Response.json(await pending);
 }
