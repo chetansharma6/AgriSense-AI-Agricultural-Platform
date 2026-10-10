@@ -133,6 +133,7 @@ def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, 
             _response_cache.move_to_end(key)
             log.info("recommend %s: memory cache hit", key)
             cached = _with_location(_apply_acres(copy.deepcopy(hit[1]), acres), lat, lon)
+            cached["provenance"] = _provenance("live", detail="Memory cache", cache_status="cached")
             cached["confidence"] = _confidence(cached, "cached")
             return cached
 
@@ -266,9 +267,19 @@ def _exact_demo_response(lat: float, lon: float) -> dict[str, Any] | None:
 
 
 def _provenance(mode: str, detail: str | None = None, failed: list[str] | None = None,
-                station: tuple[fawn.Station, float] | None = None) -> dict[str, Any]:
+                station: tuple[fawn.Station, float] | None = None, cache_status: str | None = None) -> dict[str, Any]:
     failed = failed or []
-    source_names = ("USDA SSURGO", "NASA POWER", "USDA NASS", "UF/IFAS FAWN")
+    metadata = {
+        "USDA SSURGO": ("https://sdmdataaccess.sc.egov.usda.gov/", "Current soil survey", "Point/map unit",
+                         ["Soil properties depend on survey coverage and reported horizons."]),
+        "NASA POWER": ("https://power.larc.nasa.gov/", "2016-01-01 to 2025-12-31", "Nearest POWER grid cell",
+                        ["Daily gridded values are not a field-level measurement."]),
+        "USDA NASS": ("https://quickstats.nass.usda.gov/", "2012-present; recent five years used for averages", "Florida state and county",
+                       ["Some county values are withheld or not reported."]),
+        "UF/IFAS FAWN": ("https://fawn.ifas.ufl.edu/", "2016-01-01 to 2025-12-31", "Nearest station within 40 km",
+                          ["A nearby station may not represent the exact field."]),
+    }
+    source_names = tuple(metadata)
     failure_terms = {
         "USDA SSURGO": "SSURGO",
         "NASA POWER": "POWER",
@@ -279,7 +290,10 @@ def _provenance(mode: str, detail: str | None = None, failed: list[str] | None =
         {"name": name,
          "status": "saved" if mode == "demo" else
                    ("failed" if any(failure_terms[name] in failure for failure in failed) else "live"),
-         "detail": detail}
+         "detail": detail,
+         "url": metadata[name][0], "data_period": metadata[name][1],
+         "data_status": ("demo" if mode == "demo" else (cache_status or "live")),
+         "geographic_level": metadata[name][2], "limitations": metadata[name][3]}
         for name in source_names
     ]
     return {"mode": mode, "sources": sources,
