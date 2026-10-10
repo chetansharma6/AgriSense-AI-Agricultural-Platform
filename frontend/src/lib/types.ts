@@ -57,7 +57,15 @@ export interface CropResult {
   factor_details: Record<FactorKey, FactorDetail | null> | null;
   avg_yield: Yield | null;
   price: PriceRange | null;
+  limited_by: string[] | null;
   flags: string[] | null;
+}
+
+export interface Scoring {
+  weights: Record<FactorKey, number>;
+  critical_factors: string[];
+  critical_threshold: number;
+  critical_cap: number;
 }
 
 export interface RecommendResponse {
@@ -65,6 +73,7 @@ export interface RecommendResponse {
   conditions: Conditions | null;
   crops: CropResult[] | null;
   warnings: string[] | null;
+  scoring: Scoring | null;
 }
 
 export interface ExtensionLink {
@@ -83,4 +92,5 @@ export interface CropDetail extends CropResult {
   extension_links: ExtensionLink[] | null;
   conditions: Conditions | null;
   location: Location | null;
+  scoring: Scoring | null;
 }

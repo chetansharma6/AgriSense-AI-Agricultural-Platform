@@ -4,8 +4,14 @@ import hastings from "./hastings.json";
 import plantCity from "./plant_city.json";
 import belleGlade from "./belle_glade.json";
 
+interface DemoSample {
+  recommend: RecommendResponse;
+  crops: Record<string, CropDetail>;
+}
+
 // Check every JSON fixture without assertions that could hide type mismatches.
-const demos = [marianna, hastings, plantCity, belleGlade] satisfies RecommendResponse[];
+const samples: DemoSample[] = [marianna, hastings, plantCity, belleGlade];
+const demos = samples.map((sample) => sample.recommend);
 
 /** Great-circle distance term; sufficient for comparing demo locations. */
 function distance(lat: number, lon: number, demoLat: number, demoLon: number): number {
@@ -15,7 +21,7 @@ function distance(lat: number, lon: number, demoLat: number, demoLon: number): n
     * Math.sin((demoLon - lon) * radians / 2) ** 2;
 }
 
-/** Synthetic demo data. Return independent copies to protect shared fixtures. */
+/** Real backend samples. Return independent copies to protect shared fixtures. */
 export function getMockRecommend(lat: number, lon: number): RecommendResponse {
   if (!Number.isFinite(lat) || !Number.isFinite(lon)) {
     throw new Error("Latitude and longitude must be finite numbers");
@@ -23,7 +29,7 @@ export function getMockRecommend(lat: number, lon: number): RecommendResponse {
   let nearest = demos[0];
   let nearestDistance = Infinity;
   for (const demo of demos) {
-    const candidate = distance(lat, lon, demo.location.lat, demo.location.lon);
+    const candidate = distance(lat, lon, demo.location?.lat ?? NaN, demo.location?.lon ?? NaN);
     if (candidate < nearestDistance) {
       nearest = demo;
       nearestDistance = candidate;
@@ -33,26 +39,10 @@ export function getMockRecommend(lat: number, lon: number): RecommendResponse {
 }
 
 export function getMockCropDetail(id: string, lat: number, lon: number): CropDetail {
-  const recommendation = getMockRecommend(lat, lon);
-  const crop = recommendation.crops?.find((candidate) => candidate.id === id);
-  if (!crop) throw new Error("Unknown crop");
-
-  return {
-    ...crop,
-    requirements: {
-      mock: true,
-      soil_ph_ideal: crop.factor_details?.soil_ph?.ideal ?? null,
-      drainage_ideal: crop.factor_details?.drainage?.ideal ?? null,
-      season_temp_ideal: crop.factor_details?.season_temp?.ideal ?? null,
-      rainfall_ideal: crop.factor_details?.rainfall?.ideal ?? null,
-      fl_windows: [crop.season_label],
-    },
-    general_guidance: `Mock guidance for ${crop.name} near ${recommendation.location?.county}: ${crop.season_label}. Review soil pH, drainage, irrigation, and freeze protection with your local Extension office. Scores, yields, prices, and requirements in this demo are synthetic fixtures, not measured data or farm advice.`,
-    extension_links: [{
-      title: "UF/IFAS Extension publications (EDIS)",
-      url: "https://edis.ifas.ufl.edu/",
-    }],
-    conditions: recommendation.conditions,
-    location: recommendation.location,
-  };
+  const nearest = getMockRecommend(lat, lon);
+  const sample = samples.find((candidate) => candidate.recommend.location?.lat === nearest.location?.lat
+    && candidate.recommend.location?.lon === nearest.location?.lon);
+  const detail = sample?.crops[id];
+  if (!detail) throw new Error("Unknown crop");
+  return structuredClone(detail);
 }
