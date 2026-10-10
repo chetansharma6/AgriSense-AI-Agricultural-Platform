@@ -28,3 +28,15 @@ def test_cache_never_contains_key(isolated_cache: Path, monkeypatch: pytest.Monk
         assert "secret-key" not in path.name
         if path.is_file():
             assert "secret-key" not in path.read_text()
+
+
+def test_error_message_never_contains_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(nass, "nass_api_key", lambda: "secret-key")
+    fake = FakeClient({"error": ["bad request - invalid query"]})
+    fake.status_code = 400
+    monkeypatch.setattr(nass, "http", lambda: fake)
+
+    with pytest.raises(nass.NassError) as error:
+        nass.query({"commodity_desc": "NOPE"})
+    assert "secret-key" not in str(error.value)
+    assert "invalid query" in str(error.value)
