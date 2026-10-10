@@ -73,6 +73,31 @@ class PriceRange(Strict):
     unit: str | None
 
 
+class ExtensionLink(Strict):
+    title: str
+    url: str
+
+
+class Scale(Strict):
+    fit: str | None
+    min_practical_acres: float
+    note: str | None
+
+
+class GrossValue(Strict):
+    low: float
+    high: float
+    label: str
+
+
+class NutrientPlan(Strict):
+    n_lb_per_acre: float | None
+    soil_test_first: bool
+    lime_note: str | None
+    practices: list[str]
+    sources: list[ExtensionLink]
+
+
 class ScoringRules(Strict):
     weights: dict[str, float]
     critical_factors: list[str]
@@ -113,6 +138,8 @@ class CropResult(Strict):
     factor_details: FactorDetails
     avg_yield: YieldInfo | None
     price: PriceRange | None
+    scale: Scale
+    est_gross_value: GrossValue | None
     limited_by: list[str]
     flags: list[str]
 
@@ -127,15 +154,11 @@ class RecommendResponse(Strict):
     confidence: Confidence | None = None
 
 
-class ExtensionLink(Strict):
-    title: str
-    url: str
-
-
 class CropDetail(CropResult):
     requirements: dict[str, Any]
     general_guidance: str
     extension_links: list[ExtensionLink]
+    nutrient_plan: NutrientPlan
     conditions: Conditions
     location: Location
     scoring: ScoringRules

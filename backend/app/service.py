@@ -26,7 +26,7 @@ from app.clients.power import get_daily_weather
 from app.clients.soil import SoilNotFound, get_soil
 from app.crops import load_crops
 from app.market import load_market
-from app.scoring import rank_crops, score_crop, scoring_rules
+from app.scoring import estimated_gross_value, rank_crops, scale_info, score_crop, scoring_rules
 from app.utils import haversine_km
 
 T = TypeVar("T")
@@ -105,12 +105,12 @@ def clear_response_cache() -> None:
         _response_cache.clear()
 
 
-def recommend(lat: float, lon: float) -> dict[str, Any]:
+def recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, Any]:
     """Full /api/recommend response for a Florida point, from memory when possible."""
     if config.DEMO_MODE:
         exact = _exact_demo_response(lat, lon)
         if exact is not None:
-            return exact
+            return _apply_acres(exact, acres)
     key = _cache_key(lat, lon)
     now = time.monotonic()
     with _response_cache_lock:
@@ -118,13 +118,13 @@ def recommend(lat: float, lon: float) -> dict[str, Any]:
         if hit is not None and now - hit[0] < RESPONSE_CACHE_TTL_S:
             _response_cache.move_to_end(key)
             log.info("recommend %s: memory cache hit", key)
-            return _with_location(copy.deepcopy(hit[1]), lat, lon)
+        return _with_location(_apply_acres(copy.deepcopy(hit[1]), acres), lat, lon)
 
     started = time.perf_counter()
     if config.DEMO_MODE:
-        result, complete = _build_with_deadline(lat, lon)
+        result, complete = _build_with_deadline(lat, lon, acres)
     else:
-        result, complete = _build_recommendation(lat, lon)
+        result, complete = _build_recommendation(lat, lon, acres)
     log.info("recommend %s: answered in %.0f ms%s", key, (time.perf_counter() - started) * 1000,
              "" if complete else " (incomplete; not cached)")
     if complete:  # never pin a degraded answer: the next request retries the failed source
@@ -140,12 +140,12 @@ def _remember(key: tuple[float, float], result: dict[str, Any]) -> None:
             _response_cache.popitem(last=False)
 
 
-def _build_with_deadline(lat: float, lon: float) -> tuple[dict[str, Any], bool]:
+def _build_with_deadline(lat: float, lon: float, acres: float | None = None) -> tuple[dict[str, Any], bool]:
     """Use saved data nearby; otherwise return bounded live/partial data."""
     fallback = _demo_fallback(lat, lon, "DEMO_MODE uses the saved demo response")
     if fallback is not None:
-        return fallback, False
-    return _build_recommendation_bounded(lat, lon, config.DEMO_DEADLINE_S)
+        return _apply_acres(fallback, acres), False
+    return _build_recommendation_bounded(lat, lon, config.DEMO_DEADLINE_S, acres)
 
 
 def _bounded_fetches(fetches: dict[str, Callable[[], Any]], timeout_s: float,
@@ -169,7 +169,8 @@ def _bounded_fetches(fetches: dict[str, Callable[[], Any]], timeout_s: float,
     return results
 
 
-def _build_recommendation_bounded(lat: float, lon: float, timeout_s: float) -> tuple[dict[str, Any], bool]:
+def _build_recommendation_bounded(lat: float, lon: float, timeout_s: float,
+                                  acres: float | None = None) -> tuple[dict[str, Any], bool]:
     """Build a valid live response within the demo deadline, allowing nulls."""
     started = time.perf_counter()
     warnings: list[str] = []
@@ -204,7 +205,7 @@ def _build_recommendation_bounded(lat: float, lon: float, timeout_s: float) -> t
     climate = _attempt(lambda: summarize(weather), "Climate summary", warnings, failed) if weather is not None else None
     conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
     conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
-    crops = rank_crops([score_crop(crop, soil, weather, market) for crop in load_crops().values()])
+    crops = rank_crops([score_crop(crop, soil, weather, market, acres) for crop in load_crops().values()])
     response = {
         "location": {"lat": lat, "lon": lon,
                      "county": county["county"] if county else None,
@@ -289,7 +290,7 @@ def _with_location(result: dict[str, Any], lat: float, lon: float) -> dict[str, 
     return result
 
 
-def _build_recommendation(lat: float, lon: float) -> tuple[dict[str, Any], bool]:
+def _build_recommendation(lat: float, lon: float, acres: float | None = None) -> tuple[dict[str, Any], bool]:
     """The response, and whether every source answered."""
     warnings: list[str] = []
     failed: list[str] = []
@@ -297,7 +298,7 @@ def _build_recommendation(lat: float, lon: float) -> tuple[dict[str, Any], bool]
     # keeps the synchronous ASGI test client and constrained free hosts from
     # deadlocking while retaining parallel source fetches for normal requests.
     if threading.current_thread().name.startswith("recommend_"):
-        return _build_recommendation_sequential(lat, lon, warnings, failed)
+        return _build_recommendation_sequential(lat, lon, warnings, failed, acres)
     with ThreadPoolExecutor(max_workers=4) as pool:
         county_job = pool.submit(_attempt, lambda: lookup_county(lat, lon), "County lookup (FCC)", warnings, failed)
         soil_job = pool.submit(_attempt, lambda: get_soil(lat, lon), "Soil data (USDA SSURGO)", warnings, failed)
@@ -329,7 +330,7 @@ def _build_recommendation(lat: float, lon: float) -> tuple[dict[str, Any], bool]
     conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
     conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
 
-    crops = rank_crops([score_crop(crop, soil, weather, market) for crop in load_crops().values()])
+    crops = rank_crops([score_crop(crop, soil, weather, market, acres) for crop in load_crops().values()])
 
     response = {
         "location": {
@@ -350,7 +351,7 @@ def _build_recommendation(lat: float, lon: float) -> tuple[dict[str, Any], bool]
 
 
 def _build_recommendation_sequential(lat: float, lon: float, warnings: list[str],
-                                     failed: list[str]) -> tuple[dict[str, Any], bool]:
+                                     failed: list[str], acres: float | None = None) -> tuple[dict[str, Any], bool]:
     """Build a deadline-worker response without recursively creating pools."""
     county = _attempt(lambda: lookup_county(lat, lon), "County lookup (FCC)", warnings, failed)
     soil = _attempt(lambda: get_soil(lat, lon), "Soil data (USDA SSURGO)", warnings, failed)
@@ -372,7 +373,7 @@ def _build_recommendation_sequential(lat: float, lon: float, warnings: list[str]
     climate = _attempt(lambda: summarize(weather), "Climate summary", warnings, failed) if weather is not None else None
     conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
     conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
-    crops = rank_crops([score_crop(crop, soil, weather, market) for crop in load_crops().values()])
+    crops = rank_crops([score_crop(crop, soil, weather, market, acres) for crop in load_crops().values()])
     response = {"location": {"lat": lat, "lon": lon, "county": county["county"] if county else None,
                               "county_fips": county["county_fips"] if county else None, "state": "FL"},
                 "conditions": conditions, "crops": crops, "warnings": warnings,
@@ -381,19 +382,60 @@ def _build_recommendation_sequential(lat: float, lon: float, warnings: list[str]
     return response, not failed
 
 
-def crop_detail(crop_id: str, lat: float, lon: float) -> dict[str, Any] | None:
+def crop_detail(crop_id: str, lat: float, lon: float, acres: float | None = None) -> dict[str, Any] | None:
     """/api/crops/{crop_id} response, or None for an unknown crop id."""
     crop = load_crops().get(crop_id)
     if crop is None:
         return None
-    result = recommend(lat, lon)
+    result = recommend(lat, lon, acres)
     scored = next(item for item in result["crops"] if item["id"] == crop_id)
+    ph = result["conditions"].get("soil_ph")
+    lime_note = (f"pH {ph:g} is below {crop.ph_ideal_min:g}-{crop.ph_ideal_max:g}: a soil test will say how much lime is needed"
+                 if ph is not None and ph < crop.ph_ideal_min else None)
+    nutrient_plan = {
+        "n_lb_per_acre": crop.n_lb_per_acre,
+        "soil_test_first": True,
+        "lime_note": lime_note,
+        "practices": [
+            "Soil test before fertilizing",
+            "Split nitrogen into several smaller applications",
+            "Consider controlled-release fertilizer or fertigation through drip lines",
+            "Use cover crops and compost to build organic matter on sandy soils",
+            "Follow Florida agricultural Best Management Practices (FDACS)",
+        ],
+        "sources": [crop.nutrient_source.model_dump(),
+                    {"title": "UF/IFAS 4R nutrient management", "url": "https://edis.ifas.ufl.edu/publication/SS639"},
+                    {"title": "FDACS Agricultural Best Management Practices", "url": "https://www.fdacs.gov/Water/Agricultural-Water-Field-Services/Agricultural-Best-Management-Practices"}],
+    }
     return {
         **scored,
         "requirements": crop.requirements(),
         "general_guidance": crop.general_guidance,
         "extension_links": [link.model_dump() for link in crop.extension_links],
+        "nutrient_plan": nutrient_plan,
         "conditions": result["conditions"],
         "location": result["location"],
         "scoring": result["scoring"],
     }
+
+
+def _apply_acres(response: dict[str, Any], acres: float | None) -> dict[str, Any]:
+    crops = load_crops()
+    for crop_result in response.get("crops", []):
+        crop = crops.get(crop_result["id"])
+        if crop is None:
+            continue
+        scale = scale_info(crop, acres)
+        crop_result["scale"] = scale
+        crop_result["est_gross_value"] = estimated_gross_value(crop_result.get("avg_yield"),
+                                                                 crop_result.get("price"), acres)
+        if scale["fit"] == "too_small" and crop_result["score"] is not None:
+            crop_result["score"] = min(crop_result["score"], 40)
+            note = scale["note"]
+            if note and note not in crop_result["flags"]:
+                crop_result["flags"] = [note, *crop_result["flags"]][:4]
+    response["crops"] = rank_crops(response.get("crops", []))
+    for crop in response["crops"]:
+        crop.setdefault("scale", {"fit": None, "min_practical_acres": 0, "note": None})
+        crop.setdefault("est_gross_value", None)
+    return response

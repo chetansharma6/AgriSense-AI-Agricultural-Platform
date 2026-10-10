@@ -29,6 +29,9 @@ def make_crop(**overrides: Any) -> Crop:
         "temp_min_c": 10, "temp_ideal_min_c": 15, "temp_ideal_max_c": 25, "temp_max_c": 30,
         "max_freeze_days": 2, "rain_mm_per_month": [100, 200],
         "general_guidance": "", "extension_links": [], "source_notes": "", "needs_review": False,
+        "min_practical_acres": 10, "small_acres": 2, "scale_note": "Equipment and market access matter.",
+        "n_lb_per_acre": 100,
+        "nutrient_source": {"title": "Test source", "url": "https://edis.ifas.ufl.edu/"},
     }
     return Crop.model_validate({**raw, **overrides})
 

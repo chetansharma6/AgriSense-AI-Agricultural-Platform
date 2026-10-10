@@ -217,7 +217,7 @@ def best_window(crop: Crop, weather: pd.DataFrame | None) -> tuple[GrowingWindow
 
 
 def score_crop(crop: Crop, soil: dict[str, Any] | None, weather: pd.DataFrame | None,
-               market: Market | None) -> dict[str, Any]:
+               market: Market | None, acres: float | None = None) -> dict[str, Any]:
     """The API crop object for one crop."""
     soil = soil or {}
     window, climate = best_window(crop, weather)
@@ -233,6 +233,14 @@ def score_crop(crop: Crop, soil: dict[str, Any] | None, weather: pd.DataFrame | 
                   if scores[name] is not None and scores[name] < CRITICAL_THRESHOLD]
     if limited_by and score is not None:
         score = min(score, CRITICAL_CAP)
+    scale = scale_info(crop, acres)
+    if scale["fit"] == "too_small" and score is not None:
+        score = min(score, 40)
+    gross_value = estimated_gross_value(average_yield(market, crop) if market else None,
+                                        price_range(market, crop) if market else None, acres)
+    flags = ordered_flags(factors, limited_by)
+    if scale["note"]:
+        flags.insert(0, scale["note"])
     return {
         "id": crop.id,
         "name": crop.name,
@@ -242,9 +250,40 @@ def score_crop(crop: Crop, soil: dict[str, Any] | None, weather: pd.DataFrame | 
         "factor_details": {name: f[1] for name, f in factors.items()},
         "avg_yield": average_yield(market, crop) if market else None,
         "price": price_range(market, crop) if market else None,
+        "scale": scale,
+        "est_gross_value": gross_value,
         "limited_by": limited_by,
-        "flags": ordered_flags(factors, limited_by),
+        "flags": flags[:MAX_FLAGS],
     }
+
+
+def scale_info(crop: Crop, acres: float | None) -> dict[str, Any]:
+    if acres is None:
+        return {"fit": None, "min_practical_acres": crop.min_practical_acres, "note": None}
+    if acres < crop.small_acres:
+        return {"fit": "too_small", "min_practical_acres": crop.min_practical_acres,
+                "note": f"Usually grown on {crop.min_practical_acres:g}+ acres; hard to make work on {acres:g} acres."}
+    if acres < crop.min_practical_acres:
+        return {"fit": "small", "min_practical_acres": crop.min_practical_acres,
+                "note": f"Small planting of {acres:g} acres; commercial scale is usually {crop.min_practical_acres:g}+ acres."}
+    return {"fit": "good", "min_practical_acres": crop.min_practical_acres, "note": None}
+
+
+def estimated_gross_value(yield_info: dict[str, Any] | None, price: dict[str, Any] | None,
+                          acres: float | None) -> dict[str, Any] | None:
+    if acres is None or yield_info is None or price is None:
+        return None
+    yield_unit = yield_info.get("unit", "").upper().replace(" ", "")
+    price_unit = price.get("unit", "").upper().replace(" ", "")
+    if not yield_unit.endswith("/ACRE") or not price_unit.startswith("$/"):
+        return None
+    yield_measure = yield_unit.removesuffix("/ACRE")
+    price_measure = price_unit.removeprefix("$/")
+    if yield_measure != price_measure:
+        return None
+    return {"low": round(acres * yield_info["value"] * price["low"]),
+            "high": round(acres * yield_info["value"] * price["high"]),
+            "label": "Rough gross value before costs"}
 
 
 def ordered_flags(factors: dict[str, Factor], limited_by: list[str]) -> list[str]:

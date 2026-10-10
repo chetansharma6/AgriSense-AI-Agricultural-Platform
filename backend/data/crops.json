@@ -68,7 +68,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
-    "needs_review": false
+    "needs_review": false,
+    "min_practical_acres": 100, "small_acres": 25,
+    "scale_note": "Large row-crop acreage spreads specialized planting, harvesting, and drying equipment costs.",
+    "n_lb_per_acre": 0, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"}
   },
   {
     "id": "cotton",
@@ -136,7 +139,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
-    "needs_review": false
+    "needs_review": true,
+    "min_practical_acres": 500, "small_acres": 100,
+    "scale_note": "Large row-crop acreage spreads specialized equipment and supports reliable gin and market access.",
+    "n_lb_per_acre": 60, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"}
   },
   {
     "id": "field_corn",
@@ -202,7 +208,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP (Dent maize). Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
-    "needs_review": false
+    "needs_review": true,
+    "min_practical_acres": 100, "small_acres": 25,
+    "scale_note": "Large row-crop acreage spreads planting, harvest, and grain-handling equipment costs.",
+    "n_lb_per_acre": 180, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"}
   },
   {
     "id": "soybean",
@@ -269,7 +278,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
-    "needs_review": false
+    "needs_review": true,
+    "min_practical_acres": 100, "small_acres": 25,
+    "scale_note": "Large row-crop acreage spreads planting, harvest, and grain-handling equipment costs.",
+    "n_lb_per_acre": 0, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"}
   },
   {
     "id": "sugarcane",
@@ -342,7 +354,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. Season temperature is the 12-month mean. max_freeze_days 2 (weighted; light freezes count half): nights of 28-32 F kill terminal buds and brown leaves without souring (LSU AgCenter); killing cold is very infrequent near Lake Okeechobee (UF/IFAS SC032); damaging EAA freezes are multi-night events (USDA NASS FL 2010, 2026). No commercial production in the Panhandle since the 1950s (UF/IFAS). NASA POWER's grid minimum understates EAA freezes.",
-    "needs_review": false
+    "needs_review": true,
+    "min_practical_acres": 500, "small_acres": 100,
+    "scale_note": "Sugarcane requires large acreage, specialized harvest equipment, and practical access to a nearby mill and contracts.",
+    "n_lb_per_acre": 160, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"}
   },
   {
     "id": "tomato",
@@ -422,7 +437,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: injury 2 F below freezing (UF/IFAS TR014).",
-    "needs_review": false
+    "needs_review": true,
+    "min_practical_acres": 5, "small_acres": 1,
+    "scale_note": "Vegetable acreage can be smaller, but packing, labor, cooling, and buyer contracts still favor commercial blocks.",
+    "n_lb_per_acre": 200, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
   },
   {
     "id": "watermelon",
@@ -489,7 +507,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates.",
-    "needs_review": false
+    "needs_review": true,
+    "min_practical_acres": 5, "small_acres": 1,
+    "scale_note": "Vegetable acreage can be smaller, but plasticulture, labor, packing, and buyer contracts still favor commercial blocks.",
+    "n_lb_per_acre": 150, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
   },
   {
     "id": "strawberry",
@@ -546,7 +567,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 3 (weighted): crowns survive to about 20 F and flowers and fruit are protected with overhead irrigation from about 31 F (FAWN, UF/IFAS CV201, HS403); freeze events are typically 1-2 nights (SWFWMD). At Plant City only the worst 10-15% of seasons (e.g. 2010) exceed 3. Still to verify: protection nights per season, and North Florida suitability.",
-    "needs_review": true
+    "needs_review": true,
+    "min_practical_acres": 1, "small_acres": 0.25,
+    "scale_note": "Strawberries can be grown on small blocks, but beds, transplants, labor, cooling, and contracts are substantial fixed costs.",
+    "n_lb_per_acre": 150, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
   },
   {
     "id": "potato",
@@ -613,7 +637,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 2 (weighted): potato cannot handle temperatures below 32 F (UF/IFAS HS183), but young plants rebound and growers cover them with soil before a freeze (UF/IFAS Putnam County 2022). Still to verify: yield loss per freeze; NASA POWER misses Hastings freezes (Jan 2022). pH upper limit 7.0 (common scab) is not confirmed by UF/IFAS.",
-    "needs_review": true
+    "needs_review": true,
+    "min_practical_acres": 5, "small_acres": 1,
+    "scale_note": "Vegetable acreage can be smaller, but specialized harvest, grading, packing, and buyer access favor commercial blocks.",
+    "n_lb_per_acre": 150, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
   },
   {
     "id": "sweet_corn",
@@ -691,7 +718,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: little frost resistance (UF/IFAS TR013).",
-    "needs_review": false
+    "needs_review": true,
+    "min_practical_acres": 5, "small_acres": 1,
+    "scale_note": "Vegetable acreage can be smaller, but harvest, packing, and buyer contracts still favor commercial blocks.",
+    "n_lb_per_acre": 180, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
   },
   {
     "id": "snap_bean",
@@ -767,7 +797,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP (Common bean). Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: freeze injury at 28 F for 30-45 minutes (UF/IFAS HS853).",
-    "needs_review": false
+    "needs_review": true,
+    "min_practical_acres": 2, "small_acres": 0.5,
+    "scale_note": "Specialty vegetable acreage can be small, though harvest labor, packing, and reliable buyer access remain important.",
+    "n_lb_per_acre": 120, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
   },
   {
     "id": "bell_pepper",
@@ -847,7 +880,10 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP (Sweet pepper). Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 0: injury 2 F below freezing (UF/IFAS TR010).",
-    "needs_review": false
+    "needs_review": true,
+    "min_practical_acres": 2, "small_acres": 0.5,
+    "scale_note": "Specialty vegetable acreage can be small, though harvest labor, packing, and reliable buyer access remain important.",
+    "n_lb_per_acre": 150, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
   },
   {
     "id": "cabbage",
@@ -904,6 +940,9 @@
       }
     ],
     "source_notes": "UF/IFAS EDIS (Vegetable Production Handbook of Florida and agronomy guides). Temperature limits: FAO ECOCROP. Lower rainfall bound: median FAO-56 crop water need (Kc from UF/IFAS AE456 or FAO-56 x Hargreaves ETo) at the four demo farms; upper bound is an estimate. Hard pH limits are estimates. max_freeze_days 10: no frost injury until 10-16 F below freezing (UF/IFAS TR006).",
-    "needs_review": false
+    "needs_review": true,
+    "min_practical_acres": 2, "small_acres": 0.5,
+    "scale_note": "Specialty vegetable acreage can be small, though harvest labor, packing, and reliable buyer access remain important.",
+    "n_lb_per_acre": 170, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
   }
 ]
