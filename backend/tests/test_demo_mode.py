@@ -160,6 +160,12 @@ def test_exact_demo_coordinates_are_instant_contract_valid_and_offline(
     assert len(body["crops"]) == 13
     assert body["provenance"]["mode"] == "demo"
     assert body["confidence"]["total_factors"] == 6
+    assert [crop["id"] for crop in body["crops"]] == [crop["id"] for crop in service.recommend(lat, lon)["crops"]]
+    assert [crop["score"] for crop in body["crops"]] == sorted(
+        (crop["score"] for crop in body["crops"]), reverse=True
+    )
+    assert body["provenance"] == service.recommend(lat, lon)["provenance"]
+    assert time.perf_counter() - started < 0.5
     assert calls == []
 
 
