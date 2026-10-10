@@ -104,7 +104,6 @@ main p { max-width: 70ch; }
 .site-header { background: #faf9f3f2; }
 .site-header nav a { border-radius: 999px; padding-inline: 1rem; text-decoration: none; transition: background-color 180ms; }
 .site-header nav a:hover { background: var(--color-mint); }
-.site-header nav a:first-child { background: var(--color-field); color: white; }
 .site-footer { background: var(--color-mint); }
 #main-content > main { background: radial-gradient(ellipse at 100% 0%, #eaf2e680, transparent 45%); }
 .crop-card-link article { background: #ffffffd9; border-color: var(--color-border); }
@@ -116,7 +115,6 @@ main p { max-width: 70ch; }
 @media (max-width: 480px) {
   .site-header > div { justify-content: center; gap: .5rem; }
   .site-header nav { width: 100%; justify-content: center; gap: .25rem; }
-  .site-header img { height: 3rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   #main-content { animation: none; }

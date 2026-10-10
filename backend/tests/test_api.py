@@ -226,7 +226,7 @@ def test_cached_response_adds_small_scale_flag() -> None:
     updated = service._apply_acres(response, 2)
     tomato = updated["crops"][0]
     assert tomato["scale"]["fit"] == "small"
-    assert tomato["score"] == 90
+    assert tomato["score"] == 74
     assert tomato["flags"][0].startswith("Small planting of 2 acres")
 
 
@@ -285,3 +285,22 @@ def test_fractional_climate_averages_are_valid(sources: dict[str, Any], monkeypa
     response = client.get("/api/recommend", params={"lat": 29.71, "lon": -81.50})
     assert response.status_code == 200
     assert response.json()["conditions"]["frost_free_days"] % 1 != 0
+
+
+def test_acreage_cache_does_not_pin_small_lot_scores(sources: dict[str, Any]) -> None:
+    params = {"lat": 29.71, "lon": -81.50}
+    small = service.recommend(**params, acres=0.1)
+    large = service.recommend(**params, acres=500)
+    unspecified = service.recommend(**params)
+    for crop in small["crops"]:
+        if crop["id"] in {"cotton", "sugarcane", "peanut", "soybean", "field_corn"}:
+            assert crop["score"] <= 40
+            assert crop["scale"]["fit"] == "too_small"
+        if crop["id"] in {"tomato", "strawberry", "snap_bean", "bell_pepper", "cabbage"}:
+            assert crop["scale"]["fit"] == "good"
+            assert "Garden-scale" in crop["scale"]["note"]
+    assert {c["id"]: c["score"] for c in large["crops"]} == {c["id"]: c["score"] for c in unspecified["crops"]}
+    assert all(c["scale"]["note"] is None for c in unspecified["crops"])
+    service.clear_response_cache()
+    fresh = service.recommend(**params)
+    assert {c["id"]: c["score"] for c in fresh["crops"]} == {c["id"]: c["score"] for c in large["crops"]}
