@@ -7,6 +7,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from app import service
+from app.clients import fawn
 from app.main import app
 from app.market import Market
 from app.schemas import CropDetail, RecommendResponse
@@ -35,6 +36,7 @@ def sources(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
     monkeypatch.setattr(service, "lookup_county", lambda lat, lon: fakes["county"])
     monkeypatch.setattr(service, "get_soil", lambda lat, lon: fakes["soil"])
     monkeypatch.setattr(service, "get_daily_weather", fake_weather)
+    monkeypatch.setattr(fawn, "nearest_station", lambda lat, lon: None)
     # Like the real load_market: no county rows when the county is unknown.
     monkeypatch.setattr(service, "load_market", lambda fips: Market(None if fips is None else [], [], []))
     return fakes
