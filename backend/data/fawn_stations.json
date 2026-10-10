@@ -1,0 +1,359 @@
+[
+ {
+  "id": "110",
+  "name": "Jay",
+  "lat": 30.7752,
+  "lon": -87.1402,
+  "years": 10.0
+ },
+ {
+  "id": "111",
+  "name": "StrawBerry Plant City",
+  "lat": 28.0043,
+  "lon": -82.073,
+  "years": 0.0
+ },
+ {
+  "id": "120",
+  "name": "DeFuniak Springs",
+  "lat": 30.8766,
+  "lon": -86.2139,
+  "years": 10.0
+ },
+ {
+  "id": "121",
+  "name": "Mayo",
+  "lat": 30.0797,
+  "lon": -83.2346,
+  "years": 10.0
+ },
+ {
+  "id": "125",
+  "name": "Panama City",
+  "lat": 30.3089,
+  "lon": -85.5004,
+  "years": 3.5
+ },
+ {
+  "id": "130",
+  "name": "Marianna",
+  "lat": 30.85,
+  "lon": -85.1652,
+  "years": 10.0
+ },
+ {
+  "id": "140",
+  "name": "Quincy",
+  "lat": 30.5458,
+  "lon": -84.599,
+  "years": 10.0
+ },
+ {
+  "id": "150",
+  "name": "Carrabelle",
+  "lat": 29.8424,
+  "lon": -84.6951,
+  "years": 10.0
+ },
+ {
+  "id": "160",
+  "name": "Monticello",
+  "lat": 30.5357,
+  "lon": -83.9176,
+  "years": 9.9
+ },
+ {
+  "id": "170",
+  "name": "Live Oak",
+  "lat": 30.305,
+  "lon": -82.8988,
+  "years": 10.0
+ },
+ {
+  "id": "180",
+  "name": "Macclenny",
+  "lat": 30.2815,
+  "lon": -82.138,
+  "years": 10.0
+ },
+ {
+  "id": "190",
+  "name": "Bristol",
+  "lat": 30.4933,
+  "lon": -84.9711,
+  "years": 3.6
+ },
+ {
+  "id": "230",
+  "name": "Bronson",
+  "lat": 29.4004,
+  "lon": -82.5861,
+  "years": 10.0
+ },
+ {
+  "id": "240",
+  "name": "Putnam Hall",
+  "lat": 29.6977,
+  "lon": -81.9868,
+  "years": 9.9
+ },
+ {
+  "id": "241",
+  "name": "Joshua",
+  "lat": 27.2598,
+  "lon": -81.6131,
+  "years": 7.8
+ },
+ {
+  "id": "250",
+  "name": "Citra",
+  "lat": 29.4101,
+  "lon": -82.1732,
+  "years": 10.0
+ },
+ {
+  "id": "260",
+  "name": "Alachua",
+  "lat": 29.8027,
+  "lon": -82.4108,
+  "years": 9.9
+ },
+ {
+  "id": "261",
+  "name": "StrawBerry Floral City",
+  "lat": 28.763,
+  "lon": -82.2743,
+  "years": 0.0
+ },
+ {
+  "id": "270",
+  "name": "Hastings",
+  "lat": 29.6933,
+  "lon": -81.4459,
+  "years": 9.9
+ },
+ {
+  "id": "275",
+  "name": "Lecanto",
+  "lat": 28.8291,
+  "lon": -82.4989,
+  "years": 10.0
+ },
+ {
+  "id": "280",
+  "name": "Ocklawaha",
+  "lat": 29.0203,
+  "lon": -81.969,
+  "years": 10.0
+ },
+ {
+  "id": "290",
+  "name": "Pierson",
+  "lat": 29.2172,
+  "lon": -81.4607,
+  "years": 10.0
+ },
+ {
+  "id": "302",
+  "name": "Umatilla",
+  "lat": 28.9266,
+  "lon": -81.653,
+  "years": 10.0
+ },
+ {
+  "id": "303",
+  "name": "Okahumpka",
+  "lat": 28.6817,
+  "lon": -81.8857,
+  "years": 9.9
+ },
+ {
+  "id": "304",
+  "name": "Avalon",
+  "lat": 28.4749,
+  "lon": -81.653,
+  "years": 10.0
+ },
+ {
+  "id": "311",
+  "name": "Dade City",
+  "lat": 28.3492,
+  "lon": -82.2048,
+  "years": 10.0
+ },
+ {
+  "id": "315",
+  "name": "Brooksville South",
+  "lat": 28.4715,
+  "lon": -82.4446,
+  "years": 4.0
+ },
+ {
+  "id": "320",
+  "name": "Apopka",
+  "lat": 28.6377,
+  "lon": -81.5468,
+  "years": 9.9
+ },
+ {
+  "id": "330",
+  "name": "Lake Alfred",
+  "lat": 28.1019,
+  "lon": -81.7113,
+  "years": 9.9
+ },
+ {
+  "id": "335",
+  "name": "Poinciana",
+  "lat": 28.081,
+  "lon": -81.4114,
+  "years": 3.4
+ },
+ {
+  "id": "340",
+  "name": "Kenansville",
+  "lat": 27.9622,
+  "lon": -81.0512,
+  "years": 10.0
+ },
+ {
+  "id": "350",
+  "name": "Balm",
+  "lat": 27.76,
+  "lon": -82.2241,
+  "years": 10.0
+ },
+ {
+  "id": "360",
+  "name": "Dover",
+  "lat": 28.0151,
+  "lon": -82.2325,
+  "years": 10.0
+ },
+ {
+  "id": "380",
+  "name": "Ona",
+  "lat": 27.3975,
+  "lon": -81.9397,
+  "years": 9.9
+ },
+ {
+  "id": "395",
+  "name": "Tiger Creek",
+  "lat": 27.8094,
+  "lon": -81.4855,
+  "years": 3.1
+ },
+ {
+  "id": "400",
+  "name": "Babson Park",
+  "lat": 27.8026,
+  "lon": -81.5464,
+  "years": 3.9
+ },
+ {
+  "id": "405",
+  "name": "Clewiston",
+  "lat": 26.7391,
+  "lon": -81.0528,
+  "years": 10.0
+ },
+ {
+  "id": "410",
+  "name": "Belle Glade",
+  "lat": 26.6568,
+  "lon": -80.63,
+  "years": 9.9
+ },
+ {
+  "id": "415",
+  "name": "Jupiter",
+  "lat": 26.983,
+  "lon": -80.0827,
+  "years": 2.0
+ },
+ {
+  "id": "420",
+  "name": "Fort Lauderdale",
+  "lat": 26.0853,
+  "lon": -80.2405,
+  "years": 9.9
+ },
+ {
+  "id": "425",
+  "name": "Wellington",
+  "lat": 26.6812,
+  "lon": -80.2992,
+  "years": 9.6
+ },
+ {
+  "id": "430",
+  "name": "Fort Pierce",
+  "lat": 27.4271,
+  "lon": -80.4053,
+  "years": 5.1
+ },
+ {
+  "id": "435",
+  "name": "St. Lucie West",
+  "lat": 27.3378,
+  "lon": -80.6192,
+  "years": 9.9
+ },
+ {
+  "id": "440",
+  "name": "Homestead",
+  "lat": 25.5126,
+  "lon": -80.5031,
+  "years": 10.0
+ },
+ {
+  "id": "445",
+  "name": "Yeehaw Junction",
+  "lat": 27.6988,
+  "lon": -80.9173,
+  "years": 1.6
+ },
+ {
+  "id": "450",
+  "name": "Immokalee",
+  "lat": 26.4621,
+  "lon": -81.4405,
+  "years": 10.0
+ },
+ {
+  "id": "455",
+  "name": "Okeechobee",
+  "lat": 27.3306,
+  "lon": -80.8514,
+  "years": 10.0
+ },
+ {
+  "id": "460",
+  "name": "Palmdale",
+  "lat": 26.9248,
+  "lon": -81.3146,
+  "years": 10.0
+ },
+ {
+  "id": "470",
+  "name": "Sebring",
+  "lat": 27.4211,
+  "lon": -81.401,
+  "years": 10.0
+ },
+ {
+  "id": "480",
+  "name": "North Port",
+  "lat": 27.1434,
+  "lon": -82.3374,
+  "years": 9.9
+ },
+ {
+  "id": "490",
+  "name": "Arcadia",
+  "lat": 27.2262,
+  "lon": -81.8384,
+  "years": 10.0
+ }
+]
