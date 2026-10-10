@@ -149,12 +149,8 @@ def _typical_date(dates: list[pd.Timestamp], n_years: int) -> str | None:
 if __name__ == "__main__":
     import time
 
-    DEMO_FARMS = {
-        "marianna": (30.80, -85.25),
-        "hastings": (29.71, -81.50),
-        "plant_city": (28.03, -82.15),
-        "belle_glade": (26.68, -80.68),
-    }
+    from app.config import DEMO_FARMS
+
     started = time.perf_counter()
     for name, (lat, lon) in DEMO_FARMS.items():
         climate = get_climate(lat, lon)
