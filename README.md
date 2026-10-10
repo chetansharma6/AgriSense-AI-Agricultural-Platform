@@ -1,6 +1,52 @@
 # AgriSense
 
+![AgriSense home page with the Florida map and example locations](docs/screenshots/home-map.png)
+
+[Try the live app](https://agrisense-ai-cyan.vercel.app)
+
 AgriSense helps small and mid-scale Florida farmers decide what to plant by ranking 13 crops for a selected location. Each crop report includes an explainable suitability score, local yield and price history, growing guidance, and UF/IFAS Extension links.
+
+## Features
+
+- Pick a Florida location on the map or enter latitude and longitude.
+- Compare 13 crops ranked by deterministic, explainable suitability scores.
+- Inspect six factors and the best Florida growing window for each crop.
+- Review regional yield and price history, missing-data warnings, and UF/IFAS links.
+- Read a plain-language AI report grounded in the calculated crop data, with a local fallback when AI is unavailable.
+
+## How it works
+
+USDA SSURGO soil data, NASA POWER climate history, and USDA NASS harvest and price records feed a Python scoring engine. It compares crop requirements across Florida growing windows, ranks the crops, and supplies the results to a server-side AI report generator. The AI does not calculate the scores.
+
+Read the [methodology](docs/methodology.md) for factor weights, missing-data handling, and limitations. The four demo choices are example growing locations, not verified individual farms.
+
+## Screenshot gallery
+
+### Florida map and location controls
+
+![Florida map, demo locations, and coordinate inputs](docs/screenshots/home-controls.png)
+
+### Plant City results
+
+![Land conditions for the Plant City example location](docs/screenshots/plant-city-conditions.png)
+
+![Plant City crop rankings with strawberry, potato, and watermelon](docs/screenshots/plant-city-results.png)
+
+### Strawberry report
+
+![Strawberry AI summary with pros, cons, and first steps](docs/screenshots/strawberry-report.png)
+
+### About AgriSense
+
+![Public data to calculated score to AI explanation](docs/screenshots/about.png)
+
+![AgriSense public data sources](docs/screenshots/about-sources.png)
+
+![The six suitability factors and their weights](docs/screenshots/about-factors.png)
+
+Screenshots capture example responses; scores and reports can change as data changes. The strawberry screenshot shows the report section; its crop-detail factor chart is not pictured.
+
+For a walkthrough, see the [75-second demo video script](docs/demo-video-script.md).
 
 ## Team
 
@@ -71,3 +117,9 @@ git config user.name "Your Name"
 git config user.email "your-email@example.com"
 git config core.hooksPath .githooks
 ```
+Vercel Links:
+
+  Inspect         https://vercel.com/rich5369/agrisense-ai/B2T3nyRfFb2vzo9wmnYeFRyo9d7G
+  Production      https://agrisense-t2dq1ryjw-rich5369.vercel.ap
+  Production      https://agrisense-t2dq1ryjw-rich5369.vercel.app
+▲ Aliased         https://agrisense-ai-cyan.vercel.app
