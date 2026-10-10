@@ -57,7 +57,7 @@ export default function ResultsClient() {
 
   const current = state?.key === key && state.attempt === attempt ? state.data : undefined;
   const place = placeLabel(params.get("place"), current?.location?.county);
-  const title = `${place}${acres !== undefined && Number.isFinite(acres) ? ` for ${acres.toLocaleString("en-US")} acres` : ""}`;
+  const title = `${place}${acres !== undefined && Number.isFinite(acres) ? ` for ${acres.toLocaleString("en-US", { maximumFractionDigits: 20 })} acres` : ""}`;
   useEffect(() => { document.title = `${title} results · AgriSense`; }, [title]);
   function withTitle(content: ReactNode) {
     return <><h1 className="page-title mb-6">{title}</h1>{content}</>;
