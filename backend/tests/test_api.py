@@ -304,3 +304,15 @@ def test_acreage_cache_does_not_pin_small_lot_scores(sources: dict[str, Any]) ->
     service.clear_response_cache()
     fresh = service.recommend(**params)
     assert {c["id"]: c["score"] for c in fresh["crops"]} == {c["id"]: c["score"] for c in large["crops"]}
+
+
+def test_minimum_acreage_is_accepted_by_both_endpoints(sources: dict[str, Any]) -> None:
+    params = {"lat": 29.71, "lon": -81.50, "acres": 0.1}
+    for endpoint in ("/api/recommend", "/api/crops/tomato"):
+        response = client.get(endpoint, params=params)
+        assert response.status_code == 200
+        body = response.json()
+        tomato = (next(c for c in body["crops"] if c["id"] == "tomato")
+                  if "crops" in body else body)
+        assert tomato["scale"]["fit"] == "good"
+        assert tomato["score"] <= 74
