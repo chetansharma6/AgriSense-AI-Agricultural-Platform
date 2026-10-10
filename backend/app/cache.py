@@ -51,7 +51,7 @@ def write_cache(namespace: str, params: dict[str, Any], data: Any) -> None:
         with os.fdopen(fd, "w") as tmp:
             json.dump(data, tmp)
         os.replace(tmp_name, path)
-    except OSError as error:  # disk filled up mid-write: drop the partial file, keep serving
+    except (OSError, TypeError, ValueError) as error:  # cache is optional; keep serving on write failure
         _remove(tmp_name)
         log.warning("cache write skipped for %s: %s", namespace, error)
     except BaseException:

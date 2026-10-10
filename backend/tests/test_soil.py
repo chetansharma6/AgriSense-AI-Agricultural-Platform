@@ -76,3 +76,14 @@ def test_maintenance_page_raises_and_is_not_cached(monkeypatch: pytest.MonkeyPat
         with pytest.raises(soil.SoilServiceDown):
             soil.get_soil(29.65, -82.32)
     assert client.calls == 2
+
+
+def test_malformed_json_is_classified(monkeypatch: pytest.MonkeyPatch) -> None:
+    class Malformed(FakeResponse):
+        def json(self) -> Any:
+            raise ValueError("not json")
+
+    client = use(monkeypatch, ScriptedClient(Malformed({}), Malformed({})))
+    with pytest.raises(soil.SoilMalformed):
+        soil.get_mukey(29.71, -81.50)
+    assert client.calls == 1

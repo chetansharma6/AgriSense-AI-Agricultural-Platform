@@ -7,6 +7,7 @@ nearby points share one cache entry.
 
 import httpx
 import pandas as pd
+import time
 
 from app.cache import read_cache, write_cache
 from app.clients.http import http
@@ -15,6 +16,10 @@ POWER_URL = "https://power.larc.nasa.gov/api/temporal/daily/point"
 START, END = "20160101", "20251231"
 TIMEOUT_S = 90.0
 MISSING = -999.0
+
+
+class PowerError(RuntimeError):
+    """NASA POWER returned an HTTP, empty, or malformed response."""
 
 # POWER parameter -> DataFrame column
 PARAMETERS = {
@@ -53,11 +58,21 @@ def _fetch(params: dict) -> dict[str, dict[str, float]]:
         except httpx.TimeoutException:
             if attempt == 2:
                 raise
+            time.sleep(0.05)
             continue
         if response.status_code >= 500 and attempt == 1:
+            time.sleep(0.05)
             continue
-        response.raise_for_status()
-        return response.json()["properties"]["parameter"]
+        try:
+            response.raise_for_status()
+            parameters = response.json()["properties"]["parameter"]
+            if not isinstance(parameters, dict) or not parameters:
+                raise ValueError("parameter data is empty")
+            return parameters
+        except httpx.HTTPStatusError:
+            raise PowerError(f"NASA POWER HTTP {response.status_code}") from None
+        except (KeyError, TypeError, ValueError):
+            raise PowerError("NASA POWER response malformed or empty") from None
     raise AssertionError("unreachable")
 
 
