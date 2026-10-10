@@ -75,6 +75,10 @@ def test_failed_source_becomes_warning(sources: dict[str, Any], monkeypatch: pyt
     assert body["conditions"]["soil_ph"] is None
     assert body["crops"][0]["factors"]["soil_ph"] is None
     assert any("SSURGO" in warning for warning in body["warnings"])
+    statuses = {source["name"]: source["status"] for source in body["provenance"]["sources"]}
+    assert statuses["USDA SSURGO"] == "failed"
+    assert statuses["NASA POWER"] == "live"
+    assert body["provenance"]["fawn_station"] is None
 
 
 def test_point_in_another_state_is_rejected(sources: dict[str, Any]) -> None:

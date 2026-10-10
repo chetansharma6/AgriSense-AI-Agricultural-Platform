@@ -35,7 +35,16 @@ GET /api/recommend?lat=<float>&lon=<float> ->
     "critical_factors": ["soil_ph", "drainage", "season_temp", "frost_risk"],
     "critical_threshold": 25,
     "critical_cap": 45},
-  "provenance": {"mode": "live", "sources": [{"name": "USDA SSURGO", "status": "live", "detail": null}]},
+  "provenance": {
+    "mode": "live",
+    "sources": [
+      {"name": "USDA SSURGO", "status": "live", "detail": null},
+      {"name": "NASA POWER", "status": "live", "detail": null},
+      {"name": "USDA NASS", "status": "failed", "detail": null},
+      {"name": "UF/IFAS FAWN", "status": "live", "detail": null}
+    ],
+    "fawn_station": {"name": "Hastings", "distance_km": 8.4}
+  },
   "confidence": {"level": "high", "available_factors": 6, "total_factors": 6, "notes": []}
 }
 Rules: crops sorted by score descending, then name ascending; every factor
@@ -49,9 +58,11 @@ frost_risk value: weighted freeze days in the growing window. Nights at or
 below -2 C count 1, nights between -2 and 0 C count 0.5.
 flags: at most 4, deduplicated, most critical first ("Limited by" flags, then
 flags of the lowest-scoring factors).
-`provenance` identifies live versus saved demo data and lists the source status.
-`confidence` reports how many of the six scoring factors had data; it does not
-alter the suitability score.
+`provenance` identifies live versus saved demo data and lists each source as
+`live`, `saved`, or `failed`. When a FAWN station is selected, `fawn_station`
+contains only its public name and rounded distance in kilometres; it is null
+when no station is used. `confidence` reports how many of the six scoring
+factors had data; it does not alter the suitability score.
 
 GET /api/crops/{crop_id}?lat=&lon= -> the same crop object plus:
   "requirements": {raw fields from crops.json},

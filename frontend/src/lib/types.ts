@@ -77,6 +77,12 @@ export interface SourceStatus {
 export interface Provenance {
   mode: string;
   sources: SourceStatus[];
+  fawn_station: FawnStation | null;
+}
+
+export interface FawnStation {
+  name: string;
+  distance_km: number;
 }
 
 export interface Confidence {

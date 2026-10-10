@@ -8,6 +8,7 @@ import pytest
 from app import cache, config, service
 from app.clients import fawn, fcc
 from app.market import Market
+from app.schemas import Provenance
 from app.schemas import RecommendResponse
 from app.utils import haversine_km
 from tests.test_api import COUNTY, SOIL, fake_weather
@@ -169,3 +170,12 @@ def test_arbitrary_florida_coordinates_keep_live_behavior(demo: pytest.MonkeyPat
     assert body["provenance"]["mode"] == "live"
     assert body["location"]["lat"] == ORLANDO["lat"]
     assert len(body["crops"]) == 13
+
+
+def test_live_provenance_includes_fawn_station() -> None:
+    station = {"id": "TEST", "name": "Test Station", "lat": 28.0, "lon": -82.0, "years": 10.0}
+    provenance = service._provenance("live", station=(station, 12.345))
+    validated = Provenance.model_validate(provenance)
+    assert validated.fawn_station is not None
+    assert validated.fawn_station.name == "Test Station"
+    assert validated.fawn_station.distance_km == 12.3

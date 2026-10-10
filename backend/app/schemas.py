@@ -86,9 +86,15 @@ class SourceStatus(Strict):
     detail: str | None = None
 
 
+class FawnStation(Strict):
+    name: str
+    distance_km: float
+
+
 class Provenance(Strict):
     mode: str
     sources: list[SourceStatus]
+    fawn_station: FawnStation | None = None
 
 
 class Confidence(Strict):

@@ -185,7 +185,7 @@ def _build_recommendation_bounded(lat: float, lon: float, timeout_s: float) -> t
                      "county_fips": county["county_fips"] if county else None,
                      "state": "FL"},
         "conditions": conditions, "crops": crops, "warnings": warnings,
-        "scoring": scoring_rules(), "provenance": _provenance("live"),
+        "scoring": scoring_rules(), "provenance": _provenance("live", failed=failed, station=station),
         "confidence": _confidence({"crops": crops, "warnings": warnings}),
     }
     return response, not failed
@@ -220,14 +220,26 @@ def _exact_demo_response(lat: float, lon: float) -> dict[str, Any] | None:
     return None
 
 
-def _provenance(mode: str, detail: str | None = None) -> dict[str, Any]:
+def _provenance(mode: str, detail: str | None = None, failed: list[str] | None = None,
+                station: tuple[fawn.Station, float] | None = None) -> dict[str, Any]:
+    failed = failed or []
+    source_names = ("USDA SSURGO", "NASA POWER", "USDA NASS", "UF/IFAS FAWN")
+    failure_terms = {
+        "USDA SSURGO": "SSURGO",
+        "NASA POWER": "POWER",
+        "USDA NASS": "NASS",
+        "UF/IFAS FAWN": "FAWN",
+    }
     sources = [
-        {"name": "USDA SSURGO", "status": "saved" if mode == "demo" else "live", "detail": detail},
-        {"name": "NASA POWER", "status": "saved" if mode == "demo" else "live", "detail": detail},
-        {"name": "USDA NASS", "status": "saved" if mode == "demo" else "live", "detail": detail},
-        {"name": "UF/IFAS FAWN", "status": "saved" if mode == "demo" else "live", "detail": detail},
+        {"name": name,
+         "status": "saved" if mode == "demo" else
+                   ("failed" if any(failure_terms[name] in failure for failure in failed) else "live"),
+         "detail": detail}
+        for name in source_names
     ]
-    return {"mode": mode, "sources": sources}
+    return {"mode": mode, "sources": sources,
+            "fawn_station": ({"name": station[0]["name"], "distance_km": round(station[1], 1)}
+                              if station is not None else None)}
 
 
 def _confidence(response: dict[str, Any]) -> dict[str, Any]:
@@ -306,7 +318,7 @@ def _build_recommendation(lat: float, lon: float) -> tuple[dict[str, Any], bool]
         "warnings": warnings,
         "scoring": scoring_rules(),
     }
-    response["provenance"] = _provenance("live")
+    response["provenance"] = _provenance("live", failed=failed, station=station)
     response["confidence"] = _confidence(response)
     return response, not failed
 
@@ -338,7 +350,7 @@ def _build_recommendation_sequential(lat: float, lon: float, warnings: list[str]
     response = {"location": {"lat": lat, "lon": lon, "county": county["county"] if county else None,
                               "county_fips": county["county_fips"] if county else None, "state": "FL"},
                 "conditions": conditions, "crops": crops, "warnings": warnings,
-                "scoring": scoring_rules(), "provenance": _provenance("live"),
+                "scoring": scoring_rules(), "provenance": _provenance("live", failed=failed, station=station),
                 "confidence": _confidence({"crops": crops, "warnings": warnings})}
     return response, not failed
 
