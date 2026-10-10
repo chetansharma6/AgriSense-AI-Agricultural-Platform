@@ -15,6 +15,9 @@ type RequestState = {
   error?: string;
 };
 
+// Render free-plan servers can take about a minute to wake after being idle.
+const SLOW_AFTER_MS = 5_000;
+
 const filters = ["All", "Strong fit (75+)", "Summer crops", "Fall/Winter crops", "Needs irrigation"] as const;
 type CropFilter = typeof filters[number];
 
@@ -31,10 +34,13 @@ export default function ResultsClient() {
   const [filter, setFilter] = useState<CropFilter>("All");
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<RequestState | null>(null);
+  const [slowFor, setSlowFor] = useState<string | null>(null);
+  const slow = slowFor === `${key}:${attempt}`;
 
   useEffect(() => {
     if (!valid) return;
     let active = true;
+    const slowTimer = setTimeout(() => setSlowFor(`${key}:${attempt}`), SLOW_AFTER_MS);
     getRecommendations(lat, lon).then(
       (data) => { if (active) setState({ key, attempt, data }); },
       (error: unknown) => {
@@ -42,7 +48,7 @@ export default function ResultsClient() {
           ? error.message : "Something went wrong while checking your land. Please try again." });
       },
     );
-    return () => { active = false; };
+    return () => { active = false; clearTimeout(slowTimer); };
   }, [lat, lon, valid, key, attempt]);
 
   if (!valid) return (
@@ -52,7 +58,7 @@ export default function ResultsClient() {
       <Link href="/" className="mt-4 inline-block text-field underline underline-offset-4">Back home to pick a spot</Link>
     </section>
   );
-  if (state?.key !== key || state.attempt !== attempt) return <LandSummarySkeleton />;
+  if (state?.key !== key || state.attempt !== attempt) return <LandSummarySkeleton slow={slow} />;
   if (state.error) return (
     <section className="rounded-xl border border-clay/25 bg-white/50 p-6" role="alert">
       <h2 className="text-xl font-semibold">We couldn’t check your land</h2>
@@ -63,7 +69,7 @@ export default function ResultsClient() {
       </div>
     </section>
   );
-  if (!state.data) return <LandSummarySkeleton />;
+  if (!state.data) return <LandSummarySkeleton slow={slow} />;
   const crops = [...(state.data.crops ?? [])].sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
   const ranked = crops.map((crop, i) => ({ crop, rank: i + 1 }));
   const matching = ranked.filter(({ crop }) => {

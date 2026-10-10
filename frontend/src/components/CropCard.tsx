@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { factorLabel, formatPrice, formatYield, scoreTone } from "@/lib/format";
+import { factorLabel, limitedText, formatPrice, formatYield, scoreTone } from "@/lib/format";
 import type { CropResult, FactorKey } from "@/lib/types";
 
 interface CropCardProps {
@@ -53,7 +53,8 @@ export default function CropCard({ crop, rank, lat, lon, compact = false }: Crop
         })}
       </div>
       <p className="mt-5 text-xs leading-relaxed text-soil">Price: {formatPrice(crop.price)} · Yield: {formatYield(crop.avg_yield)}</p>
-      {crop.flags?.[0] && <p className="mt-3 inline-block rounded-full bg-sun/20 px-3 py-1 text-xs text-ink">{crop.flags[0]}</p>}
+      {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/15 px-3 py-1 text-xs font-semibold text-clay">{limitedText(crop.limited_by)}</p>}
+      {crop.flags?.[0] && !crop.flags[0].startsWith("Limited by") && <p className="mt-3 inline-block rounded-full bg-sun/20 px-3 py-1 text-xs text-ink">{crop.flags[0]}</p>}
     </article>
   );
   if (!crop.id) return content;
