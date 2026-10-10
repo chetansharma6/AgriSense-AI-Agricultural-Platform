@@ -9,6 +9,7 @@ from fastapi.testclient import TestClient
 from app import service
 from app.main import app
 from app.market import Market
+from app.schemas import CropDetail, RecommendResponse
 
 client = TestClient(app)
 
@@ -116,3 +117,53 @@ def test_unknown_crop() -> None:
     response = client.get("/api/crops/kale", params={"lat": 29.71, "lon": -81.50})
     assert response.status_code == 404
     assert response.json() == {"detail": "Unknown crop"}
+
+
+def test_responses_validate_against_contract_models(sources: dict[str, Any]) -> None:
+    RecommendResponse.model_validate(client.get("/api/recommend", params={"lat": 29.71, "lon": -81.50}).json())
+    CropDetail.model_validate(client.get("/api/crops/potato", params={"lat": 29.71, "lon": -81.50}).json())
+
+
+def test_repeat_request_served_from_memory(sources: dict[str, Any], monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = []
+    monkeypatch.setattr(service, "get_soil", lambda lat, lon: calls.append((lat, lon)) or SOIL)
+    first = client.get("/api/recommend", params={"lat": 29.71, "lon": -81.50}).json()
+    second = client.get("/api/recommend", params={"lat": 29.710001, "lon": -81.50}).json()
+    assert len(calls) == 1
+    assert second["crops"] == first["crops"]
+    assert second["location"]["lat"] == 29.710001  # echoes this request, not the cached one
+
+
+def test_degraded_response_is_not_cached(sources: dict[str, Any], monkeypatch: pytest.MonkeyPatch) -> None:
+    calls = []
+
+    def flaky(lat: float, lon: float) -> dict[str, Any]:
+        calls.append(1)
+        if len(calls) == 1:
+            raise TimeoutError
+        return SOIL
+
+    monkeypatch.setattr(service, "get_soil", flaky)
+    first = client.get("/api/recommend", params={"lat": 29.71, "lon": -81.50}).json()
+    second = client.get("/api/recommend", params={"lat": 29.71, "lon": -81.50}).json()
+    assert first["conditions"]["soil_ph"] is None and first["warnings"]
+    assert second["conditions"]["soil_ph"] == 5.6 and second["warnings"] == []
+    assert len(calls) == 2
+
+
+def test_cached_response_is_not_shared_mutable_state(sources: dict[str, Any]) -> None:
+    first = service.recommend(29.71, -81.50)
+    first["crops"].clear()
+    assert len(service.recommend(29.71, -81.50)["crops"]) == 13
+
+
+def test_fractional_climate_averages_are_valid(sources: dict[str, Any], monkeypatch: pytest.MonkeyPatch) -> None:
+    def frosty(lat: float, lon: float) -> pd.DataFrame:
+        weather = fake_weather(lat, lon)
+        weather.loc[weather.index.year == 2021, "t_min_c"] = -1.0  # one year with freezes: average is fractional
+        return weather
+
+    monkeypatch.setattr(service, "get_daily_weather", frosty)
+    response = client.get("/api/recommend", params={"lat": 29.71, "lon": -81.50})
+    assert response.status_code == 200
+    assert response.json()["conditions"]["frost_free_days"] % 1 != 0

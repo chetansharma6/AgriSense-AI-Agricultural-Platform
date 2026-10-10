@@ -1,0 +1,115 @@
+"""Response models for docs/api-contract.md.
+
+FastAPI validates every response against these, so a field added, renamed or
+mistyped in the service fails loudly (in tests) instead of reaching the
+frontend. Optional fields are the ones the contract allows to be null.
+"""
+
+from typing import Any
+
+from pydantic import BaseModel, ConfigDict
+
+
+class Strict(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+
+class Location(Strict):
+    lat: float
+    lon: float
+    county: str | None
+    county_fips: str | None
+    state: str
+
+
+class Conditions(Strict):
+    soil_ph: float | None
+    organic_matter_pct: float | None
+    sand_pct: float | None
+    clay_pct: float | None
+    texture: str | None
+    drainage: str | None
+    annual_precip_mm: float | None
+    frost_free_days: float | None  # average over years, so fractional
+    last_spring_frost: str | None  # MM-DD
+    first_fall_frost: str | None  # MM-DD
+    avg_summer_high_c: float | None
+    avg_winter_low_c: float | None
+
+
+class FactorDetail(Strict):
+    value: int | float | str | None
+    ideal: str | None
+    unit: str | None = None
+
+
+class Factors(Strict):
+    soil_ph: int | None
+    drainage: int | None
+    season_temp: int | None
+    frost_risk: int | None
+    rainfall: int | None
+    local_history: int | None
+
+
+class FactorDetails(Strict):
+    soil_ph: FactorDetail
+    drainage: FactorDetail
+    season_temp: FactorDetail
+    frost_risk: FactorDetail
+    rainfall: FactorDetail
+    local_history: FactorDetail
+
+
+class YieldInfo(Strict):
+    value: float | None
+    unit: str | None
+    level: str | None
+
+
+class PriceRange(Strict):
+    low: float | None
+    high: float | None
+    unit: str | None
+
+
+class ScoringRules(Strict):
+    weights: dict[str, float]
+    critical_factors: list[str]
+    critical_threshold: int
+    critical_cap: int
+
+
+class CropResult(Strict):
+    id: str
+    name: str
+    score: int | None
+    season_label: str
+    factors: Factors
+    factor_details: FactorDetails
+    avg_yield: YieldInfo | None
+    price: PriceRange | None
+    limited_by: list[str]
+    flags: list[str]
+
+
+class RecommendResponse(Strict):
+    location: Location
+    conditions: Conditions
+    crops: list[CropResult]
+    warnings: list[str]
+    scoring: ScoringRules
+
+
+class ExtensionLink(Strict):
+    title: str
+    url: str
+
+
+class CropDetail(CropResult):
+    requirements: dict[str, Any]
+    general_guidance: str
+    extension_links: list[ExtensionLink]
+    conditions: Conditions
+    location: Location
+    scoring: ScoringRules
