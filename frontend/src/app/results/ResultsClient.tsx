@@ -52,20 +52,20 @@ export default function ResultsClient() {
   }, [lat, lon, valid, key, attempt]);
 
   if (!valid) return (
-    <section className="rounded-xl border border-clay/25 bg-white/50 p-6">
+    <section className="rounded-xl border border-clay/25 bg-white/50 p-5 sm:p-6">
       <h2 className="text-xl font-semibold">Choose a valid Florida location</h2>
       <p className="mt-3">The link needs latitude 24.3–31.1 and longitude −87.7–−79.9.</p>
-      <Link href="/" className="mt-4 inline-block text-field underline underline-offset-4">Back home to pick a spot</Link>
+      <Link href="/" className="mt-2 inline-flex min-h-11 items-center text-field underline underline-offset-4">Back home to pick a spot</Link>
     </section>
   );
   if (state?.key !== key || state.attempt !== attempt) return <LandSummarySkeleton slow={slow} />;
   if (state.error) return (
-    <section className="rounded-xl border border-clay/25 bg-white/50 p-6" role="alert">
+    <section className="rounded-xl border border-clay/25 bg-white/50 p-5 sm:p-6" role="alert">
       <h2 className="text-xl font-semibold">We couldn’t check your land</h2>
       <p className="mt-3">{state.error}</p>
       <div className="mt-5 flex flex-wrap items-center gap-5">
         <button type="button" onClick={() => setAttempt((n) => n + 1)} className="rounded-lg bg-field px-5 py-3 font-semibold text-white">Try again</button>
-        <Link href="/" className="text-field underline underline-offset-4">Pick another spot</Link>
+        <Link href="/" className="inline-flex min-h-11 items-center text-field underline underline-offset-4">Pick another spot</Link>
       </div>
     </section>
   );
@@ -90,7 +90,7 @@ export default function ResultsClient() {
       <div className="mt-8 flex flex-wrap gap-2" role="group" aria-label="Filter crops">
         {filters.map((label) => (
           <button key={label} type="button" aria-pressed={filter === label} onClick={() => setFilter(label)}
-            className={`rounded-full border px-4 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field ${filter === label ? "border-field bg-field text-white" : "border-field/25 bg-white/60 hover:bg-leaf/15"}`}>
+            className={`min-h-11 rounded-full border px-4 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field ${filter === label ? "border-field bg-field text-white" : "border-field/25 bg-white/60 hover:bg-leaf/15"}`}>
             {label}
           </button>
         ))}

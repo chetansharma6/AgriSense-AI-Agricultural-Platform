@@ -27,11 +27,11 @@ export default function CropCard({ crop, rank, lat, lon, compact = false }: Crop
         <div className="min-w-0">
           <p className="text-sm font-semibold text-soil">#{rank}</p>
           <h3 className="mt-1 text-xl font-semibold">{crop.name ?? "Unnamed crop"}</h3>
-          <p className="mt-2 text-xs leading-relaxed text-soil">{crop.season_label ?? "Season: No data"}</p>
+          <p className="mt-2 text-sm leading-relaxed text-soil">{crop.season_label ?? "Season: No data"}</p>
         </div>
         <div className={`shrink-0 rounded-lg px-3 py-2 text-center ${tone ? tones[tone].badge : "bg-sand text-soil"}`}>
           <p className="text-3xl font-bold">{crop.score ?? "—"}</p>
-          <p className="text-xs font-semibold">{tone ? tones[tone].label : "No data"}</p>
+          <p className="text-sm font-semibold">{tone ? tones[tone].label : "No data"}</p>
         </div>
       </div>
       <div className={`mt-5 grid gap-2 ${compact ? "sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3" : ""}`}>
@@ -39,7 +39,7 @@ export default function CropCard({ crop, rank, lat, lon, compact = false }: Crop
           const factorTone = scoreTone(score);
           return (
             <div key={key}>
-              <div className="mb-1 flex justify-between gap-2 text-xs">
+              <div className="mb-1 flex justify-between gap-2 text-sm">
                 <span>{factorLabel(key)}</span><span>{score ?? "No data"}</span>
               </div>
               {score !== null && (
@@ -52,9 +52,9 @@ export default function CropCard({ crop, rank, lat, lon, compact = false }: Crop
           );
         })}
       </div>
-      <p className="mt-5 text-xs leading-relaxed text-soil">Price: {formatPrice(crop.price)} · Yield: {formatYield(crop.avg_yield)}</p>
-      {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/15 px-3 py-1 text-xs font-semibold text-clay">{limitedText(crop.limited_by)}</p>}
-      {crop.flags?.[0] && !crop.flags[0].startsWith("Limited by") && <p className="mt-3 inline-block rounded-full bg-sun/20 px-3 py-1 text-xs text-ink">{crop.flags[0]}</p>}
+      <p className="mt-5 text-sm leading-relaxed text-soil">Price: {formatPrice(crop.price)} · Yield: {formatYield(crop.avg_yield)}</p>
+      {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/15 px-3 py-1 text-sm font-semibold text-clay">{limitedText(crop.limited_by)}</p>}
+      {crop.flags?.[0] && !crop.flags[0].startsWith("Limited by") && <p className="mt-3 inline-block rounded-full bg-sun/20 px-3 py-1 text-sm text-ink">{crop.flags[0]}</p>}
     </article>
   );
   if (!crop.id) return content;

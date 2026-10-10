@@ -6,8 +6,8 @@ import ResultsClient from "./ResultsClient";
 export default function ResultsPage() {
   return (
     <main className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
-      <Link href="/" className="text-2xl font-bold tracking-tight text-field">AgriSense</Link>
-      <h1 className="mt-8 mb-6 text-3xl font-semibold">Your Florida land</h1>
+      <Link href="/" className="inline-flex min-h-11 items-center text-2xl font-bold tracking-tight text-field">AgriSense</Link>
+      <h1 className="mt-8 mb-6 text-3xl font-semibold sm:text-4xl">Your Florida land</h1>
       <Suspense fallback={<LandSummarySkeleton />}>
         <ResultsClient />
       </Suspense>

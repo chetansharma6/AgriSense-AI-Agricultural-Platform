@@ -32,7 +32,7 @@ export default function FactorChart({ factors, details, weights, explanation }: 
     detail: detailText(details?.[key]), weight: weights[key],
   })).sort((a, b) => (b.score ?? -1) - (a.score ?? -1));
   return (
-    <section id="factor-chart" className="rounded-xl border border-field/15 bg-white/50 p-4 sm:p-6" aria-labelledby="factor-chart-title">
+    <section id="factor-chart" className="rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="factor-chart-title">
       <h2 id="factor-chart-title" className="mb-5 text-2xl font-semibold">Why it ranked here</h2>
       <div className="space-y-4 lg:hidden">
         {data.map((row) => (
@@ -40,21 +40,21 @@ export default function FactorChart({ factors, details, weights, explanation }: 
             <p className="text-sm font-semibold">{row.label} <span className="font-normal">({row.score ?? "No data"})</span></p>
             <ResponsiveContainer width="100%" height={44} minWidth={0}>
               <BarChart data={[row]} layout="vertical" margin={{ top: 0, right: 0, bottom: 0, left: 0 }}>
-                <XAxis type="number" domain={[0, 100]} ticks={[0, 50, 100]} tick={{ fontSize: 10 }} height={20} />
+                <XAxis type="number" domain={[0, 100]} ticks={[0, 50, 100]} tick={{ fontSize: 14 }} height={20} />
                 <YAxis type="category" dataKey="label" hide />
                 <Tooltip formatter={() => [`${row.detail} · weight ${row.weight}%`, row.label]} />
                 <Bar dataKey="score" fill={color(row.score)} barSize={10} isAnimationActive={false} />
               </BarChart>
             </ResponsiveContainer>
-            <p className="mt-1 text-xs leading-relaxed text-soil">{row.detail}</p>
+            <p className="mt-1 text-sm leading-relaxed text-soil">{row.detail}</p>
           </div>
         ))}
       </div>
       <div className="hidden h-[300px] grid-cols-[minmax(0,1fr)_minmax(0,1fr)] gap-5 lg:grid">
         <ResponsiveContainer width="100%" height="100%" minWidth={0}>
           <BarChart data={data} layout="vertical" margin={{ top: 4, right: 16, bottom: 0, left: 0 }}>
-            <XAxis type="number" domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} height={26} tick={{ fontSize: 12 }} />
-            <YAxis type="category" dataKey="label" width={145} tick={{ fontSize: 12 }} />
+            <XAxis type="number" domain={[0, 100]} ticks={[0, 25, 50, 75, 100]} height={26} tick={{ fontSize: 14 }} />
+            <YAxis type="category" dataKey="label" width={145} tick={{ fontSize: 14 }} />
             <Tooltip content={({ active, label }) => {
               const row = data.find((item) => item.label === label);
               return active && row ? <div className="max-w-xs rounded-lg border border-field/20 bg-sand p-3 text-sm shadow-md"><p className="font-semibold">{row.label}: {row.score ?? "No data"}</p><p>{row.detail}</p><p>Weight: {row.weight}%</p></div> : null;
@@ -65,7 +65,7 @@ export default function FactorChart({ factors, details, weights, explanation }: 
           </BarChart>
         </ResponsiveContainer>
         <div className="grid grid-rows-6 pt-1 pb-[26px]">
-          {data.map((row) => <p key={row.key} className="flex items-center text-xs leading-relaxed text-soil">{row.score === null ? `${row.label}: No data · ` : ""}{row.detail}</p>)}
+          {data.map((row) => <p key={row.key} className="flex items-center text-sm leading-relaxed text-soil">{row.score === null ? `${row.label}: No data · ` : ""}{row.detail}</p>)}
         </div>
       </div>
       <p className="mt-5 text-sm leading-relaxed text-soil">{explanation}</p>
