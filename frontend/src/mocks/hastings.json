@@ -15,8 +15,8 @@
     "drainage": "Poorly drained",
     "annual_precip_mm": 1290,
     "frost_free_days": 300,
-    "last_spring_frost": "02-10",
-    "first_fall_frost": "12-12",
+    "last_spring_frost": null,
+    "first_fall_frost": null,
     "avg_summer_high_c": 32.8,
     "avg_winter_low_c": 7.9
   },
