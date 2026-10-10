@@ -33,7 +33,7 @@ export default function FloridaMap({ value, onChange, demoPins }: FloridaMapProp
       minZoom={5}
       maxBounds={[[23.3, -88.7], [32.1, -78.9]]}
       maxBoundsViscosity={1}
-      className="h-[420px] w-full rounded-lg bg-sand"
+      className="h-[320px] lg:h-[420px] w-full rounded-lg bg-sand"
       aria-label="Select a Florida farm location"
     >
       <TileLayer
