@@ -30,6 +30,7 @@ class GrowingWindow(BaseModel):
     label: str
     start: str  # MM-DD
     end: str  # MM-DD, may be earlier than start (window crosses New Year)
+    months: list[int]  # calendar months the crop is in the field
 
 
 class ExtensionLink(BaseModel):
@@ -38,18 +39,31 @@ class ExtensionLink(BaseModel):
 
 
 class Crop(BaseModel):
+    """One crop's Florida requirements. Ranges are trapezoids: 100 inside the
+    ideal band, falling linearly to 0 at the hard limit."""
+
     id: str
     name: str
+    nass_commodity: str
+    nass_class: str | None
     nass: NassSeries
-    ph: tuple[float, float]
+    fl_windows: list[GrowingWindow]
+    ph_min: float
+    ph_ideal_min: float
+    ph_ideal_max: float
+    ph_max: float
     drainage: tuple[str, str]  # driest and wettest ideal classes
-    season_temp_c: tuple[float, float]
+    muck_suitable: bool
+    temp_min_c: float  # season mean temperature
+    temp_ideal_min_c: float
+    temp_ideal_max_c: float
+    temp_max_c: float
     max_freeze_days: float
     rain_mm_per_month: tuple[float, float]
-    muck_suitable: bool
-    fl_windows: list[GrowingWindow]
     general_guidance: str
     extension_links: list[ExtensionLink]
+    source_notes: str
+    needs_review: bool
 
     def requirements(self) -> dict[str, Any]:
         """Raw requirement fields (everything except guidance and links)."""
@@ -66,3 +80,8 @@ def load_crops() -> dict[str, Crop]:
             if drainage_class not in DRAINAGE_CLASSES:
                 raise ValueError(f"{crop.id}: unknown drainage class {drainage_class!r}")
     return {crop.id: crop for crop in crops}
+
+
+def get_crop(crop_id: str) -> Crop | None:
+    """One crop by id, or None if unknown."""
+    return load_crops().get(crop_id)

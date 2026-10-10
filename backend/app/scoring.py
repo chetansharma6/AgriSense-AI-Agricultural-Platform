@@ -25,9 +25,7 @@ WEIGHTS = {
 }
 CLIMATE_FACTORS = ("season_temp", "frost_risk", "rainfall")
 
-PH_PENALTY_PER_UNIT = 40
 DRAINAGE_PENALTY_PER_CLASS = 25
-TEMP_PENALTY_PER_C = 10
 FREEZE_PENALTY_PER_DAY = 10
 MUCK_SUITABLE_SCORE = 90
 MUCK_UNSUITABLE_SCORE = 30
@@ -47,6 +45,16 @@ def range_score(value: float, low: float, high: float, penalty_per_unit: float) 
     return max(0, round(100 - penalty_per_unit * distance))
 
 
+def trapezoid_score(value: float, hard_min: float, ideal_min: float,
+                    ideal_max: float, hard_max: float) -> int:
+    """100 inside [ideal_min, ideal_max], falling linearly to 0 at the hard limits."""
+    if value < ideal_min:
+        return max(0, round(100 * (value - hard_min) / (ideal_min - hard_min)))
+    if value > ideal_max:
+        return max(0, round(100 * (hard_max - value) / (hard_max - ideal_max)))
+    return 100
+
+
 def relative_range_score(value: float, low: float, high: float) -> int:
     """100 inside [low, high], minus 1 point per percent outside the nearer bound."""
     if value < low:
@@ -57,7 +65,7 @@ def relative_range_score(value: float, low: float, high: float) -> int:
 
 
 def score_ph(crop: Crop, ph: float | None) -> Factor:
-    low, high = crop.ph
+    low, high = crop.ph_ideal_min, crop.ph_ideal_max
     detail = {"value": ph, "ideal": f"{low:g}-{high:g}", "unit": "pH"}
     if ph is None:
         return None, detail, []
@@ -66,7 +74,7 @@ def score_ph(crop: Crop, ph: float | None) -> Factor:
         flags.append("Soil is more acidic than ideal: lime may be needed")
     elif ph > high:
         flags.append("Soil pH is above ideal: sulfur or acid-forming fertilizer may help")
-    return range_score(ph, low, high, PH_PENALTY_PER_UNIT), detail, flags
+    return trapezoid_score(ph, crop.ph_min, low, high, crop.ph_max), detail, flags
 
 
 def score_drainage(crop: Crop, drainage: str | None, texture: str | None) -> Factor:
@@ -90,7 +98,7 @@ def score_drainage(crop: Crop, drainage: str | None, texture: str | None) -> Fac
 
 def score_climate(crop: Crop, stats: SeasonStats | None) -> dict[str, Factor]:
     """Season temperature, frost risk and rainfall for one growing window."""
-    t_low, t_high = crop.season_temp_c
+    t_low, t_high = crop.temp_ideal_min_c, crop.temp_ideal_max_c
     # Season rainfall ideal, rounded to 10 mm so it reads cleanly.
     r_low = round(crop.rain_mm_per_month[0] * stats.months, -1) if stats else None
     r_high = round(crop.rain_mm_per_month[1] * stats.months, -1) if stats else None
@@ -121,7 +129,8 @@ def score_climate(crop: Crop, stats: SeasonStats | None) -> dict[str, Factor]:
         rain_flags.append("Season rainfall above ideal: watch for disease and waterlogging")
 
     return {
-        "season_temp": (range_score(stats.mean_temp_c, t_low, t_high, TEMP_PENALTY_PER_C), temp_detail, temp_flags),
+        "season_temp": (trapezoid_score(stats.mean_temp_c, crop.temp_min_c, t_low, t_high, crop.temp_max_c),
+                        temp_detail, temp_flags),
         "frost_risk": (max(0, round(100 - FREEZE_PENALTY_PER_DAY * max(0.0, excess_freezes))), frost_detail, frost_flags),
         "rainfall": (relative_range_score(stats.precip_mm, r_low, r_high), rain_detail, rain_flags),
     }
