@@ -11,6 +11,24 @@ AgriSense helps small and mid-scale Florida farmers decide what to plant by rank
 
 ## Run the frontend
 
+```bash
+cd frontend
+npm install
+cp .env.local.example .env.local
+npm run dev
+```
+
+Open http://localhost:3000. The example environment points to the backend at
+http://localhost:8000 and enables mock mode for future API integration.
+Keep `ANTHROPIC_API_KEY` in `.env.local` and use it only on the server.
+
+To check the frontend:
+
+```bash
+npm run lint
+npm run build
+```
+
 ## First-time setup
 
 Set your own Git identity to match your GitHub account, then enable the repository hooks:
