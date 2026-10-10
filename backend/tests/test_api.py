@@ -32,7 +32,8 @@ def sources(monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
     monkeypatch.setattr(service, "lookup_county", lambda lat, lon: fakes["county"])
     monkeypatch.setattr(service, "get_soil", lambda lat, lon: fakes["soil"])
     monkeypatch.setattr(service, "get_daily_weather", fake_weather)
-    monkeypatch.setattr(service, "load_market", lambda fips: Market([], [], []))
+    # Like the real load_market: no county rows when the county is unknown.
+    monkeypatch.setattr(service, "load_market", lambda fips: Market(None if fips is None else [], [], []))
     return fakes
 
 
@@ -68,6 +69,25 @@ def test_point_in_another_state_is_rejected(sources: dict[str, Any]) -> None:
     response = client.get("/api/recommend", params={"lat": 30.9, "lon": -84.0})
     assert response.status_code == 400
     assert response.json() == {"detail": "Location must be in Florida"}
+
+
+def test_open_water_is_rejected(sources: dict[str, Any]) -> None:
+    sources["county"] = None  # FCC answered: no county at this point
+    response = client.get("/api/recommend", params={"lat": 27.5, "lon": -84.0})
+    assert response.status_code == 400
+    assert response.json() == {"detail": "Location must be in Florida"}
+    assert client.get("/api/crops/potato", params={"lat": 27.5, "lon": -84.0}).status_code == 400
+
+
+def test_failed_county_lookup_still_scores(sources: dict[str, Any], monkeypatch: pytest.MonkeyPatch) -> None:
+    def broken(lat: float, lon: float) -> None:
+        raise TimeoutError
+
+    monkeypatch.setattr(service, "lookup_county", broken)
+    body = client.get("/api/recommend", params={"lat": 29.71, "lon": -81.50}).json()
+    assert body["location"]["county"] is None
+    assert body["crops"][0]["factors"]["local_history"] is None
+    assert any("FCC" in warning for warning in body["warnings"])
 
 
 def test_outside_bounding_box() -> None:
