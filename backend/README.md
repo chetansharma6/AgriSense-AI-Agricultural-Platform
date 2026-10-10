@@ -53,3 +53,13 @@ the best window is reported as `season_label`.
 
 A source that fails never fails the request: its values are null and a
 message is added to `warnings`.
+
+## Offline test/demo mode
+
+Set `DEMO_MODE=true` when exercising the four official coordinates from
+`app.config.DEMO_FARMS` (Marianna, Hastings, Plant City, and Belle Glade).
+An exact official coordinate is served from the committed JSON fixture in
+`data/demo/` before any provider client is called. This path is deterministic,
+contains 13 ranked crops, and is intended for offline tests and demonstrations.
+Coordinates other than those four exact points retain the existing live path;
+`DEMO_MODE` only applies the bounded fallback/deadline behavior to them.
