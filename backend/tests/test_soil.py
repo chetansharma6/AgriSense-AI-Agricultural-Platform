@@ -41,3 +41,18 @@ def test_get_soil_none_without_map_unit(monkeypatch: pytest.MonkeyPatch) -> None
 def test_texture_class(sand: float | None, clay: float | None, om: float | None,
                        expected: str | None) -> None:
     assert soil.texture_class(sand, clay, om) == expected
+
+
+def test_maintenance_page_raises_and_is_not_cached(monkeypatch: pytest.MonkeyPatch) -> None:
+    class MaintenanceClient(FakeClient):
+        def post(self, url: str, **kwargs: object) -> object:
+            response = super().post(url, **kwargs)
+            response.text = "<html><body>Site is under daily maintenance</body></html>"
+            return response
+
+    fake = MaintenanceClient({})
+    monkeypatch.setattr(soil, "http", lambda: fake)
+    for _ in range(2):
+        with pytest.raises(soil.SoilServiceDown):
+            soil.get_soil(29.65, -82.32)
+    assert fake.calls == 2
