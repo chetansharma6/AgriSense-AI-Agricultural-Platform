@@ -241,6 +241,7 @@ def score_crop(crop: Crop, soil: dict[str, Any] | None, weather: pd.DataFrame | 
     flags = ordered_flags(factors, limited_by)
     if scale["note"]:
         flags.insert(0, scale["note"])
+    risk_notes = climate_risk_notes(flags)
     return {
         "id": crop.id,
         "name": crop.name,
@@ -254,7 +255,25 @@ def score_crop(crop: Crop, soil: dict[str, Any] | None, weather: pd.DataFrame | 
         "est_gross_value": gross_value,
         "limited_by": limited_by,
         "flags": flags[:MAX_FLAGS],
+        "risk_notes": risk_notes,
     }
+
+
+def climate_risk_notes(flags: list[str]) -> list[str]:
+    """Expose only climate risks already identified by the existing factor thresholds."""
+    notes: list[str] = []
+    categories = (
+        ("warmer than the ideal", "Excessive heat"),
+        ("freezing nights", "Frost exposure"),
+        ("above the ideal", "Excessive rainfall"),
+        ("Likely needs irrigation", "Dry-season irrigation pressure"),
+    )
+    for flag in flags:
+        for marker, label in categories:
+            if marker in flag:
+                notes.append(f"{label}: {flag}")
+                break
+    return notes
 
 
 def scale_info(crop: Crop, acres: float | None) -> dict[str, Any]:
