@@ -36,8 +36,11 @@ export default function LandSummary({ response }: { response: RecommendResponse 
     { label: "Summer highs", value: formatTemperature(c?.avg_summer_high_c ?? null), meaning: c?.avg_summer_high_c == null ? "Summer temperatures are unavailable." : "Summer heat can stress cool-season crops." },
     { label: "Winter lows", value: formatTemperature(c?.avg_winter_low_c ?? null), meaning: c?.avg_winter_low_c == null ? "Winter temperatures are unavailable." : "Average lows do not rule out occasional freezes." },
   ];
+  const cached = response.warnings?.find((warning) => warning.startsWith("Showing cached data"));
+  const otherWarnings = response.warnings?.filter((warning) => warning !== cached) ?? [];
   return (
     <div>
+      {cached && <p role="status" className="mb-4 rounded-lg border border-sun/60 bg-sun/20 p-4 font-semibold">{cached}</p>}
       <section className="rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="land-summary-title">
         <h2 id="land-summary-title" className="text-2xl font-semibold">Your land at a glance</h2>
         <p className="mt-2 text-soil">{response.location?.county ? `${response.location.county} County, Florida` : "County: No data"}</p>
@@ -52,11 +55,11 @@ export default function LandSummary({ response }: { response: RecommendResponse 
           ))}
         </dl>
       </section>
-      {!!response.warnings?.length && (
+      {otherWarnings.length > 0 && (
         <aside className="mt-4 rounded-lg border border-sun/50 bg-sun/15 p-4" aria-label="Data warnings">
           <p className="font-semibold">A note about the data</p>
           <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
-            {response.warnings.map((warning, index) => <li key={index}>{warning}</li>)}
+            {otherWarnings.map((warning, index) => <li key={index}>{warning}</li>)}
           </ul>
         </aside>
       )}
