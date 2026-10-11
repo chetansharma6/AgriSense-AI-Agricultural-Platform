@@ -14,7 +14,7 @@ import time
 import httpx
 
 from app.cache import read_cache, write_cache
-from app.clients.http import TIMEOUT_S, http
+from app.clients.http import TIMEOUT_S, http, timeout_for
 
 SDA_URL = "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest"
 SOURCE = "USDA NRCS SSURGO"
@@ -67,18 +67,19 @@ def _valid_soil(value: object) -> bool:
         key in value for key in ("soil_ph", "organic_matter_pct", "sand_pct", "clay_pct", "texture", "drainage"))
 
 
-def sda_query(sql: str) -> list[dict[str, str | None]]:
+def sda_query(sql: str, *, deadline: float | None = None) -> list[dict[str, str | None]]:
     """Run SQL on Soil Data Access and return rows as dicts of strings.
     Retries once on a timeout or a 5xx response."""
     for attempt in (1, 2):
         try:
-            response = http().post(SDA_URL, json={"query": sql, "format": "JSON+COLUMNNAME"}, timeout=TIMEOUT_S)
+            response = http().post(SDA_URL, json={"query": sql, "format": "JSON+COLUMNNAME"},
+                                   timeout=timeout_for(deadline, TIMEOUT_S))
         except httpx.TimeoutException:
-            if attempt == 2:
+            if attempt == 2 or (deadline is not None and deadline - time.monotonic() <= 0.1):
                 raise
             time.sleep(0.05)
             continue
-        if response.status_code >= 500 and attempt == 1:
+        if response.status_code >= 500 and attempt == 1 and (deadline is None or deadline - time.monotonic() > 0.1):
             time.sleep(0.05)
             continue
         response.raise_for_status()
@@ -103,15 +104,15 @@ def parse_table(payload: dict[str, Any]) -> list[dict[str, str | None]]:
     return [dict(zip(columns, row)) for row in table[1:]]
 
 
-def get_mukey(lat: float, lon: float) -> str:
+def get_mukey(lat: float, lon: float, *, deadline: float | None = None) -> str:
     """Map unit key under the point. WKT puts longitude first."""
-    rows = sda_query(_MUKEY_SQL.format(lat=lat, lon=lon))
+    rows = sda_query(_MUKEY_SQL.format(lat=lat, lon=lon), deadline=deadline)
     if not rows:
         raise SoilNotFound("No soil map unit at this point (water or urban area?)")
     return str(rows[0]["mukey"])
 
 
-def get_soil(lat: float, lon: float) -> Soil:
+def get_soil(lat: float, lon: float, *, deadline: float | None = None) -> Soil:
     """Top-30-cm soil properties at a point. Raises SoilNotFound."""
     params = {"lat": round(lat, 4), "lon": round(lon, 4)}
     cached = read_cache("soil", params, _valid_soil)
@@ -119,8 +120,8 @@ def get_soil(lat: float, lon: float) -> Soil:
         return cached
 
     # SoilNotFound is not cached, so a point is never stuck as "no soil".
-    mukey = get_mukey(params["lat"], params["lon"])
-    rows = [_to_numbers(row) for row in sda_query(_HORIZON_SQL.format(mukey=mukey))]
+    mukey = get_mukey(params["lat"], params["lon"], deadline=deadline)
+    rows = [_to_numbers(row) for row in sda_query(_HORIZON_SQL.format(mukey=mukey), deadline=deadline)]
     soil = summarize_soil(rows, mukey)
     write_cache("soil", params, soil)
     return soil

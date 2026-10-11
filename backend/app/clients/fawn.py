@@ -25,7 +25,7 @@ import pandas as pd
 import httpx
 
 from app.cache import read_cache, write_cache
-from app.clients.http import TIMEOUT_S, http
+from app.clients.http import TIMEOUT_S, http, timeout_for
 from app.clients.power import END, START
 from app.config import DATA_DIR
 from app.utils import haversine_km
@@ -75,17 +75,18 @@ def nearest_station(lat: float, lon: float) -> tuple[Station, float] | None:
     return (station, km) if km <= MAX_STATION_KM else None
 
 
-def daily_min_c(station_id: str) -> pd.Series:
+def daily_min_c(station_id: str, *, deadline: float | None = None) -> pd.Series:
     """Daily 2 m minimum temperature (C) for complete days in START-END, indexed by date."""
     params = {"station": station_id, "start": START, "end": END}
     cached = read_cache("fawn", params, _valid_fawn)
     if cached is None:
-        cached = _encode(_download(station_id))
+        mins = _download(station_id) if deadline is None else _download(station_id, deadline=deadline)
+        cached = _encode(mins)
         write_cache("fawn", params, cached)
     return _decode(cached)
 
 
-def _download(station_id: str) -> dict[date, float]:
+def _download(station_id: str, *, deadline: float | None = None) -> dict[date, float]:
     start, end = datetime.strptime(START, "%Y%m%d"), datetime.strptime(END, "%Y%m%d")
     form = {
         f"locs__{station_id}": "on", "reportType": "daily", "presetRange": "dates",
@@ -94,7 +95,7 @@ def _download(station_id: str) -> dict[date, float]:
         "vars__AirTemp9": "on", "format": ".CSV (Excel)",
     }
     try:
-        response = http().post(REPORT_URL, data=form, timeout=TIMEOUT_S)
+        response = http().post(REPORT_URL, data=form, timeout=timeout_for(deadline, TIMEOUT_S))
         response.raise_for_status()
     except httpx.TimeoutException:
         raise FawnTimeout("FAWN request timed out") from None

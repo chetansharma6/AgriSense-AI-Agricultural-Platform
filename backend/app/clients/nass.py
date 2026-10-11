@@ -10,7 +10,7 @@ from typing import Any
 import httpx
 
 from app.cache import read_cache, write_cache
-from app.clients.http import TIMEOUT_S, http
+from app.clients.http import TIMEOUT_S, http, timeout_for
 from app.config import nass_api_key
 
 NASS_URL = "https://quickstats.nass.usda.gov/api/api_GET/"
@@ -37,7 +37,8 @@ def _safe_error(text: str) -> str:
     return re.sub(r"(?i)(api[_-]?key|key|token|secret)([=:][^&\s]+)", r"\1=[redacted]", text[:200])
 
 
-def query(params: dict[str, Any], invalid_means_empty: bool = False) -> list[dict[str, Any]]:
+def query(params: dict[str, Any], invalid_means_empty: bool = False,
+          *, deadline: float | None = None) -> list[dict[str, Any]]:
     """Return Quick Stats rows for the params. Empty list if NASS has none.
 
     NASS answers "invalid query" (not "no data") when a filter value never
@@ -52,7 +53,7 @@ def query(params: dict[str, Any], invalid_means_empty: bool = False) -> list[dic
         response = http().get(
             NASS_URL,
             params={**params, "key": nass_api_key(), "format": "JSON"},
-            timeout=TIMEOUT_S,
+            timeout=timeout_for(deadline, TIMEOUT_S),
         )
     except httpx.TimeoutException:
         raise NassError("NASS request timed out") from None
