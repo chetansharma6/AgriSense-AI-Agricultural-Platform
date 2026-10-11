@@ -12,7 +12,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Promise
 
 export default function ResultsPage() {
   return (
-    <main className="theme-page mx-auto max-w-6xl px-5 py-8 sm:px-8">
+    <main className="theme-page analysis-page results-page mx-auto max-w-6xl px-5 py-8 sm:px-8">
       <Suspense fallback={<ResultsSkeleton />}>
         <ResultsClient />
       </Suspense>

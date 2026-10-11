@@ -6,7 +6,7 @@ import type { RecommendResponse } from "@/lib/types";
 
 export function LandSummarySkeleton({ slow = false }: { slow?: boolean }) {
   return (
-    <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" role="status" aria-live="polite" aria-label="Loading land conditions">
+    <section className="land-summary card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" role="status" aria-live="polite" aria-label="Loading land conditions">
       <h2 className="section-title">Your land at a glance</h2>
       <p className="mt-2 text-sm text-soil">Checking soil, climate and local harvest history…</p>
       {slow && <p className="mt-3 rounded-lg border border-sun/50 bg-sun/15 p-3 text-sm" role="status" aria-live="polite">Waking up the server… the first request after a quiet spell can take up to a minute. Thanks for waiting.</p>}
@@ -52,7 +52,7 @@ export default function LandSummary({ response, place }: { response: RecommendRe
     <div>
       {response.provenance?.mode === "demo" && <p className="mb-4 text-sm text-soil">Saved demo recommendations; soil and climate are not live measurements for your property.</p>}
       {cached && <p role="status" aria-live="polite" className="mb-4 rounded-lg border border-sun/60 bg-sun/20 p-4 font-semibold">{formatDisplayText(cached)}</p>}
-      <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="land-summary-title">
+      <section className="land-summary card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="land-summary-title">
         <h2 id="land-summary-title" className="section-title">Your land at a glance</h2>
         <p className="mt-2 text-soil">{place || (response.location?.county ? `${response.location.county} County, Florida` : "County: No data")}</p>
         <dl className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -74,7 +74,7 @@ export default function LandSummary({ response, place }: { response: RecommendRe
           </ul>
         </aside>
       )}
-      {(confidence || sources.length > 0) && <section className="card mt-4 rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="data-confidence-title">
+      {(confidence || sources.length > 0) && <section className="data-sources card mt-4 rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="data-confidence-title">
         <h2 id="data-confidence-title" className="section-title">Data confidence &amp; sources</h2>
         <p className="mt-1 text-sm text-soil">See how much data supports these recommendations and where it comes from.</p>
         <ul className="mt-3 flex flex-wrap gap-2 text-sm" aria-label="Data coverage summary">

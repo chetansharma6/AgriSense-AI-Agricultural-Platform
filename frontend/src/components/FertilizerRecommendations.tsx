@@ -39,7 +39,7 @@ export default function FertilizerRecommendations({ crop, acres }: { crop: CropD
   }
 
   return (
-    <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="fertilizers">
+    <section className="fertilizer-section card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="fertilizers">
       <h2 id="fertilizers" className="section-title">Recommended Fertilizers</h2>
       <p className="mt-2 text-soil">Explore fertilizer options suited to your crop, land size, and available soil information.</p>
       <p className="mt-2 rounded-lg bg-mint px-3 py-2 text-sm" data-testid="soil-data-status">
@@ -62,7 +62,7 @@ export default function FertilizerRecommendations({ crop, acres }: { crop: CropD
       </ul>}
       <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-soil" role="status" aria-live="polite">Showing {shown.length} of {all.length} options for {cropName}{selected.length > 1 ? " matching all selected filters" : ""}.</p>
-        {explain.state === "idle" && <button type="button" onClick={loadExplanations} aria-describedby="fert-ai-note" className="no-print min-h-11 rounded-lg border border-field px-4 text-sm font-semibold text-field hover:bg-leaf/15">Explain with AI</button>}
+        {explain.state === "idle" && <button type="button" onClick={loadExplanations} aria-describedby="fert-ai-note" className="ai-explain-button no-print min-h-11 rounded-lg border border-field px-4 text-sm font-semibold text-field hover:bg-leaf/15">Explain with AI</button>}
         {explain.state === "loading" && <span className="text-sm text-soil" role="status">Writing explanations…</span>}
         {explain.state === "done" && <span className="text-sm text-soil" role="status">AI explanations added. Rankings are unchanged.</span>}
       </div>
@@ -74,7 +74,7 @@ export default function FertilizerRecommendations({ crop, acres }: { crop: CropD
         <ul className="mt-5 grid gap-4 lg:grid-cols-2">
           {shown.map((f) => (
             <li key={f.id} className="min-w-0">
-              <article className="card h-full rounded-xl border border-field/15 bg-sand p-5 transition-shadow motion-reduce:transition-none" aria-labelledby={`fert-${f.id}`}>
+              <article className="fertilizer-card card h-full rounded-xl border border-field/15 bg-sand p-5 transition-shadow motion-reduce:transition-none" aria-labelledby={`fert-${f.id}`}>
                 <div className="flex items-start justify-between gap-3">
                   <h3 id={`fert-${f.id}`} className="text-lg font-semibold">{f.name}</h3>
                   <span className="shrink-0 rounded-full bg-sun/40 px-3 py-1 text-sm font-semibold" title="AgriSense estimate of relative cost, not a retail price">{f.cost} <span className="sr-only">approximate relative cost category (estimate, not a price)</span></span>

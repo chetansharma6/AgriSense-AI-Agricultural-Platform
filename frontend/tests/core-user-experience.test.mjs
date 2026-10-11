@@ -141,6 +141,9 @@ test('results feature the actual highest score before land details and open its 
   '@/components/LandSummary': {default: () => React.createElement('section', {'data-land':true}, 'Land details')},
  }).default;
  await render(Results, {});
+ const hero = document.querySelector('.results-hero');
+ assert.match(hero.textContent, /Plant City, Florida.*0.1 acres.*Demo data/);
+ assert.equal(hero.querySelector('a').getAttribute('href'), '/');
  const featured = document.querySelector('article');
  assert.equal(featured.querySelector('h2').textContent, 'Your Best Match');
  assert.equal(featured.querySelector('h3').textContent, 'Tomato');

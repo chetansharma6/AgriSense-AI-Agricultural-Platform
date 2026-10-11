@@ -32,13 +32,13 @@ export default function CropCard({ crop, rank, lat, lon, place, acres, compact =
   const content = (
     <article className={`recommendation-card ${featured ? "featured-recommendation" : ""} card h-full rounded-xl ${featured ? "border-2 border-field bg-mint" : "border border-field/20 bg-white/60"} ${compact ? "p-4 sm:p-5" : "p-5 sm:p-6"}`}>
       {featured && <h2 className="mb-4 text-2xl font-semibold text-field">Your Best Match</h2>}
-      <div className="flex items-start justify-between gap-3">
+      <div className="crop-card-heading flex items-start justify-between gap-3">
         <div className="min-w-0">
           <p className="text-sm font-semibold text-soil">#{rank}</p>
           <h3 className="mt-1 text-xl font-semibold">{crop.name ?? "Unnamed crop"}</h3>
           <p className="mt-2 text-sm leading-relaxed text-soil">{formatDisplayText(highlights.window)}</p>
         </div>
-        <div className={`shrink-0 rounded-2xl px-3 py-3 text-center ${tone ? tones[tone].badge : "bg-sand text-soil"}`}>
+        <div className={`score-badge shrink-0 rounded-2xl px-3 py-3 text-center ${tone ? tones[tone].badge : "bg-sand text-soil"}`}>
           <p className="text-3xl font-bold">{crop.score == null ? "—" : formatWhole(crop.score)}<span className="text-sm font-medium"> /100</span></p>
           <p className="text-sm font-semibold">{tone ? tones[tone].label : "Score unavailable"}</p>
         </div>
@@ -50,7 +50,7 @@ export default function CropCard({ crop, rank, lat, lon, place, acres, compact =
         <div><dt className="font-semibold">Main consideration</dt><dd>{formatDisplayText(highlights.consideration)}</dd></div>
         {featured && <div><dt className="font-semibold">First step</dt><dd>{formatDisplayText(highlights.firstStep)}</dd></div>}
       </dl>
-      {href ? <Link href={href} className="mt-4 inline-flex min-h-11 items-center rounded-lg bg-field px-4 py-3 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-field" aria-label={`View growing plan for ${crop.name ?? "this crop"}`}>View growing plan <span className="ml-2" aria-hidden="true">↗</span></Link> : <p className="mt-4 text-sm text-soil">Growing plan unavailable: crop identifier missing.</p>}
+      {href ? <Link href={href} className="crop-plan-cta mt-4 inline-flex min-h-11 items-center rounded-lg bg-field px-4 py-3 text-sm font-semibold text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-field" aria-label={`View growing plan for ${crop.name ?? "this crop"}`}>View growing plan <span className="ml-2" aria-hidden="true">↗</span></Link> : <p className="mt-4 text-sm text-soil">Growing plan unavailable: crop identifier missing.</p>}
       <details className="mt-4 border-t border-field/20 pt-2">
         <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-field">Factors, market &amp; scoring details</summary>
         {crop.scale?.fit && <p className="mt-3 text-sm">{{ good: "Fits your size", small: "Tight for your size", too_small: "Needs more land" }[crop.scale.fit]}{crop.scale.note ? `: ${formatDisplayText(crop.scale.note)}` : ""}</p>}
