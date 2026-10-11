@@ -9,7 +9,10 @@ const SYSTEM_PROMPT = "You write short crop reports for small-farm owners in Flo
 const INSTRUCTION = "Return JSON with keys: verdict (one sentence, max 25 words, starting with the crop name), summary (2-3 sentences explaining the score using the factor values), pros (exactly 3 short strings), cons (exactly 3 short strings, use the flags), first_steps (3-4 practical next steps a farmer would take before planting, e.g. soil test, talk to county extension agent).";
 const keys: FactorKey[] = ["soil_ph", "drainage", "season_temp", "frost_risk", "rainfall", "local_history"];
 const MAX_BODY_BYTES = 64 * 1024;
-const MAX_STRING_LENGTH = 500;
+// Crop requirements include committed UF/IFAS source notes up to 738
+// characters. Keep this comfortably above the public contract while still
+// bounding arbitrary browser input well below the total request limit.
+const MAX_STRING_LENGTH = 1_024;
 const CROP_NAMES: Record<string, string> = {
   peanut: "Peanut", cotton: "Cotton", field_corn: "Field corn", soybean: "Soybean",
   sugarcane: "Sugarcane", tomato: "Tomato", watermelon: "Watermelon", strawberry: "Strawberry",

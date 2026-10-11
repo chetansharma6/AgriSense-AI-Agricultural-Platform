@@ -64,6 +64,14 @@ test('fallback explains missing acreage and discourages undersized field product
   assert.equal((await route.post(crop, 0.09)).status, 400);
 });
 
+test('committed crop evidence strings fit the report request bound', async () => {
+  const route = loadRoute();
+  const detail = { ...crop, requirements: { source_notes: 'Verified UF/IFAS source note. '.repeat(27) } };
+  assert.equal((await route.post(detail, 0.25)).status, 200);
+  const oversized = { ...crop, requirements: { source_notes: 'x'.repeat(1025) } };
+  assert.equal((await route.post(oversized, 0.25)).status, 413);
+});
+
 test('provider failure returns a usable report and saved provenance reaches the prompt', async () => {
   const route = loadRoute(true, true);
   const saved = { ...crop, provenance: { mode: 'demo', sources: [], fawn_station: null } };
