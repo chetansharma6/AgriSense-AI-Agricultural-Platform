@@ -7,14 +7,13 @@ for the same spot skip all I/O and scoring.
 """
 
 import copy
+import inspect
 import json
 import logging
-import weakref
 import threading
 import time
 from collections import OrderedDict
 from concurrent.futures import Future, ThreadPoolExecutor, wait
-from concurrent.futures.thread import _threads_queues, _worker
 from functools import lru_cache
 from typing import Any, Callable, TypeVar
 
@@ -36,34 +35,15 @@ log = logging.getLogger(__name__)
 RESPONSE_CACHE_SIZE = 256
 RESPONSE_CACHE_TTL_S = 3600.0
 MAX_CONCURRENT_RECOMMENDATIONS = 8
+MAX_CONCURRENT_PROVIDER_WORK = 8
 FACTOR_COUNT = 6
 _response_cache: OrderedDict[tuple[float, float], tuple[float, dict[str, Any]]] = OrderedDict()
 _response_cache_lock = threading.Lock()
 _recommendation_slots = threading.BoundedSemaphore(MAX_CONCURRENT_RECOMMENDATIONS)
-
-
-class _DaemonThreadPoolExecutor(ThreadPoolExecutor):
-    """Executor whose abandoned deadline workers cannot hold up process exit."""
-
-    def _adjust_thread_count(self) -> None:
-        if self._idle_semaphore.acquire(timeout=0):
-            return
-
-        def weakref_cb(_, queue=self._work_queue) -> None:
-            queue.put(None)
-
-        if len(self._threads) < self._max_workers:
-            name = f"{self._thread_name_prefix or self}_{len(self._threads)}"
-            thread = threading.Thread(
-                name=name,
-                target=_worker,
-                args=(weakref.ref(self, weakref_cb), self._work_queue,
-                      self._initializer, self._initargs),
-                daemon=True,
-            )
-            thread.start()
-            self._threads.add(thread)
-            _threads_queues[thread] = self._work_queue
+_provider_pool = ThreadPoolExecutor(max_workers=MAX_CONCURRENT_PROVIDER_WORK,
+                                    thread_name_prefix="provider")
+_inflight: dict[tuple[float, float], Future[tuple[dict[str, Any], bool]]] = {}
+_inflight_lock = threading.Lock()
 
 SOIL_FIELDS = ("soil_ph", "organic_matter_pct", "sand_pct", "clay_pct", "texture", "drainage")
 CLIMATE_FIELDS = ("annual_precip_mm", "frost_free_days", "last_spring_frost", "first_fall_frost",
@@ -105,6 +85,8 @@ def _cache_key(lat: float, lon: float) -> tuple[float, float]:
 def clear_response_cache() -> None:
     with _response_cache_lock:
         _response_cache.clear()
+    with _inflight_lock:
+        _inflight.clear()
 
 
 def recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, Any]:
@@ -138,10 +120,8 @@ def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, 
             return cached
 
     started = time.perf_counter()
-    if config.DEMO_MODE:
-        result, complete = _build_with_deadline(lat, lon)
-    else:
-        result, complete = _build_recommendation(lat, lon)
+    deadline = started + config.RECOMMENDATION_DEADLINE_S
+    result, complete = _coalesced_build(key, lat, lon, deadline)
     if complete:
         _remember(key, result)  # Cache location scores before request-specific land-size caps.
     # Normalize live and partial responses through the same response decoration
@@ -153,6 +133,40 @@ def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, 
     return result
 
 
+def _coalesced_build(key: tuple[float, float], lat: float, lon: float,
+                     deadline: float) -> tuple[dict[str, Any], bool]:
+    """Run one bounded provider pipeline per rounded coordinate.
+
+    Followers wait only for their own remaining request budget; a failed or
+    partial build is never retained as a successful memory-cache entry.
+    """
+    leader = False
+    with _inflight_lock:
+        future = _inflight.get(key)
+        if future is None:
+            future = Future()
+            _inflight[key] = future
+            leader = True
+    if not leader:
+        try:
+            return future.result(timeout=max(0.0, deadline - time.perf_counter()))
+        except Exception:
+            # The leader will either return a safe partial result or remove its
+            # entry.  Never reveal an implementation exception to the caller.
+            return _deadline_response(lat, lon, "Recommendation deadline expired while waiting for shared data"), False
+    try:
+        outcome = (_build_with_deadline(lat, lon, deadline=deadline) if config.DEMO_MODE
+                   else _build_recommendation_bounded(lat, lon, deadline))
+        future.set_result(outcome)
+        return outcome
+    except Exception as error:
+        future.set_exception(error)
+        raise
+    finally:
+        with _inflight_lock:
+            _inflight.pop(key, None)
+
+
 def _remember(key: tuple[float, float], result: dict[str, Any]) -> None:
     with _response_cache_lock:
         _response_cache[key] = (time.monotonic(), copy.deepcopy(result))
@@ -161,52 +175,73 @@ def _remember(key: tuple[float, float], result: dict[str, Any]) -> None:
             _response_cache.popitem(last=False)
 
 
-def _build_with_deadline(lat: float, lon: float, acres: float | None = None) -> tuple[dict[str, Any], bool]:
+def _build_with_deadline(lat: float, lon: float, acres: float | None = None,
+                         deadline: float | None = None) -> tuple[dict[str, Any], bool]:
     """Use saved data nearby; otherwise return bounded live/partial data."""
     fallback = _demo_fallback(lat, lon, "DEMO_MODE uses the saved demo response")
     if fallback is not None:
         fallback = _apply_acres(fallback, acres)
         fallback["confidence"] = _confidence(fallback, "demo")
         return fallback, False
-    return _build_recommendation_bounded(lat, lon, config.DEMO_DEADLINE_S, acres)
+    return _build_recommendation_bounded(
+        lat, lon, deadline if deadline is not None else time.perf_counter() + config.RECOMMENDATION_DEADLINE_S
+    )
 
 
-def _bounded_fetches(fetches: dict[str, Callable[[], Any]], timeout_s: float,
+def _call_with_deadline(fetch: Callable[..., T], deadline: float) -> T:
+    """Pass an absolute deadline to modern providers and preserve test fakes."""
+    try:
+        parameters = inspect.signature(fetch).parameters.values()
+        supports_deadline = any(p.name == "deadline" or p.kind == p.VAR_KEYWORD for p in parameters)
+    except (TypeError, ValueError):
+        supports_deadline = False
+    return fetch(deadline=deadline) if supports_deadline else fetch()
+
+
+def _provider_call(fetch: Callable[..., T], *args: Any, deadline: float) -> T:
+    """Call a provider with a deadline when its public signature supports it."""
+    try:
+        parameters = inspect.signature(fetch).parameters.values()
+        supports_deadline = any(p.name == "deadline" or p.kind == p.VAR_KEYWORD for p in parameters)
+    except (TypeError, ValueError):
+        supports_deadline = False
+    return fetch(*args, deadline=deadline) if supports_deadline else fetch(*args)
+
+
+def _bounded_fetches(fetches: dict[str, Callable[..., Any]], deadline: float,
                     warnings: list[str], failed: list[str]) -> dict[str, Any | None]:
-    """Fetch independent providers without letting one occupy the request."""
-    pool = _DaemonThreadPoolExecutor(max_workers=len(fetches), thread_name_prefix="bounded_source")
+    """Fetch providers on a fixed global worker pool until one absolute deadline."""
     futures: dict[str, Future[Any]] = {
-        name: pool.submit(_attempt, fetch, name, warnings, failed)
+        name: _provider_pool.submit(_attempt, lambda f=fetch: _call_with_deadline(f, deadline), name, warnings, failed)
         for name, fetch in fetches.items()
     }
-    done, pending = wait(futures.values(), timeout=max(timeout_s, 0.0))
+    done, pending = wait(futures.values(), timeout=max(0.0, deadline - time.perf_counter()))
     for name, future in futures.items():
         if future in pending:
             failed.append(name)
             warnings.append(f"{name} timed out; related values are null")
     results = {name: (future.result() if future in done else None)
                for name, future in futures.items()}
-    # A timed-out provider may still be inside an upstream HTTP call. Do not
-    # wait for it and do not reuse its worker for another request.
-    pool.shutdown(wait=False, cancel_futures=True)
+    for future in pending:
+        future.cancel()
     return results
 
 
-def _build_recommendation_bounded(lat: float, lon: float, timeout_s: float,
+def _build_recommendation_bounded(lat: float, lon: float, deadline: float,
                                   acres: float | None = None) -> tuple[dict[str, Any], bool]:
-    """Build a valid live response within the demo deadline, allowing nulls."""
-    started = time.perf_counter()
+    """Build a valid live response within the one recommendation deadline."""
     warnings: list[str] = []
     failed: list[str] = []
     station = fawn.nearest_station(lat, lon)
     source_names = {
-        "County lookup (FCC)": lambda: lookup_county(lat, lon),
-        "Soil data (USDA SSURGO)": lambda: get_soil(lat, lon),
-        "Weather data (NASA POWER)": lambda: get_daily_weather(lat, lon),
+        "County lookup (FCC)": lambda: _provider_call(lookup_county, lat, lon, deadline=deadline),
+        "Soil data (USDA SSURGO)": lambda: _provider_call(get_soil, lat, lon, deadline=deadline),
+        "Weather data (NASA POWER)": lambda: _provider_call(get_daily_weather, lat, lon, deadline=deadline),
     }
     if station:
-        source_names["Freeze records (FAWN station)"] = lambda: fawn.daily_min_c(station[0]["id"])
-    results = _bounded_fetches(source_names, timeout_s, warnings, failed)
+        source_names["Freeze records (FAWN station)"] = lambda: _provider_call(
+            fawn.daily_min_c, station[0]["id"], deadline=deadline)
+    results = _bounded_fetches(source_names, deadline, warnings, failed)
     county = results.get("County lookup (FCC)")
     soil = results.get("Soil data (USDA SSURGO)")
     weather = results.get("Weather data (NASA POWER)")
@@ -218,13 +253,16 @@ def _build_recommendation_bounded(lat: float, lon: float, timeout_s: float,
     if soil is not None and soil["soil_ph"] is None:
         warnings.append("Soil survey reports no pH for this soil; the pH factor is skipped")
 
-    remaining = timeout_s - (time.perf_counter() - started)
     market = None
-    if county is not None and remaining > 0:
+    if county is not None and time.perf_counter() < deadline:
         market_result = _bounded_fetches(
-            {"Yield and price data (USDA NASS)": lambda: load_market(county["county_fips"])},
-            remaining, warnings, failed)
+            {"Yield and price data (USDA NASS)": lambda: _provider_call(
+                load_market, county["county_fips"], deadline=deadline)},
+            deadline, warnings, failed)
         market = market_result["Yield and price data (USDA NASS)"]
+    elif county is not None:
+        failed.append("Yield and price data (USDA NASS)")
+        warnings.append("Yield and price data (USDA NASS) timed out; related values are null")
     climate = _attempt(lambda: summarize(weather), "Climate summary", warnings, failed) if weather is not None else None
     conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
     conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
@@ -239,6 +277,17 @@ def _build_recommendation_bounded(lat: float, lon: float, timeout_s: float,
         "confidence": _confidence({"crops": crops, "warnings": warnings}),
     }
     return response, not failed
+
+
+def _deadline_response(lat: float, lon: float, warning: str) -> dict[str, Any]:
+    """A schema-shaped partial result for a follower whose shared work expired."""
+    crops = rank_crops([score_crop(crop, None, None, None) for crop in load_crops().values()])
+    response = {"location": {"lat": lat, "lon": lon, "county": None, "county_fips": None, "state": "FL"},
+                "conditions": {field: None for field in SOIL_FIELDS + CLIMATE_FIELDS},
+                "crops": crops, "warnings": [warning], "scoring": scoring_rules(),
+                "provenance": _provenance("live", failed=["deadline"])}
+    response["confidence"] = _confidence(response)
+    return response
 
 
 def _demo_fallback(lat: float, lon: float, reason: str) -> dict[str, Any] | None:
@@ -352,95 +401,10 @@ def _with_location(result: dict[str, Any], lat: float, lon: float) -> dict[str, 
 
 
 def _build_recommendation(lat: float, lon: float, acres: float | None = None) -> tuple[dict[str, Any], bool]:
-    """The response, and whether every source answered."""
-    warnings: list[str] = []
-    failed: list[str] = []
-    # Avoid nesting a thread pool inside the DEMO_MODE deadline worker. This
-    # keeps the synchronous ASGI test client and constrained free hosts from
-    # deadlocking while retaining parallel source fetches for normal requests.
-    if threading.current_thread().name.startswith("recommend_"):
-        return _build_recommendation_sequential(lat, lon, warnings, failed, acres)
-    with ThreadPoolExecutor(max_workers=4) as pool:
-        county_job = pool.submit(_attempt, lambda: lookup_county(lat, lon), "County lookup (FCC)", warnings, failed)
-        soil_job = pool.submit(_attempt, lambda: get_soil(lat, lon), "Soil data (USDA SSURGO)", warnings, failed)
-        weather_job = pool.submit(_attempt, lambda: get_daily_weather(lat, lon), "Weather data (NASA POWER)",
-                                  warnings, failed)
-        station = fawn.nearest_station(lat, lon)
-        station_job = (pool.submit(_attempt, lambda: fawn.daily_min_c(station[0]["id"]),
-                                   "Freeze records (FAWN station)", warnings, failed) if station else None)
-        county, soil, weather = county_job.result(), soil_job.result(), weather_job.result()
-        station_min = station_job.result() if station_job else None
-    if weather is not None and station_min is not None and station is not None:
-        weather = with_station_minimums(weather, station_min)
-        log.info("freezes from FAWN %s (%.0f km away)", station[0]["name"], station[1])
-
-    fcc_failed = "County lookup (FCC)" in failed
-    # FCC answered but found no county: open water beyond Florida's county lines.
-    if county is None and not fcc_failed:
-        raise OutsideFlorida
-    if county is not None and county["state"] != "FL":
-        raise OutsideFlorida
-    if soil is not None and soil["soil_ph"] is None:
-        warnings.append("Soil survey reports no pH for this soil; the pH factor is skipped")
-
-    market = _attempt(lambda: load_market(county["county_fips"] if county else None),
-                      "Yield and price data (USDA NASS)", warnings, failed)
-
-    climate = (_attempt(lambda: summarize(weather), "Climate summary", warnings, failed)
-               if weather is not None else None)
-    conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
-    conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
-
-    crops = rank_crops([score_crop(crop, soil, weather, market, acres) for crop in load_crops().values()])
-
-    response = {
-        "location": {
-            "lat": lat,
-            "lon": lon,
-            "county": county["county"] if county else None,
-            "county_fips": county["county_fips"] if county else None,
-            "state": "FL",
-        },
-        "conditions": conditions,
-        "crops": crops,
-        "warnings": warnings,
-        "scoring": scoring_rules(),
-    }
-    response["provenance"] = _provenance("live", failed=failed, station=station)
-    response["confidence"] = _confidence(response)
-    return response, not failed
-
-
-def _build_recommendation_sequential(lat: float, lon: float, warnings: list[str],
-                                     failed: list[str], acres: float | None = None) -> tuple[dict[str, Any], bool]:
-    """Build a deadline-worker response without recursively creating pools."""
-    county = _attempt(lambda: lookup_county(lat, lon), "County lookup (FCC)", warnings, failed)
-    soil = _attempt(lambda: get_soil(lat, lon), "Soil data (USDA SSURGO)", warnings, failed)
-    weather = _attempt(lambda: get_daily_weather(lat, lon), "Weather data (NASA POWER)", warnings, failed)
-    station = fawn.nearest_station(lat, lon)
-    station_min = (_attempt(lambda: fawn.daily_min_c(station[0]["id"]), "Freeze records (FAWN station)", warnings, failed)
-                   if station else None)
-    if weather is not None and station_min is not None and station is not None:
-        weather = with_station_minimums(weather, station_min)
-    fcc_failed = "County lookup (FCC)" in failed
-    if county is None and not fcc_failed:
-        raise OutsideFlorida
-    if county is not None and county["state"] != "FL":
-        raise OutsideFlorida
-    if soil is not None and soil["soil_ph"] is None:
-        warnings.append("Soil survey reports no pH for this soil; the pH factor is skipped")
-    market = _attempt(lambda: load_market(county["county_fips"] if county else None),
-                      "Yield and price data (USDA NASS)", warnings, failed)
-    climate = _attempt(lambda: summarize(weather), "Climate summary", warnings, failed) if weather is not None else None
-    conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
-    conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
-    crops = rank_crops([score_crop(crop, soil, weather, market, acres) for crop in load_crops().values()])
-    response = {"location": {"lat": lat, "lon": lon, "county": county["county"] if county else None,
-                              "county_fips": county["county_fips"] if county else None, "state": "FL"},
-                "conditions": conditions, "crops": crops, "warnings": warnings,
-                "scoring": scoring_rules(), "provenance": _provenance("live", failed=failed, station=station),
-                "confidence": _confidence({"crops": crops, "warnings": warnings})}
-    return response, not failed
+    """Compatibility entry point using the same bounded live pipeline."""
+    return _build_recommendation_bounded(
+        lat, lon, time.perf_counter() + config.RECOMMENDATION_DEADLINE_S, acres
+    )
 
 
 def crop_detail(crop_id: str, lat: float, lon: float, acres: float | None = None) -> dict[str, Any] | None:

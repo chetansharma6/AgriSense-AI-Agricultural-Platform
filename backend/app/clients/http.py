@@ -2,6 +2,7 @@
 
 import logging
 import threading
+import time
 
 import httpx
 
@@ -22,3 +23,13 @@ def http() -> httpx.Client:
         if _client is None:
             _client = httpx.Client(timeout=TIMEOUT_S)
     return _client
+
+
+def timeout_for(deadline: float | None, maximum: float = TIMEOUT_S) -> float:
+    """Return a finite provider timeout without exceeding a request deadline."""
+    if deadline is None:
+        return maximum
+    remaining = deadline - time.monotonic()
+    if remaining <= 0:
+        raise httpx.TimeoutException("recommendation deadline expired")
+    return min(maximum, remaining)

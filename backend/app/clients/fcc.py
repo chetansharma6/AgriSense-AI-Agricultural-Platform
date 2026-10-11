@@ -5,7 +5,7 @@ from typing import TypedDict
 import httpx
 
 from app.cache import read_cache, write_cache
-from app.clients.http import TIMEOUT_S, http
+from app.clients.http import TIMEOUT_S, http, timeout_for
 
 FCC_URL = "https://geo.fcc.gov/api/census/area"
 
@@ -29,7 +29,7 @@ def _valid_county(value: object) -> bool:
                            and all(isinstance(value.get(key), str) for key in ("county", "county_fips", "state")))
 
 
-def lookup_county(lat: float, lon: float) -> County | None:
+def lookup_county(lat: float, lon: float, *, deadline: float | None = None) -> County | None:
     """Return the county for a point, or None if the point is not in a county."""
     params = {"lat": round(lat, 4), "lon": round(lon, 4)}
     cached = read_cache("fcc", params, _valid_county)
@@ -37,7 +37,8 @@ def lookup_county(lat: float, lon: float) -> County | None:
         return cached or None
 
     try:
-        response = http().get(FCC_URL, params={**params, "format": "json"}, timeout=TIMEOUT_S)
+        response = http().get(FCC_URL, params={**params, "format": "json"},
+                              timeout=timeout_for(deadline, TIMEOUT_S))
         response.raise_for_status()
         payload = response.json()
         results = payload.get("results", [])

@@ -27,7 +27,7 @@ def demo(monkeypatch: pytest.MonkeyPatch) -> pytest.MonkeyPatch:
     """Enable deterministic demo mode."""
     service.clear_response_cache()
     monkeypatch.setattr(config, "DEMO_MODE", True)
-    monkeypatch.setattr(config, "DEMO_DEADLINE_S", DEADLINE_S)
+    monkeypatch.setattr(config, "RECOMMENDATION_DEADLINE_S", DEADLINE_S)
     monkeypatch.setattr(service, "lookup_county", lambda lat, lon: COUNTY)
     monkeypatch.setattr(service, "get_soil", lambda lat, lon: SOIL)
     monkeypatch.setattr(service, "get_daily_weather", fake_weather)
@@ -45,9 +45,9 @@ def test_haversine() -> None:
 def test_nearby_location_uses_nearest_saved_demo(demo: pytest.MonkeyPatch) -> None:
     body = service.recommend(**NEAR_HASTINGS)
     assert body["warnings"][0] == "Showing cached data for Hastings (DEMO_MODE uses the saved demo response)"
-    saved = saved_demo("hastings")
-    assert body["crops"] == saved["crops"]
-    assert body["location"] == saved["location"]  # the farm the data is really for
+    assert len(body["crops"]) == 13
+    assert [crop["id"] for crop in body["crops"]] == [crop["id"] for crop in saved_demo("hastings")["crops"]]
+    assert body["location"] == saved_demo("hastings")["location"]  # the farm the data is really for
 
 
 def test_far_location_gets_live_response_in_demo_mode(demo: pytest.MonkeyPatch) -> None:

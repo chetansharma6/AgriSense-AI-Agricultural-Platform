@@ -19,7 +19,21 @@ NASS_API_KEY = os.getenv("NASS_API_KEY", "").strip()
 # a point within DEMO_FALLBACK_KM of a demo farm gets that farm's saved
 # response from data/demo, and any other point gets a quick 503.
 DEMO_MODE = os.getenv("DEMO_MODE", "false").strip().lower() in {"1", "true", "yes"}
-DEMO_DEADLINE_S = 6.0
+def _positive_float(name: str, default: float) -> float:
+    try:
+        value = float(os.getenv(name, str(default)))
+    except ValueError:
+        return default
+    return value if value > 0 else default
+
+
+# One wall-clock budget for every recommendation.  DEMO_DEADLINE_S remains a
+# backwards-compatible fallback for existing deployments, but both demo and
+# live requests use this single setting.
+RECOMMENDATION_DEADLINE_S = _positive_float(
+    "RECOMMENDATION_DEADLINE_S", _positive_float("DEMO_DEADLINE_S", 6.0)
+)
+DEMO_DEADLINE_S = RECOMMENDATION_DEADLINE_S
 DEMO_FALLBACK_KM = 25.0
 
 # Comma-separated browser origins allowed to call the API. In Codespaces, add

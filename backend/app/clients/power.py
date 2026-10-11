@@ -10,7 +10,7 @@ import pandas as pd
 import time
 
 from app.cache import read_cache, write_cache
-from app.clients.http import http
+from app.clients.http import http, timeout_for
 
 POWER_URL = "https://power.larc.nasa.gov/api/temporal/daily/point"
 START, END = "20160101", "20251231"
@@ -34,18 +34,18 @@ PARAMETERS = {
 }
 
 
-def get_daily_weather(lat: float, lon: float) -> pd.DataFrame:
+def get_daily_weather(lat: float, lon: float, *, deadline: float | None = None) -> pd.DataFrame:
     """Return daily weather indexed by date, one column per PARAMETERS value.
     Missing values are NaN."""
     params = {"lat": round(lat, 1), "lon": round(lon, 1), "start": START, "end": END}
     series = read_cache("power", params, _valid_series)
     if series is None:
-        series = _fetch(params)
+        series = _fetch(params, deadline=deadline)
         write_cache("power", params, series)
     return _to_frame(series)
 
 
-def _fetch(params: dict) -> dict[str, dict[str, float]]:
+def _fetch(params: dict, *, deadline: float | None = None) -> dict[str, dict[str, float]]:
     """One POWER request, retried once on a timeout or a 5xx response."""
     query = {
         "parameters": ",".join(PARAMETERS),
@@ -58,15 +58,15 @@ def _fetch(params: dict) -> dict[str, dict[str, float]]:
     }
     for attempt in (1, 2):
         try:
-            response = http().get(POWER_URL, params=query, timeout=TIMEOUT_S)
+            response = http().get(POWER_URL, params=query, timeout=timeout_for(deadline, TIMEOUT_S))
         except httpx.TimeoutException:
-            if attempt == 2:
+            if attempt == 2 or (deadline is not None and deadline - time.monotonic() <= 0.1):
                 raise
             time.sleep(0.05)
             continue
         except httpx.HTTPError:
             raise PowerError("NASA POWER request failed") from None
-        if response.status_code >= 500 and attempt == 1:
+        if response.status_code >= 500 and attempt == 1 and (deadline is None or deadline - time.monotonic() > 0.1):
             time.sleep(0.05)
             continue
         try:

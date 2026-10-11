@@ -2,6 +2,7 @@
 
 import json
 import math
+import copy
 from urllib.parse import urlparse
 
 import pytest
@@ -9,6 +10,7 @@ import pytest
 from app.config import DATA_DIR, DEMO_FARMS
 from app.crops import load_crops
 from app.schemas import CropDetail, RecommendResponse
+from app import service
 
 
 def _assert_finite(value: object, path: str = "response") -> None:
@@ -46,13 +48,22 @@ def _assert_response_invariants(response: dict) -> None:
 
 
 @pytest.mark.parametrize("farm", DEMO_FARMS)
-def test_demo_sample_matches_contract(farm: str) -> None:
+def test_demo_sample_matches_contract(farm: str, monkeypatch: pytest.MonkeyPatch) -> None:
     sample = json.loads((DATA_DIR / "demo" / f"{farm}.json").read_text())
     assert set(sample) == {"recommend", "crops"}
-    recommend = RecommendResponse.model_validate(sample["recommend"])
+    # Committed recommendation data is a raw source fixture.  The API adds
+    # deterministic presentation fields at one boundary before validation.
+    response = service._apply_acres(copy.deepcopy(sample["recommend"]), None)
+    response["provenance"] = service._provenance("demo", "Saved fixture")
+    response["confidence"] = service._confidence(response, "demo")
+    recommend = RecommendResponse.model_validate(response)
     assert (recommend.location.lat, recommend.location.lon) == DEMO_FARMS[farm]
     assert set(sample["crops"]) == set(load_crops()) == {crop.id for crop in recommend.crops}
-    for crop_id, detail in sample["crops"].items():
+    monkeypatch.setattr(service.config, "DEMO_MODE", True)
+    lat, lon = DEMO_FARMS[farm]
+    for crop_id in sample["crops"]:
+        detail = service.crop_detail(crop_id, lat, lon)
+        assert detail is not None
         validated = CropDetail.model_validate(detail)
         assert validated.id == crop_id
         for link in validated.extension_links:
