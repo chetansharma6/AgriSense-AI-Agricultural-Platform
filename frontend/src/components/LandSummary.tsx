@@ -1,3 +1,6 @@
+"use client";
+
+import { useId, useState } from "react";
 import { describePh, formatTemperature, formatDays, formatMillimeters, formatFrostDate, formatDisplayText } from "@/lib/format";
 import type { RecommendResponse } from "@/lib/types";
 
@@ -21,6 +24,8 @@ export function LandSummarySkeleton({ slow = false }: { slow?: boolean }) {
 }
 
 export default function LandSummary({ response, place }: { response: RecommendResponse; place?: string }) {
+  const [expanded, setExpanded] = useState(false);
+  const detailsId = useId();
   const c = response.conditions;
   const frost = c?.frost_free_days;
   const rain = c?.annual_precip_mm;
@@ -41,6 +46,8 @@ export default function LandSummary({ response, place }: { response: RecommendRe
   const otherWarnings = response.warnings?.filter((warning) => warning !== cached) ?? [];
   const confidence = response.confidence;
   const sources = response.provenance?.sources ?? [];
+  const sourceCount = new Set(sources.map((source) => source.name)).size;
+  const dataStatus = confidence?.data_status ?? response.provenance?.mode;
   return (
     <div>
       {response.provenance?.mode === "demo" && <p className="mb-4 text-sm text-soil">Saved demo recommendations; soil and climate are not live measurements for your property.</p>}
@@ -68,28 +75,45 @@ export default function LandSummary({ response, place }: { response: RecommendRe
         </aside>
       )}
       {(confidence || sources.length > 0) && <section className="card mt-4 rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="data-confidence-title">
-        <h2 id="data-confidence-title" className="section-title">Data confidence and sources</h2>
-        {confidence && <div className="mt-4 text-sm leading-relaxed">
-          <p><span className="font-semibold">Confidence:</span> {formatDisplayText(confidence.level)} · {confidence.available_factors} of {confidence.total_factors} factors available{confidence.partial ? " · partial result" : ""}</p>
-          {confidence.data_status && <p className="mt-1"><span className="font-semibold">Data:</span> {formatDisplayText(confidence.data_status)}</p>}
-          {confidence.county_history_status && <p className="mt-1"><span className="font-semibold">County history:</span> {formatDisplayText(confidence.county_history_status)}</p>}
-          {!!confidence.available_factor_names?.length && <p className="mt-1"><span className="font-semibold">Available:</span> {confidence.available_factor_names.map(formatDisplayText).join(", ")}</p>}
-          {!!confidence.missing_factor_names?.length && <p className="mt-1"><span className="font-semibold">Missing:</span> {confidence.missing_factor_names.map(formatDisplayText).join(", ")}</p>}
-        </div>}
-        {sources.length > 0 && <details className="mt-4 rounded-xl bg-sand p-4">
-          <summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold text-field">View detailed source provenance</summary>
-          <ul className="mt-2 grid gap-3 sm:grid-cols-2" aria-label="Data sources">{sources.map((source) => {
-          const safeUrl = extensionUrl(source.url ?? null);
-          return <li key={source.name} className="rounded-lg bg-sand p-4 text-sm">
-            <p className="font-semibold">{safeUrl ? <a href={safeUrl} target="_blank" rel="noopener noreferrer" className="text-field underline underline-offset-4">{source.name}</a> : source.name}</p>
-            <p className="mt-1">{formatDisplayText(source.data_status ?? source.status)} · {formatDisplayText(source.status)}</p>
-            {source.data_period && <p className="mt-1">Period: {formatDisplayText(source.data_period)}</p>}
-            {source.geographic_level && <p className="mt-1">Area: {formatDisplayText(source.geographic_level)}</p>}
-            {source.detail && <p className="mt-1 text-ink/75">{formatDisplayText(source.detail)}</p>}
-            {!!source.limitations?.length && <p className="mt-1 text-ink/75">Limits: {source.limitations.map(formatDisplayText).join("; ")}</p>}
-          </li>;
-        })}</ul>
-        </details>}
+        <h2 id="data-confidence-title" className="section-title">Data confidence &amp; sources</h2>
+        <p className="mt-1 text-sm text-soil">See how much data supports these recommendations and where it comes from.</p>
+        <ul className="mt-3 flex flex-wrap gap-2 text-sm" aria-label="Data coverage summary">
+          <li className="rounded-full bg-mint px-3 py-1 font-semibold text-field">{confidence ? `${readableText(confidence.level)} data coverage` : "Data coverage unavailable"}</li>
+          <li className="rounded-full bg-sand px-3 py-1">{confidence ? `${confidence.available_factors} of ${confidence.total_factors} factors available` : "Factor availability unknown"}</li>
+          <li className="rounded-full bg-sand px-3 py-1">{statusLabel(dataStatus)}</li>
+          <li className="rounded-full bg-sand px-3 py-1">{sourceCount} {sourceCount === 1 ? "source" : "sources"}</li>
+          {confidence?.partial && <li className="rounded-full bg-sun/20 px-3 py-1">Partial result · some data is missing or limited</li>}
+        </ul>
+        <button type="button" aria-expanded={expanded} aria-controls={detailsId}
+          onClick={() => setExpanded(!expanded)}
+          className="mt-3 flex min-h-11 items-center gap-2 text-sm font-semibold text-field motion-reduce:transition-none">
+          {expanded ? "Hide source details" : "View source details"}
+          <span aria-hidden="true" className={`inline-block transition-transform duration-200 motion-reduce:transition-none ${expanded ? "rotate-180" : ""}`}>⌄</span>
+        </button>
+        <div id={detailsId} inert={!expanded} aria-hidden={!expanded}
+          className={`grid transition-[grid-template-rows,opacity] duration-200 ease-in-out motion-reduce:transition-none ${expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"}`}>
+          <div className="min-h-0 overflow-hidden">
+            {confidence && <div className="mt-3 border-t border-field/15 pt-4 text-sm leading-relaxed">
+              <p><span className="font-semibold">County history:</span> {confidence.county_history_status ? readableText(confidence.county_history_status) : "Availability unknown"}</p>
+              <p className="mt-1"><span className="font-semibold">Available factors:</span> {confidence.available_factor_names?.length ? confidence.available_factor_names.map(readableText).join(", ") : "None reported"}</p>
+              <p className="mt-1"><span className="font-semibold">Missing factors:</span> {confidence.missing_factor_names?.length ? confidence.missing_factor_names.map(readableText).join(", ") : "None reported"}</p>
+              {!!confidence.notes?.length && <ul className="mt-2 list-disc space-y-1 pl-5" aria-label="Data notes">{confidence.notes.map((note, index) => <li key={index}>{readableText(note)}</li>)}</ul>}
+            </div>}
+            {sources.length > 0 && <ul className="mt-4 grid gap-3 sm:grid-cols-2" aria-label="Data sources">{sources.map((source, index) => {
+              const safeUrl = extensionUrl(source.url ?? null);
+              const sourceDataStatus = source.data_status ?? source.status;
+              return <li key={`${source.name}-${index}`} className="min-w-0 rounded-lg bg-sand p-4 text-sm break-words">
+                <p className="font-semibold">{safeUrl ? <a href={safeUrl} target="_blank" rel="noopener noreferrer" className="text-field underline underline-offset-4">{source.name}</a> : source.name}</p>
+                <p className="mt-1">{statusLabel(sourceDataStatus)}{source.status !== sourceDataStatus && !(source.status === "saved" && ["demo", "cached"].includes(sourceDataStatus)) ? ` · Source: ${readableText(source.status)}` : ""}</p>
+                {source.data_period && <p className="mt-1">Reporting period: {readableText(source.data_period)}</p>}
+                {source.geographic_level && <p className="mt-1">Geographic coverage: {readableText(source.geographic_level)}</p>}
+                {source.detail && <p className="mt-1 text-ink/75">{readableText(source.detail)}</p>}
+                {!!source.limitations?.length && <p className="mt-1 text-ink/75">Limitations: {source.limitations.map(readableText).join("; ")}</p>}
+              </li>;
+            })}</ul>}
+            {response.provenance?.fawn_station && <p className="mt-3 text-sm text-soil">Weather station: {response.provenance.fawn_station.name} · {response.provenance.fawn_station.distance_km} km away</p>}
+          </div>
+        </div>
       </section>}
     </div>
   );
@@ -101,4 +125,25 @@ function extensionUrl(value: string | null): string | null {
     const url = new URL(value);
     return url.protocol === "https:" || url.protocol === "http:" ? url.href : null;
   } catch { return null; }
+}
+
+/** Presentation only: preserve the original factor and provenance values. */
+function readableText(value: string): string {
+  const labels: Record<string, string> = {
+    soil_ph: "Soil pH", drainage: "Drainage", season_temp: "Season temperature",
+    frost_risk: "Freeze risk", rainfall: "Rainfall", local_history: "Local harvest history",
+  };
+  const text = formatDisplayText(value).replace(/\b(soil_ph|drainage|season_temp|frost_risk|rainfall|local_history)\b/g,
+    (key) => labels[key]).replace(/_/g, " ");
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function statusLabel(value: string | undefined): string {
+  const labels: Record<string, string> = {
+    live: "Live data", demo: "Saved demo data", cached: "Saved cached data",
+    saved: "Saved data", stale: "Older saved data", failed: "Data unavailable (source failed)",
+    missing: "Missing data", unavailable: "Data unavailable", estimated: "Estimated data",
+    fallback: "Fallback data", withheld: "Withheld data",
+  };
+  return value ? labels[value] ?? readableText(value) : "Data status unknown";
 }
