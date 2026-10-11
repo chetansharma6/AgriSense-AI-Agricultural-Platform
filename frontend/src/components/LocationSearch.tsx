@@ -14,6 +14,8 @@ export default function LocationSearch({ onSelect, selectedLabel }: LocationSear
   const [searching, setSearching] = useState(false);
   const [results, setResults] = useState<LocationResult[]>([]);
   const [message, setMessage] = useState("");
+  const [feedbackLocation, setFeedbackLocation] = useState(selectedLabel);
+  const currentFeedback = feedbackLocation === selectedLabel;
 
   function select(result: LocationResult) {
     onSelect(result);
@@ -26,6 +28,7 @@ export default function LocationSearch({ onSelect, selectedLabel }: LocationSear
     if (searching) return;
     const q = query.trim();
     setSearching(true);
+    setFeedbackLocation(selectedLabel);
     setResults([]);
     setMessage("");
     try {
@@ -56,8 +59,8 @@ export default function LocationSearch({ onSelect, selectedLabel }: LocationSear
         </div>
       </form>
       <div id="location-search-status" aria-live="polite" aria-busy={searching}>
-        {message && <p className="mt-3 text-sm">{message}</p>}
-        {results.length > 0 && <ul className="mt-3 space-y-2" aria-label="Matching Florida locations">
+        {currentFeedback && message && <p className="mt-3 text-sm">{message}</p>}
+        {currentFeedback && results.length > 0 && <ul className="mt-3 space-y-2" aria-label="Matching Florida locations">
           {results.map((result, index) => <li key={`${result.lat}:${result.lon}:${index}`}>
             <button type="button" onClick={() => select(result)} className="min-h-11 w-full rounded-lg border border-field/25 bg-white/70 px-3 py-2 text-left hover:bg-leaf/15">{result.label}</button>
           </li>)}

@@ -1,12 +1,15 @@
 "use client";
 
 import Image from "next/image";
+import plantCityExample from "@/mocks/plant_city.json";
 import { stats } from "@/content/stats";
 import styles from "./home.module.css";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, type FormEvent } from "react";
 import LocationSearch from "@/components/LocationSearch";
 import MapLoader from "@/components/MapLoader";
+
+const exampleCrop = plantCityExample.recommend.crops.find((crop) => crop.id === "strawberry")!;
 
 const demos = [
   { name: "Marianna", caption: "Panhandle row crops", lat: 30.80, lon: -85.25 },
@@ -78,7 +81,8 @@ export default function Home() {
                 <div className="min-w-0">
                   <p className={styles.eyebrow}>Your next harvest starts here</p>
                   <h2 id="analysis-title" className={styles.analysisTitle}>Start with your land.</h2>
-                  <p className={styles.analysisDescription}>Pick a spot on the map. We check soil, climate and local harvest history, then rank 13 Florida crops by how well they fit.</p>
+                  <p className={styles.analysisDescription}>Enter your Florida location and acreage to discover crops suited to your land.</p>
+                  <ul className={styles.factorLabels} aria-label="What AgriSense considers">{["Soil", "Climate", "Local history", "Land size"].map((label) => <li key={label}>{label}</li>)}</ul>
                   <div className={styles.landControls}>
                     <div className={styles.locationSearch}><LocationSearch selectedLabel={selectedLocation ? `Selected: ${selectedLocation}` : ""} onSelect={(result) => {
                       selectPoint(result.lat, result.lon, result.label);
@@ -108,7 +112,7 @@ export default function Home() {
                     <details className={styles.coordinates}>
                       <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold">Enter coordinates instead</summary>
                       <fieldset className="mt-2">
-                        <legend className="text-sm font-semibold">Or enter coordinates</legend>
+                        <legend className="sr-only">Florida latitude and longitude</legend>
                         <div className="mt-3 grid grid-cols-2 gap-3">
                           {([['Latitude', latitude, setLatitude], ['Longitude', longitude, setLongitude]] as const).map(([label, input, update]) => (
                             <label key={label} className="block text-sm">
@@ -121,20 +125,39 @@ export default function Home() {
                         </div>
                       </fieldset>
                     </details>
+                    <div className={styles.selectionConfirmation} aria-live="polite">{valid && <p><span aria-hidden="true">✓ </span><strong>{selectedLocation}</strong><br />Location selected · {validAcres ? "Ready to analyze" : "Check acreage to continue"}</p>}</div>
                     <p id="location-message" aria-live="polite" className={styles.locationMessage}>
-                      {complete && !valid ? 'Location must be in Florida: latitude 24.3–31.1, longitude −87.7–−79.9.' : valid ? `Ready to analyze: ${selectedLocation}.` : 'Choose a location in Florida to analyze your land.'}
+                      {complete && !valid ? 'Location must be in Florida: latitude 24.3–31.1, longitude −87.7–−79.9.' : valid ? validAcres ? `Ready to analyze: ${selectedLocation}.` : `Selected: ${selectedLocation}. Check acreage to continue.` : 'Choose a location in Florida to analyze your land.'}
                     </p>
-                    <button type="submit" disabled={!valid || !validAcres} className={styles.analyzeButton}>{valid && place ? `Analyze ${place}` : "Analyze my land"} <span aria-hidden="true">↗</span></button>
+                    <button type="submit" disabled={!valid || !validAcres} className={styles.analyzeButton}>{valid && place ? `Analyze ${place}` : valid ? "Analyze selected location" : "Analyze my land"} <span aria-hidden="true">↗</span></button>
                   </form>
                 </div>
                 <section className={`${styles.mapPanel} min-w-0`} aria-label="Farm location map">
-                  <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><h3 className={styles.mapTitle}>Your Florida starting point</h3><span className={styles.mapBadge}>{valid ? "Location selected" : "Select a spot"}</span></div>
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><h3 className={styles.mapTitle}>Your Florida starting point</h3><span className={styles.mapBadge}>{valid ? `✓ ${selectedLocation}` : "Select a spot"}</span></div>
                   <div className={styles.mapFrame}>
                     <MapLoader value={value} onChange={selectPoint} demoPins={demos} />
                   </div>
                   <p className="mt-3 text-sm">{valid ? `Selected: ${selectedLocation}. Click the map to change your location.` : "Click the map or choose a demo farm to get started."}</p>
                 </section>
               </div>
+            </section>
+            <section className={styles.examplePreview} aria-labelledby="example-heading">
+              <div>
+                <p className={styles.eyebrow}>See what AgriSense can discover</p>
+                <h2 id="example-heading">An example from Plant City, Florida</h2>
+                <p className="mt-3 text-sm text-soil">Saved demo data · An illustration of the report you can explore, not live measurements for your land.</p>
+              </div>
+              <article className={styles.exampleCard}>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h3>{exampleCrop.name}</h3>
+                  <p className={styles.exampleScore}><strong>{exampleCrop.score}</strong> / 100 <span>saved suitability score</span></p>
+                </div>
+                <p className="mt-3 text-sm leading-relaxed">The saved winter climate and local growing history are strong matches for strawberries.</p>
+                <p className="mt-2 text-sm text-soil">{exampleCrop.season_label}</p>
+                <p className="mt-2 text-sm text-soil">Check before planting: {exampleCrop.flags[0]}</p>
+                <a href="/results?lat=28.0300&lon=-82.1500&place=Plant+City" className="mt-4 inline-flex min-h-11 items-center gap-3 font-semibold text-field underline underline-offset-4">Explore this example <span aria-hidden="true">↗</span></a>
+                <p className="mt-2 text-xs text-soil">Results use the existing demo workflow; current data may differ from this saved example.</p>
+              </article>
             </section>
             <div className={styles.statsIntro}><p className={styles.eyebrow}>A state of possibility</p><h2>Small farms. A growing future.</h2></div>
             <div className="mt-5 grid gap-4 md:grid-cols-3" aria-label="Florida farm statistics">

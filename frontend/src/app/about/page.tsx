@@ -8,9 +8,9 @@ export const metadata: Metadata = {
 };
 
 const steps = [
-  { title: "Public data", description: "Soil, weather and harvest records describe conditions at your Florida location." },
-  { title: "Calculated score", description: "Python compares those conditions with crop requirements to calculate an explainable suitability score from 0 to 100." },
-  { title: "AI explanation", description: "AI turns the calculated results into plain-language guidance. It never invents scores, yields or prices." },
+  { title: "Agricultural Data", description: "Soil, weather and harvest records describe conditions at your Florida location." },
+  { title: "Suitability Scoring", description: "Python compares those conditions with crop requirements to calculate an explainable suitability score from 0 to 100." },
+  { title: "AI Interpretation", description: "Anthropic turns the calculated results into plain-language guidance. It never invents scores, yields or prices." },
 ];
 
 const sources = [
@@ -50,7 +50,7 @@ export default function About() {
             <li key={step.title} className="flex min-w-0 flex-1 flex-col gap-3 md:flex-row">
               {index > 0 && <span aria-hidden="true" className="self-center text-2xl text-field"><span className="md:hidden">↓</span><span className="hidden md:inline">→</span></span>}
               <div className="card w-full flex-1 rounded-xl border border-field/20 bg-white/50 p-5">
-                <span className="text-sm font-semibold uppercase tracking-widest text-soil">Step {index + 1}</span>
+                <span className="text-sm font-semibold uppercase tracking-widest text-soil">{String(index + 1).padStart(2, "0")}</span>
                 <h3 className="mt-2 text-xl font-semibold text-field">{step.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-ink/75">{step.description}</p>
               </div>
@@ -61,7 +61,9 @@ export default function About() {
 
       <section aria-labelledby="sources-heading" className="mt-12">
         <h2 id="sources-heading" className="section-title">Data sources</h2>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+        <details className="mt-5 rounded-xl border border-field/20 bg-white/50 p-5">
+          <summary className="min-h-11 cursor-pointer font-semibold">Explore agricultural data providers</summary>
+          <div className="mt-4 grid gap-4 sm:grid-cols-2">
           {sources.map((source) => (
             <article key={source.name} className="card rounded-xl border border-field/20 bg-white/50 p-5">
               <h3 className="font-semibold">{source.name}</h3>
@@ -69,13 +71,16 @@ export default function About() {
               <a href={source.url} className="mt-2 inline-flex min-h-11 items-center text-sm font-medium text-field underline underline-offset-4">Visit {source.name}</a>
             </article>
           ))}
-        </div>
+          </div>
+        </details>
       </section>
 
       <section aria-labelledby="factors-heading" className="mt-12">
         <h2 id="factors-heading" className="section-title">The six factors</h2>
         <p className="mt-3 leading-relaxed text-ink/75">Each factor scores from 0 to 100. Missing factors are excluded and the remaining weights are normalized; climate factors are evaluated for each Florida growing window, and the best window wins. If soil pH, drainage, season temperature or frost risk scores below 25, the total is capped at 45.</p>
-        <div className="mt-5 overflow-x-auto rounded-xl border border-field/20">
+        <details className="mt-5 rounded-xl border border-field/20 bg-white/50 p-5">
+          <summary className="min-h-11 cursor-pointer font-semibold">View scoring factors and weights</summary>
+          <div className="mt-4 overflow-x-auto rounded-xl border border-field/20">
           <table className="w-full text-left text-sm">
             <caption className="sr-only">Suitability factors, their default weights and what they measure</caption>
             <thead className="bg-field text-white">
@@ -91,7 +96,21 @@ export default function About() {
               ))}
             </tbody>
           </table>
-        </div>
+          </div>
+        </details>
+      </section>
+
+      <section aria-labelledby="coverage-heading" className="mt-12">
+        <h2 id="coverage-heading" className="section-title">Coverage and missing measurements</h2>
+        <p className="mt-3 leading-relaxed text-ink/75">AgriSense covers Florida and 13 crops. Public records describe regional conditions; they are not a substitute for testing your own soil.</p>
+        <details className="mt-5 rounded-xl border border-field/20 bg-white/50 p-5">
+          <summary className="min-h-11 cursor-pointer font-semibold">Understand geographic coverage</summary>
+          <p className="mt-3 text-sm leading-relaxed text-ink/75">Soil values describe survey map units, climate values describe a grid around your location, and harvest records may cover a county or the whole state. Check the report’s source details for the geographic level and reporting period.</p>
+        </details>
+        <details className="mt-3 rounded-xl border border-field/20 bg-white/50 p-5">
+          <summary className="min-h-11 cursor-pointer font-semibold">Understand missing, estimated and saved data</summary>
+          <p className="mt-3 text-sm leading-relaxed text-ink/75">Missing scoring factors are excluded and remaining weights are normalized. Read the data coverage summary and source details for missing factors, estimates and warnings. Saved demo responses are examples, not live measurements for your property. Missing yields or prices do not establish expected returns.</p>
+        </details>
       </section>
 
       <section aria-labelledby="limitations-heading" className="card mt-12 rounded-xl border border-soil/25 bg-sun/10 p-5 sm:p-6">

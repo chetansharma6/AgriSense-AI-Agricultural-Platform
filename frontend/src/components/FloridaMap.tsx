@@ -54,6 +54,7 @@ export default function FloridaMap({ value, onChange, demoPins }: FloridaMapProp
       center={[27.8, -83.0]}
       zoom={6}
       minZoom={5}
+      scrollWheelZoom={false}
       maxBounds={[[23.3, -88.7], [32.1, -78.9]]}
       maxBoundsViscosity={1}
       style={{ height: "100%", width: "100%" }}
