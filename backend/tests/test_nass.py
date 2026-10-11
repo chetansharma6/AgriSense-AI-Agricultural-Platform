@@ -18,7 +18,9 @@ def test_query_hits_network_once_then_uses_cache(monkeypatch: pytest.MonkeyPatch
     params = {"commodity_desc": "PEANUTS", "state_alpha": "FL"}
     assert nass.query(params) == ROWS
     assert nass.query(params) == ROWS
-    assert fake.calls == 1
+    # This deliberately partial fixture is usable by this unit test but is not
+    # admissible as a future market-cache row.
+    assert fake.calls == 2
 
 
 def test_cache_never_contains_key(isolated_cache: Path, monkeypatch: pytest.MonkeyPatch) -> None:

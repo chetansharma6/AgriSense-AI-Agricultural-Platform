@@ -216,9 +216,6 @@ def _provider_call(fetch: Callable[..., T], *args: Any, deadline: float) -> T:
 
 def _bounded_fetches(fetches: dict[str, Callable[..., Any]], deadline: float,
                     warnings: list[str], failed: list[str]) -> dict[str, Any | None]:
-    """Fetch providers on a fixed global worker pool until one absolute deadline."""
-    futures: dict[str, Future[Any]] = {
-        name: _provider_pool.submit(_attempt, lambda f=fetch: _call_with_deadline(f, deadline), name, warnings, failed)
     """Fetch providers within one request budget using the fixed worker pool.
 
     A timeout returns a partial response immediately. Work that has not begun
@@ -227,7 +224,7 @@ def _bounded_fetches(fetches: dict[str, Callable[..., Any]], deadline: float,
     unbounded number of threads or detached executors.
     """
     futures: dict[str, Future[Any]] = {
-        name: _provider_pool.submit(_attempt, fetch, name, warnings, failed)
+        name: _provider_pool.submit(_attempt, lambda f=fetch: _call_with_deadline(f, deadline), name, warnings, failed)
         for name, fetch in fetches.items()
     }
     done, pending = wait(futures.values(), timeout=max(0.0, deadline - time.perf_counter()))

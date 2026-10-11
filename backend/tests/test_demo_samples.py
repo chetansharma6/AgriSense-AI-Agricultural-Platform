@@ -68,6 +68,12 @@ def test_demo_sample_matches_contract(farm: str, monkeypatch: pytest.MonkeyPatch
         validated = CropDetail.model_validate(detail)
         assert validated.id == crop_id
         for link in validated.extension_links:
+            parsed = urlparse(link.url)
+            assert parsed.scheme == "https"
+            assert parsed.netloc
+
+
+@pytest.mark.parametrize("farm", DEMO_FARMS)
 def test_raw_demo_fixture_matches_its_source_contract(farm: str) -> None:
     sample = json.loads((DATA_DIR / "demo" / f"{farm}.json").read_text())
     fixture = RawDemoFixture.model_validate(sample)

@@ -8,6 +8,8 @@ nearby points share one cache entry.
 import httpx
 import pandas as pd
 import time
+import math
+from datetime import datetime
 
 from app.cache import read_cache, write_cache
 from app.clients.http import http, timeout_for
@@ -23,7 +25,23 @@ class PowerError(RuntimeError):
 
 
 def _valid_series(value: object) -> bool:
-    return isinstance(value, dict) and all(isinstance(series, dict) for series in value.values())
+    """Accept only complete, finite daily parameter maps for the fixed window."""
+    if not isinstance(value, dict) or set(value) != set(PARAMETERS):
+        return False
+    expected = (datetime.strptime(END, "%Y%m%d") - datetime.strptime(START, "%Y%m%d")).days + 1
+    for series in value.values():
+        if not isinstance(series, dict) or len(series) != expected:
+            return False
+        for day, number in series.items():
+            try:
+                parsed = datetime.strptime(day, "%Y%m%d")
+            except (TypeError, ValueError):
+                return False
+            if not (datetime.strptime(START, "%Y%m%d") <= parsed <= datetime.strptime(END, "%Y%m%d")
+                    and isinstance(number, (int, float)) and not isinstance(number, bool)
+                    and math.isfinite(number)):
+                return False
+    return True
 
 # POWER parameter -> DataFrame column
 PARAMETERS = {
@@ -41,7 +59,7 @@ def get_daily_weather(lat: float, lon: float, *, deadline: float | None = None) 
     series = read_cache("power", params, _valid_series)
     if series is None:
         series = _fetch(params, deadline=deadline)
-        write_cache("power", params, series)
+        write_cache("power", params, series, _valid_series)
     return _to_frame(series)
 
 

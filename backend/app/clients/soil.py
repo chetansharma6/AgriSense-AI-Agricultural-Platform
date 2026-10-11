@@ -9,6 +9,7 @@ Run `python -m app.clients.soil` from backend/ to print the demo farms.
 """
 
 from typing import Any, TypedDict
+import math
 import time
 
 import httpx
@@ -63,8 +64,18 @@ class Soil(TypedDict):
 
 
 def _valid_soil(value: object) -> bool:
-    return isinstance(value, dict) and isinstance(value.get("mukey"), str) and all(
-        key in value for key in ("soil_ph", "organic_matter_pct", "sand_pct", "clay_pct", "texture", "drainage"))
+    if not isinstance(value, dict) or not isinstance(value.get("mukey"), str) or not value["mukey"].strip():
+        return False
+    ranges = {"soil_ph": (0, 14), "organic_matter_pct": (0, 100),
+              "sand_pct": (0, 100), "clay_pct": (0, 100)}
+    for key, (low, high) in ranges.items():
+        number = value.get(key)
+        if number is not None and (not isinstance(number, (int, float)) or isinstance(number, bool)
+                                   or not math.isfinite(number) or not low <= number <= high):
+            return False
+    return (all(key in value for key in (*ranges, "texture", "drainage"))
+            and all(value.get(key) is None or isinstance(value.get(key), str)
+                    for key in ("texture", "drainage", "dominant_component", "source")))
 
 
 def sda_query(sql: str, *, deadline: float | None = None) -> list[dict[str, str | None]]:
@@ -123,7 +134,7 @@ def get_soil(lat: float, lon: float, *, deadline: float | None = None) -> Soil:
     mukey = get_mukey(params["lat"], params["lon"], deadline=deadline)
     rows = [_to_numbers(row) for row in sda_query(_HORIZON_SQL.format(mukey=mukey), deadline=deadline)]
     soil = summarize_soil(rows, mukey)
-    write_cache("soil", params, soil)
+    write_cache("soil", params, soil, _valid_soil)
     return soil
 
 

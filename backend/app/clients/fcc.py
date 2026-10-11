@@ -25,8 +25,14 @@ class FccTimeout(FccError):
 
 
 def _valid_county(value: object) -> bool:
-    return value == {} or (isinstance(value, dict)
-                           and all(isinstance(value.get(key), str) for key in ("county", "county_fips", "state")))
+    if value == {}:  # FCC's explicit no-county answer is cacheable.
+        return True
+    if not isinstance(value, dict):
+        return False
+    county, fips, state = (value.get(key) for key in ("county", "county_fips", "state"))
+    return (isinstance(county, str) and bool(county.strip()) and len(county) <= 100
+            and isinstance(fips, str) and len(fips) == 5 and fips.isascii() and fips.isdigit()
+            and isinstance(state, str) and len(state) == 2 and state.isalpha() and state.isupper())
 
 
 def lookup_county(lat: float, lon: float, *, deadline: float | None = None) -> County | None:
@@ -56,5 +62,5 @@ def lookup_county(lat: float, lon: float, *, deadline: float | None = None) -> C
                       "county_fips": first["county_fips"], "state": first["state_code"]}
         except (KeyError, AttributeError, TypeError):
             raise FccError("FCC response malformed") from None
-    write_cache("fcc", params, county)
+    write_cache("fcc", params, county, _valid_county)
     return county or None
