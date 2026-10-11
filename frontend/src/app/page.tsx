@@ -64,9 +64,9 @@ export default function Home() {
               <div className={styles.heroCopy}>
                 <p className={styles.eyebrow}><span aria-hidden="true">✳</span> Florida land. Local possibilities.</p>
                 <h1 id="hero-title" className={styles.headline}>Know what your Florida land is built to <em>grow.</em></h1>
-                <p className={styles.description}>AgriSense helps small farms pick crops that fit their soil, season and local market.</p>
+                <p className={styles.description}>AgriSense helps small farms pick crops that fit their soil, season and local market—with practical water and input planning.</p>
                 <a href="#land-analysis" className={styles.cta}>Explore your land <span aria-hidden="true">↗</span></a>
-                <p className={styles.heroNote}>Florida focused · 13 crops · Explainable scores</p>
+                <p className={styles.heroNote}>Florida focused · 13 crops · Explainable scores · Water &amp; soil-aware guidance</p>
               </div>
               <div className={styles.farmVisual}>
                 <Image src="/hero-farm.jpg" fill sizes="(max-width: 1024px) 90vw, 480px" priority
@@ -83,6 +83,7 @@ export default function Home() {
                   <h2 id="analysis-title" className={styles.analysisTitle}>Start with your land.</h2>
                   <p className={styles.analysisDescription}>Enter your Florida location and acreage to discover crops suited to your land.</p>
                   <ul className={styles.factorLabels} aria-label="What AgriSense considers">{["Soil", "Climate", "Local history", "Land size"].map((label) => <li key={label}>{label}</li>)}</ul>
+                  <p className="mt-3 text-sm leading-relaxed text-soil">Each crop plan also makes its water needs, nutrient practices, soil-health steps, and data limits easy to review before planting.</p>
                   <div className={styles.landControls}>
                     <div className={styles.locationSearch}><LocationSearch selectedLabel={selectedLocation ? `Selected: ${selectedLocation}` : ""} onSelect={(result) => {
                       selectPoint(result.lat, result.lon, result.label);
