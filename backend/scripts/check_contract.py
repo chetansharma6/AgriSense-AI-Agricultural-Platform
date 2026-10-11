@@ -31,12 +31,16 @@ CONDITIONS = {
 }
 CROP = {"id": (str,), "name": (str,), "score": (int, type(None)), "season_label": (str,), "factors": (dict,),
         "factor_details": (dict,), "avg_yield": (dict, type(None)), "price": (dict, type(None)),
-        "limited_by": (list,), "flags": (list,)}
+        "scale": (dict,), "est_gross_value": (dict, type(None)), "action_plan": (dict,),
+        "risk_notes": (list,), "limited_by": (list,), "flags": (list,)}
 SCORING = {"weights": (dict,), "critical_factors": (list,), "critical_threshold": (int,), "critical_cap": (int,)}
 RECOMMEND = {"location": (dict,), "conditions": (dict,), "crops": (list,), "warnings": (list,),
-             "scoring": (dict,)}
+             "scoring": (dict,), "provenance": (dict, type(None)), "confidence": (dict, type(None))}
 DETAIL = {**CROP, "requirements": (dict,), "general_guidance": (str,), "extension_links": (list,),
-          "conditions": (dict,), "location": (dict,), "scoring": (dict,)}
+          "conditions": (dict,), "location": (dict,), "scoring": (dict,),
+          "nutrient_plan": (dict,), "water_plan": (dict,), "management_guidance": (dict,),
+          "provenance": (dict, type(None)), "confidence": (dict, type(None))}
+OPTIONAL_FIELDS = {"provenance", "confidence"}
 
 
 class Report:
@@ -59,7 +63,7 @@ def shape_errors(obj: Any, spec: dict[str, tuple[type, ...]], path: str) -> list
     """Exact keys and types; bool is rejected where a number is expected."""
     if not isinstance(obj, dict):
         return [f"{path} is {type(obj).__name__}, not object"]
-    errors = [f"{path}: missing {key}" for key in spec if key not in obj]
+    errors = [f"{path}: missing {key}" for key in spec if key not in obj and key not in OPTIONAL_FIELDS]
     errors += [f"{path}: extra {key}" for key in obj if key not in spec]
     for key, types in spec.items():
         value = obj.get(key)
