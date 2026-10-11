@@ -16,6 +16,7 @@ import httpx
 
 from app.cache import read_cache, write_cache
 from app.clients.http import TIMEOUT_S, http, timeout_for
+from app.config import in_florida
 
 SDA_URL = "https://sdmdataaccess.sc.egov.usda.gov/Tabular/post.rest"
 SOURCE = "USDA NRCS SSURGO"
@@ -29,7 +30,7 @@ PROPERTIES = {  # output key -> SSURGO horizon column
 
 _MUKEY_SQL = "SELECT mukey FROM SDA_Get_Mukey_from_intersection_with_WktWgs84('point({lon:.6f} {lat:.6f})')"
 _HORIZON_SQL = """
-SELECT c.cokey, c.compname, c.comppct_r, c.drainagecl, c.majcompflag,
+SELECT c.mukey, c.cokey, c.compname, c.comppct_r, c.drainagecl, c.majcompflag,
        ch.hzdept_r, ch.hzdepb_r, ch.ph1to1h2o_r, ch.om_r,
        ch.sandtotal_r, ch.claytotal_r
 FROM component c
@@ -131,11 +132,64 @@ def get_soil(lat: float, lon: float, *, deadline: float | None = None) -> Soil:
         return cached
 
     # SoilNotFound is not cached, so a point is never stuck as "no soil".
-    mukey = get_mukey(params["lat"], params["lon"], deadline=deadline)
-    rows = [_to_numbers(row) for row in sda_query(_HORIZON_SQL.format(mukey=mukey), deadline=deadline)]
-    soil = summarize_soil(rows, mukey)
+    try:
+        mukey = get_mukey(params["lat"], params["lon"], deadline=deadline)
+    except SoilNotFound:
+        mukey = None
+    soil = None
+    if mukey is not None:
+        rows = [_to_numbers(row) for row in sda_query(_HORIZON_SQL.format(mukey=mukey), deadline=deadline)]
+        soil = summarize_soil(rows, mukey)
+    if soil is None or soil["soil_ph"] is None or soil["drainage"] is None:
+        nearby = _nearby_soil(params["lat"], params["lon"], deadline=deadline)
+        if nearby is not None:
+            soil = nearby
+    if soil is None:
+        raise SoilNotFound("No mapped soil at this point or within 3 km")
     write_cache("soil", params, soil, _valid_soil)
     return soil
+
+
+def _nearby_soil(lat: float, lon: float, *, deadline: float | None) -> Soil | None:
+    """Use the closest mapped soil when an urban point lacks usable survey data.
+
+    All candidate intersections are requested together; the returned source
+    makes clear that these are nearby survey values, not a soil test on site.
+    """
+    candidates = [(lat + dlat, lon + dlon, distance) for distance in (1.5, 3.0)
+                  for dlat, dlon in ((distance / 111, 0), (-distance / 111, 0),
+                                     (0, distance / (111 * math.cos(math.radians(lat)))),
+                                     (0, -distance / (111 * math.cos(math.radians(lat)))))
+                  if in_florida(lat + dlat, lon + dlon)]
+    if not candidates:
+        return None
+    sql = " UNION ALL ".join(
+        f"SELECT {index} AS candidate, mukey FROM SDA_Get_Mukey_from_intersection_with_WktWgs84"
+        f"('point({candidate_lon:.6f} {candidate_lat:.6f})')"
+        for index, (candidate_lat, candidate_lon, _) in enumerate(candidates)
+    )
+    matches = sda_query(sql, deadline=deadline)
+    keys = list(dict.fromkeys(str(row["mukey"]) for row in matches if row.get("mukey")))
+    if not keys:
+        return None
+    quoted_keys = ", ".join(f"'{key}'" for key in keys if key.isdigit())
+    if not quoted_keys:
+        return None
+    rows = [_to_numbers(row) for row in sda_query(
+        _HORIZON_SQL.replace("c.mukey = '{mukey}'", f"c.mukey IN ({quoted_keys})"), deadline=deadline)]
+    by_key: dict[str, list[dict[str, Any]]] = {}
+    for row in rows:
+        by_key.setdefault(str(row["mukey"]), []).append(row)
+    for match in sorted(matches, key=lambda row: int(row["candidate"])):
+        key = str(match["mukey"])
+        if key not in by_key:
+            continue
+        soil = summarize_soil(by_key[key], key)
+        if soil["soil_ph"] is not None and soil["drainage"] is not None:
+            distance = candidates[int(match["candidate"])][2]
+            soil["source"] = f"{SOURCE} (nearby survey, about {distance:g} km away)"
+            return soil
+    return None
 
 
 def summarize_soil(rows: list[dict[str, Any]], mukey: str) -> Soil:

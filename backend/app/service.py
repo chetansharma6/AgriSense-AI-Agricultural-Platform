@@ -40,8 +40,6 @@ FACTOR_COUNT = 6
 _response_cache: OrderedDict[tuple[float, float], tuple[float, dict[str, Any]]] = OrderedDict()
 _response_cache_lock = threading.Lock()
 _recommendation_slots = threading.BoundedSemaphore(MAX_CONCURRENT_RECOMMENDATIONS)
-_provider_pool = ThreadPoolExecutor(max_workers=MAX_CONCURRENT_PROVIDER_WORK,
-                                    thread_name_prefix="provider")
 _inflight: dict[tuple[float, float], Future[tuple[dict[str, Any], bool]]] = {}
 _inflight_lock = threading.Lock()
 # A single fixed pool bounds active provider work even when callers time out.
@@ -224,7 +222,8 @@ def _provider_call(fetch: Callable[..., T], *args: Any, deadline: float) -> T:
 
 
 def _bounded_fetches(fetches: dict[str, Callable[..., Any]], deadline: float,
-                    warnings: list[str], failed: list[str]) -> dict[str, Any | None]:
+                    warnings: list[str], failed: list[str],
+                    dependent: dict[str, tuple[str, Callable[[Any], Any]]] | None = None) -> dict[str, Any | None]:
     """Fetch providers within one request budget using the fixed worker pool.
 
     A timeout returns a partial response immediately. Work that has not begun
@@ -236,6 +235,12 @@ def _bounded_fetches(fetches: dict[str, Callable[..., Any]], deadline: float,
         name: _provider_pool.submit(_attempt, lambda f=fetch: _call_with_deadline(f, deadline), name, warnings, failed)
         for name, fetch in fetches.items()
     }
+    for name, (parent, fetch) in (dependent or {}).items():
+        def after_parent(parent: str = parent, fetch: Callable[[Any], Any] = fetch) -> Any:
+            value = futures[parent].result()
+            return fetch(value) if value is not None else None
+
+        futures[name] = _provider_pool.submit(_attempt, after_parent, name, warnings, failed)
     done, pending = wait(futures.values(), timeout=max(0.0, deadline - time.perf_counter()))
     for name, future in futures.items():
         if future in pending:
@@ -263,7 +268,13 @@ def _build_recommendation_bounded(lat: float, lon: float, deadline: float,
     if station:
         source_names["Freeze records (FAWN station)"] = lambda: _provider_call(
             fawn.daily_min_c, station[0]["id"], deadline=deadline)
-    results = _bounded_fetches(source_names, deadline, warnings, failed)
+    results = _bounded_fetches(
+        source_names, deadline, warnings, failed,
+        dependent={"Yield and price data (USDA NASS)": (
+            "County lookup (FCC)",
+            lambda county: _provider_call(load_market, county["county_fips"], deadline=deadline),
+        )},
+    )
     county = results.get("County lookup (FCC)")
     soil = results.get("Soil data (USDA SSURGO)")
     weather = results.get("Weather data (NASA POWER)")
@@ -274,17 +285,10 @@ def _build_recommendation_bounded(lat: float, lon: float, deadline: float,
         raise OutsideFlorida
     if soil is not None and soil["soil_ph"] is None:
         warnings.append("Soil survey reports no pH for this soil; the pH factor is skipped")
+    if soil is not None and "nearby survey" in soil.get("source", ""):
+        warnings.append(f"Soil values use {soil['source']}; test the soil at your site before planting")
 
-    market = None
-    if county is not None and time.perf_counter() < deadline:
-        market_result = _bounded_fetches(
-            {"Yield and price data (USDA NASS)": lambda: _provider_call(
-                load_market, county["county_fips"], deadline=deadline)},
-            deadline, warnings, failed)
-        market = market_result["Yield and price data (USDA NASS)"]
-    elif county is not None:
-        failed.append("Yield and price data (USDA NASS)")
-        warnings.append("Yield and price data (USDA NASS) timed out; related values are null")
+    market = results.get("Yield and price data (USDA NASS)")
     climate = _attempt(lambda: summarize(weather), "Climate summary", warnings, failed) if weather is not None else None
     conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
     conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
