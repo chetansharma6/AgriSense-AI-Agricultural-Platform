@@ -16,9 +16,16 @@ test("crop detail leads with deterministic guidance and tolerates missing option
   const detail = read("src/app/crops/[id]/CropDetailClient.tsx");
   assert.ok(detail.indexOf("<DecisionSnapshot") < detail.indexOf("<AiReport"));
   const snapshot = read("src/components/DecisionSnapshot.tsx");
-  for (const field of ["action_plan?.first_test", "risk_notes?.[0]", "water_plan", "scale?.fit"]) {
+  for (const field of ["action_plan?.first_test", "risk_notes?.[0]", "water_plan", "nutrient_plan?.practices", "scale?.fit", "resource-aware planning"]) {
     assert.match(snapshot, new RegExp(field.replace(/[.?[\]]/g, "\\$&")));
   }
+});
+
+test("results frame crop details as water, nutrient, and soil planning without impact claims", () => {
+  const results = read("src/app/results/ResultsClient.tsx");
+  assert.match(results, /Plan for water, soil, and inputs/);
+  assert.match(results, /irrigation pressure, nutrient practices, soil-health steps/);
+  assert.match(results, /not guarantees of water use or environmental impact/);
 });
 
 test("top cards explain rank before an optional AI report can load", () => {
