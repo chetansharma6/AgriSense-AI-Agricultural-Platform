@@ -32,11 +32,13 @@ export default function Home() {
   const valid = finite && lat >= 24.3 && lat <= 31.1 && lon >= -87.7 && lon <= -79.9;
   const value = finite ? { lat, lon } : null;
 
-  function selectPoint(lat: number, lon: number) {
-    setPlace("");
+  function selectPoint(lat: number, lon: number, label = "") {
+    setPlace(label || demos.find((demo) => demo.lat.toFixed(4) === lat.toFixed(4) && demo.lon.toFixed(4) === lon.toFixed(4))?.name || "");
     setLatitude(lat.toFixed(4));
     setLongitude(lon.toFixed(4));
   }
+
+  const selectedLocation = valid ? (place || `${lat.toFixed(4)}, ${lon.toFixed(4)}`) : "";
 
   function analyze(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -78,9 +80,8 @@ export default function Home() {
                   <h2 id="analysis-title" className={styles.analysisTitle}>Start with your land.</h2>
                   <p className={styles.analysisDescription}>Pick a spot on the map. We check soil, climate and local harvest history, then rank 13 Florida crops by how well they fit.</p>
                   <div className={styles.landControls}>
-                    <div className={styles.locationSearch}><LocationSearch selectedLabel={place} onSelect={(result) => {
-                      selectPoint(result.lat, result.lon);
-                      setPlace(result.label);
+                    <div className={styles.locationSearch}><LocationSearch selectedLabel={selectedLocation ? `Selected: ${selectedLocation}` : ""} onSelect={(result) => {
+                      selectPoint(result.lat, result.lon, result.label);
                     }} /></div>
                     <label className="block text-sm font-semibold" htmlFor="acreage">How much land? (acres)
                       <input id="acreage" type="number" min="0.1" max="10000" step="any" inputMode="decimal" placeholder="Optional" value={acreage}
@@ -96,7 +97,7 @@ export default function Home() {
                       {demos.map((demo) => {
                         const selected = latitude === demo.lat.toFixed(4) && longitude === demo.lon.toFixed(4);
                         return (
-                          <button key={demo.name} type="button" onClick={() => selectPoint(demo.lat, demo.lon)} aria-pressed={selected}
+                          <button key={demo.name} type="button" onClick={() => selectPoint(demo.lat, demo.lon, demo.name)} aria-pressed={selected}
                             className={styles.demoCard}>
                             <span className="block text-sm font-semibold">{demo.name}</span>
                             <span className={styles.demoCaption}>{demo.caption}</span>
@@ -121,17 +122,17 @@ export default function Home() {
                       </fieldset>
                     </details>
                     <p id="location-message" aria-live="polite" className={styles.locationMessage}>
-                      {complete && !valid ? 'Location must be in Florida: latitude 24.3–31.1, longitude −87.7–−79.9.' : 'Choose a location in Florida to analyze your land.'}
+                      {complete && !valid ? 'Location must be in Florida: latitude 24.3–31.1, longitude −87.7–−79.9.' : valid ? `Ready to analyze: ${selectedLocation}.` : 'Choose a location in Florida to analyze your land.'}
                     </p>
-                    <button type="submit" disabled={!valid || !validAcres} className={styles.analyzeButton}>Analyze my land <span aria-hidden="true">↗</span></button>
+                    <button type="submit" disabled={!valid || !validAcres} className={styles.analyzeButton}>{valid && place ? `Analyze ${place}` : "Analyze my land"} <span aria-hidden="true">↗</span></button>
                   </form>
                 </div>
                 <section className={`${styles.mapPanel} min-w-0`} aria-label="Farm location map">
-                  <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><h3 className={styles.mapTitle}>Your Florida starting point</h3><span className={styles.mapBadge}>Select a spot</span></div>
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><h3 className={styles.mapTitle}>Your Florida starting point</h3><span className={styles.mapBadge}>{valid ? "Location selected" : "Select a spot"}</span></div>
                   <div className={styles.mapFrame}>
                     <MapLoader value={value} onChange={selectPoint} demoPins={demos} />
                   </div>
-                  <p className="mt-3 text-sm">Click the map or choose a demo farm to get started.</p>
+                  <p className="mt-3 text-sm">{valid ? `Selected: ${selectedLocation}. Click the map to change your location.` : "Click the map or choose a demo farm to get started."}</p>
                 </section>
               </div>
             </section>
