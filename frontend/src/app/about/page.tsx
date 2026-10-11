@@ -39,8 +39,8 @@ const limitations = [
 
 export default function About() {
   return (
-    <main className="mx-auto w-full max-w-5xl px-5 py-12 sm:px-8">
-      <h1 className="page-title">How AgriSense works</h1>
+    <main className="theme-page mx-auto w-full max-w-5xl px-5 py-12 sm:px-8">
+      <header className="page-heading"><p className="theme-eyebrow">Rooted in agricultural data</p><h1 className="page-title">How AgriSense works</h1></header>
       <p className="mt-5 max-w-3xl leading-relaxed text-ink/75 sm:text-lg">AgriSense combines public soil, climate and harvest data to rank 13 crops for your Florida location. Deterministic calculations produce the suitability scores, and AI explains those results in plain language.</p>
 
       <section aria-labelledby="process-heading" className="mt-10">
@@ -49,7 +49,7 @@ export default function About() {
           {steps.map((step, index) => (
             <li key={step.title} className="flex min-w-0 flex-1 flex-col gap-3 md:flex-row">
               {index > 0 && <span aria-hidden="true" className="self-center text-2xl text-field"><span className="md:hidden">↓</span><span className="hidden md:inline">→</span></span>}
-              <div className="card w-full flex-1 rounded-xl border border-field/20 bg-white/50 p-5">
+              <div className="process-step card w-full flex-1 rounded-xl border border-field/20 bg-white/50 p-5">
                 <span className="text-sm font-semibold uppercase tracking-widest text-soil">{String(index + 1).padStart(2, "0")}</span>
                 <h3 className="mt-2 text-xl font-semibold text-field">{step.title}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-ink/75">{step.description}</p>

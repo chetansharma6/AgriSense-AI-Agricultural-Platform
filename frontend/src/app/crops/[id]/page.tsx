@@ -16,7 +16,7 @@ export async function generateMetadata({ params, searchParams }: {
 
 export default function CropDetailPage() {
   return (
-    <main className="crop-report mx-auto w-full min-w-0 max-w-6xl px-5 py-8 sm:px-8">
+    <main className="theme-page crop-report mx-auto w-full min-w-0 max-w-6xl px-5 py-8 sm:px-8">
       <Suspense fallback={<CropDetailSkeleton />}>
         <CropDetailClient />
       </Suspense>

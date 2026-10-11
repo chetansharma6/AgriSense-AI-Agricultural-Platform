@@ -121,7 +121,7 @@ export default function CropDetailClient() {
   return (
     <div className="space-y-8">
       <div className="no-print flex flex-wrap items-center justify-between gap-3">{back}<button type="button" onClick={() => window.print()} className="min-h-11 rounded-lg border border-field bg-white/50 px-4 py-3 text-sm font-semibold text-field hover:bg-leaf/15">Download report</button></div>
-      <header className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6">
+      <header className="page-heading card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <h1 className="page-title">{crop.name ?? "Unnamed crop"}</h1>
