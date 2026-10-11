@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
 import { formatDisplayText } from "@/lib/format";
 import type { CropDetail } from "@/lib/types";
 
@@ -27,7 +26,7 @@ function Shimmer({ className }: { className: string }) {
   return <div aria-hidden="true" className={`report-shimmer rounded bg-gradient-to-r from-soil/10 via-sand to-soil/10 ${className}`} />;
 }
 
-export default function AiReport({ crop, acres, verdictSlot }: { crop: CropDetail; acres?: number; verdictSlot: HTMLElement | null }) {
+export default function AiReport({ crop, acres }: { crop: CropDetail; acres?: number }) {
   const [result, setResult] = useState<ReportResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
@@ -52,13 +51,7 @@ export default function AiReport({ crop, acres, verdictSlot }: { crop: CropDetai
     return () => controller.abort();
   }, [crop, acres, attempt]);
 
-  const verdict = result ? (
-    <p className="mt-3 truncate text-sm italic text-ink/80" title={formatDisplayText(result.report.verdict)}>{formatDisplayText(result.report.verdict)}</p>
-  ) : !error ? <Shimmer className="mt-3 h-5 w-full max-w-md" /> : null;
-
   return (
-    <>
-      {verdictSlot && createPortal(verdict, verdictSlot)}
       <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="ai-summary-title" aria-busy={!result && !error}>
         <h2 id="ai-summary-title" className="section-title">Summary of the data above</h2>
         {crop.provenance?.mode === "demo" && <p className="mt-3 text-sm text-soil">Based on saved demo data, not live measurements for your property.</p>}
@@ -90,6 +83,5 @@ export default function AiReport({ crop, acres, verdictSlot }: { crop: CropDetai
         )}
         <p className="mt-5 text-sm leading-relaxed text-soil">{result?.source === "fallback" ? "Written from the supplied scores." : "Written by AI from the numbers on this page."} Scores are calculated, not generated.</p>
       </section>
-    </>
   );
 }

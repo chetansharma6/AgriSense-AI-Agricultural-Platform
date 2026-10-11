@@ -5,6 +5,8 @@ import Link from "next/link";
 import AiReport from "@/components/AiReport";
 import FactorChart from "@/components/FactorChart";
 import FertilizerRecommendations from "@/components/FertilizerRecommendations";
+import DataStatusChips from "@/components/DataStatusChips";
+import DecisionSnapshot from "@/components/DecisionSnapshot";
 import { placeLabel } from "@/lib/presentation";
 import { explanationFor, weightsFor } from "@/lib/weights";
 import { useParams, useSearchParams } from "next/navigation";
@@ -64,7 +66,6 @@ export default function CropDetailClient() {
     && Number.isFinite(lat) && Number.isFinite(lon)
     && lat >= 24.3 && lat <= 31.1 && lon >= -87.7 && lon <= -79.9;
   const key = `${id}:${lat},${lon}:${landAcres ?? ""}`;
-  const [verdictSlot, setVerdictSlot] = useState<HTMLDivElement | null>(null);
   const [attempt, setAttempt] = useState(0);
   const [state, setState] = useState<DetailState | null>(null);
   const current = state?.key === key && state.attempt === attempt ? state.data : undefined;
@@ -133,10 +134,10 @@ export default function CropDetailClient() {
           </div>
         </div>
         {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/10 px-3 py-1 text-sm font-semibold text-clay">Score capped at {crop.scale?.fit === "too_small" ? Math.min(40, crop.scoring?.critical_cap ?? 45) : crop.scoring?.critical_cap ?? 45}. {limitedText(crop.limited_by)}</p>}
-        <div id="ai-verdict" ref={setVerdictSlot} />
+        <div className="mt-4"><DataStatusChips provenance={crop.provenance} confidence={crop.confidence} /></div>
       </header>
+      <DecisionSnapshot crop={crop} />
       <FactorChart factors={crop.factors} details={crop.factor_details} weights={weightsFor(crop.scoring)} explanation={explanationFor(crop.scoring)} />
-      <AiReport key={key} crop={crop} acres={landAcres} verdictSlot={verdictSlot} />
       <section aria-labelledby="track-record">
         <h2 id="track-record" className="section-title mb-5">Local track record</h2>
         <dl className={`grid gap-4 ${hasAcres ? "sm:grid-cols-3" : "sm:grid-cols-2"}`}>
@@ -199,6 +200,7 @@ export default function CropDetailClient() {
         <p className="mt-4"><span className="font-semibold">Rotation:</span> {formatDisplayText(crop.management_guidance.rotation_guidance)}</p>
         {extensionUrl(crop.management_guidance.source.url) && <a href={extensionUrl(crop.management_guidance.source.url)!} target="_blank" rel="noopener noreferrer" className="mt-4 inline-flex min-h-11 items-center text-sm text-field underline underline-offset-4">{crop.management_guidance.source.title ?? "UF/IFAS crop guidance"}</a>}
       </section>}
+      <AiReport key={key} crop={crop} acres={landAcres} />
       <aside className="card report-disclaimer rounded-xl border border-soil/25 bg-sand p-5 text-sm leading-relaxed">General guidance only. Confirm fertilizer and pesticide decisions with your county UF/IFAS Extension office and always follow product labels.</aside>
     </div>
   );
