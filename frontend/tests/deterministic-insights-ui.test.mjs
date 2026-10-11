@@ -32,7 +32,8 @@ test("top cards explain rank before an optional AI report can load", () => {
 
 test("detailed provenance stays available behind disclosure", () => {
   const source = read("src/components/LandSummary.tsx");
-  assert.match(source, /<details className=/);
-  assert.match(source, /View detailed source provenance/);
+  assert.match(source, /aria-expanded=\{expanded\}/);
+  assert.match(source, /aria-controls=\{detailsId\}/);
+  assert.match(source, /View source details/);
   for (const field of ["data_period", "geographic_level", "limitations"]) assert.match(source, new RegExp(field));
 });
