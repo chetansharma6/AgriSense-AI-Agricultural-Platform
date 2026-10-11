@@ -61,7 +61,7 @@ export default function ResultsClient() {
   const title = `${place}${acres !== undefined && Number.isFinite(acres) ? ` for ${acres.toLocaleString("en-US", { maximumFractionDigits: 20 })} acres` : ""}`;
   useEffect(() => { document.title = `${title} results · AgriSense`; }, [title]);
   function withTitle(content: ReactNode) {
-    return <><h1 className="page-title mb-6">{title}</h1>{content}</>;
+    return <><header className="page-heading mb-6"><p className="theme-eyebrow">Your land, local possibilities</p><h1 className="page-title">{title}</h1></header>{content}</>;
   }
 
   if (!valid) return withTitle(
