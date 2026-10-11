@@ -138,6 +138,23 @@ npm run lint
 npm run build
 ```
 
+## Release verification
+
+GitHub Actions runs these checks for pull requests and changes to `main`. The
+workflow uses Python 3.11, matching Render's configured minor version, and its
+demo evaluator replaces provider calls with mocks.
+
+```bash
+python -m pip install --disable-pip-version-check --no-input -r backend/requirements.txt
+(cd backend && timeout 180s python -m pytest -q)
+(cd backend && timeout 30s python -m scripts.evaluate_demos)
+(cd frontend && timeout 180s npm ci)
+(cd frontend && timeout 60s npm test)
+(cd frontend && timeout 60s npm run lint)
+(cd frontend && timeout 60s npx next typegen && timeout 60s npx tsc --noEmit)
+(cd frontend && timeout 180s npm run build)
+```
+
 ## First-time setup
 
 Set your own Git identity to match your GitHub account, then enable the repository hooks:
