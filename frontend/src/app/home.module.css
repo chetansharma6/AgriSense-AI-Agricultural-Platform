@@ -77,7 +77,7 @@
 .mapFrame { flex: 1; min-height: 340px; overflow: hidden; border: 1px solid #68876c; border-radius: 1rem; }
 .mapFrame > div { height: 100%; min-height: 340px; }
 .mapFrame :global(.leaflet-control-zoom) { border: 1px solid #68876c; border-radius: .65rem; overflow: hidden; box-shadow: 0 2px 12px #203d3020; }
-.mapFrame :global(.leaflet-control-zoom a) { background: #f8f6ed; color: #203d30; width: 36px; height: 36px; line-height: 36px; }
+.mapFrame :global(.leaflet-control-zoom a) { background: #f8f6ed; color: #203d30; width: 44px; height: 44px; line-height: 44px; }
 .mapFrame :global(.leaflet-control-zoom a:hover) { background: #d6e4cd; }
 .mapPanel > p { color: #d4ded0; line-height: 1.5; }
 @media (min-width: 1024px) { .analysisGrid { grid-template-columns: minmax(0, 45fr) minmax(0, 55fr); gap: 2.25rem; } .mapFrame, .mapFrame > div { min-height: 520px; } }
@@ -91,3 +91,16 @@
 @media (min-width: 1024px) { .intro { grid-template-columns: 1.15fr 1fr; gap: 4rem; } .farmVisual { min-height: 450px; } .mapPanel { padding: 1.25rem; } }
 @media (max-width: 639px) { .intro { padding: 1rem 0 2.5rem; gap: 2rem; } .farmVisual { min-height: 280px; max-height: 360px; } .analysis { padding: 1.25rem; } .mapPanel { padding: .75rem; } .photoCaption { left: 1rem; right: 1rem; bottom: 1rem; } }
 @media (prefers-reduced-motion: reduce) { .hero *, .hero *::before, .hero *::after { animation: none !important; transition: none !important; } .cta:hover, .statCard:hover { transform: none; } }
+
+.factorLabels { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; color: #d4ded0; font-size: .75rem; }
+.factorLabels li { border: 1px solid #68876c; border-radius: 999px; padding: .25rem .65rem; }
+.selectionConfirmation { margin-top: 1rem; color: #d6e4cd; font-size: .875rem; overflow-wrap: anywhere; }
+.mapBadge { max-width: 100%; overflow-wrap: anywhere; }
+.examplePreview { display: grid; gap: 1.5rem; align-items: center; margin-top: 3rem; }
+.examplePreview h2 { font-family: var(--font-editorial); font-size: 2rem; font-weight: 400; line-height: 1.2; }
+.exampleCard { min-width: 0; border: 1px solid var(--color-border); background: #eaf2e699; border-radius: 1.5rem; padding: 1.5rem; }
+.exampleCard h3 { font-family: var(--font-editorial); font-size: 1.8rem; font-weight: 400; }
+.exampleScore { color: var(--color-field); font-size: .85rem; }
+.exampleScore strong { font-size: 1.5rem; }
+.exampleScore span { display: block; font-size: .7rem; }
+@media (min-width: 768px) { .examplePreview { grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 2rem; } }

@@ -26,6 +26,7 @@ function load(rel, overrides = {}) {
   const mod = { exports: {} };
   const req = (name) => {
     if (name in overrides) return { __esModule: true, ...overrides[name] };
+    if (name.endsWith('.json') && name.startsWith('@/')) return JSON.parse(fs.readFileSync(new URL(`../src/${name.slice(2)}`, import.meta.url), 'utf8'));
     if (name.startsWith('@/')) return load(`${name.slice(2)}.ts${fs.existsSync(new URL(`../src/${name.slice(2)}.tsx`, import.meta.url)) ? 'x' : ''}`);
     if (name.endsWith('.css')) return new Proxy({}, { get: (_, key) => String(key) });
     if (name.startsWith('./')) {
@@ -96,6 +97,15 @@ test('homepage selection methods share feedback and preserve location in analysi
  }).default;
  await render(Home, {});
  const message = () => document.getElementById('location-message').textContent;
+ const saved = JSON.parse(fs.readFileSync(new URL('../src/mocks/plant_city.json', import.meta.url), 'utf8'));
+ const preview = document.querySelector('[aria-labelledby="example-heading"]');
+ const strawberry = saved.recommend.crops.find((crop) => crop.id === 'strawberry');
+ assert.ok(preview.textContent.includes(String(strawberry.score)));
+ assert.ok(preview.textContent.includes(strawberry.flags[0]));
+ const exampleUrl = new URL(preview.querySelector('a').href);
+ assert.equal(exampleUrl.pathname, '/results');
+ assert.equal(Number(exampleUrl.searchParams.get('lat')), saved.recommend.location.lat);
+ assert.equal(Number(exampleUrl.searchParams.get('lon')), saved.recommend.location.lon);
  await act(async () => [...document.querySelectorAll('button')].find((b) => b.textContent.includes('Plant City')).click());
  assert.match(message(), /Ready to analyze: Plant City/);
  assert.equal(searchProps.selectedLabel, 'Selected: Plant City');
@@ -107,6 +117,8 @@ test('homepage selection methods share feedback and preserve location in analysi
  assert.match(message(), /Hastings, FL/);
  await act(async () => mapProps.onChange(27.1234, -81.4321));
  assert.match(message(), /27.1234, -81.4321/);
+ assert.match(document.querySelector('button[type="submit"]').textContent, /Analyze selected location/);
+ assert.equal(document.querySelector('button[type="submit"]').disabled, false);
  const input = [...document.querySelectorAll('input')].find((input) => input.placeholder === '27.8000');
  await act(async () => {
   Object.getOwnPropertyDescriptor(dom.window.HTMLInputElement.prototype, 'value').set.call(input, '28.5');
@@ -139,4 +151,42 @@ test('results feature the actual highest score before land details and open its 
  assert.equal(url.searchParams.get('lon'), '-82.1500');
  assert.equal(url.searchParams.get('acres'), '0.1');
  assert.equal(JSON.stringify(response), before);
+});
+
+test('location search hides superseded choices after another selection and retains new search errors', async () => {
+ const Search = load('components/LocationSearch.tsx', {
+  '@/lib/api': { searchLocation: async (query) => {
+   if (query === 'missing') return [];
+   return [{label:'Plant City, FL',lat:28.03,lon:-82.15},{label:'Hastings, FL',lat:29.71,lon:-81.5}];
+  }, ApiError: class extends Error {} },
+ }).default;
+ const props = {selectedLabel:'',onSelect:()=>{}};
+ await render(Search, props);
+ async function search(query) {
+  await act(async () => {
+   const input = document.querySelector('input');
+   Object.getOwnPropertyDescriptor(dom.window.HTMLInputElement.prototype, 'value').set.call(input, query);
+   input.dispatchEvent(new dom.window.Event('input', {bubbles:true}));
+  });
+  await act(async () => document.querySelector('form').dispatchEvent(new dom.window.Event('submit', {bubbles:true,cancelable:true})));
+ }
+ await search('town');
+ assert.match(document.body.textContent, /Choose a Florida location below/);
+ await render(Search, {...props,selectedLabel:'Selected: Marianna'});
+ assert.doesNotMatch(document.body.textContent, /Choose a Florida location below/);
+ assert.equal(document.querySelector('[aria-label="Matching Florida locations"]'), null);
+ await search('missing');
+ assert.match(document.body.textContent, /No Florida match/);
+});
+
+test('data page preserves scoring weights, source links and visible limitations', async () => {
+ const About = load('app/about/page.tsx').default;
+ await render(About, {});
+ assert.match(document.body.textContent, /01.*Agricultural Data.*02.*Suitability Scoring.*03.*AI Interpretation/);
+ assert.match(document.body.textContent, /Anthropic.*never invents scores/);
+ assert.equal(document.querySelectorAll('table tbody tr').length, 6);
+ assert.equal(document.querySelector('[aria-labelledby="sources-heading"]').querySelectorAll('a').length, 5);
+ assert.equal(document.querySelector('[aria-labelledby="limitations-heading"]').closest('details'), null);
+ assert.match(document.querySelector('[aria-labelledby="limitations-heading"]').textContent, /50 km.*map-unit averages.*statewide data/);
+ assert.equal(document.querySelectorAll('details').length, 4);
 });
