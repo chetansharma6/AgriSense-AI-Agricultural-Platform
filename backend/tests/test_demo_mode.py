@@ -8,8 +8,7 @@ import pytest
 from app import cache, config, service
 from app.clients import fawn, fcc
 from app.market import Market
-from app.schemas import Provenance
-from app.schemas import RecommendResponse
+from app.schemas import CropDetail, Provenance, RecommendResponse
 from app.utils import haversine_km
 from tests.test_api import COUNTY, SOIL, fake_weather
 
@@ -46,7 +45,10 @@ def test_nearby_location_uses_nearest_saved_demo(demo: pytest.MonkeyPatch) -> No
     body = service.recommend(**NEAR_HASTINGS)
     assert body["warnings"][0] == "Showing cached data for Hastings (DEMO_MODE uses the saved demo response)"
     saved = saved_demo("hastings")
-    assert body["crops"] == saved["crops"]
+    # Saved fixtures are raw source data. The service adds current public API
+    # fields (scale, actions, risks, provenance and confidence) at one boundary.
+    assert [crop["id"] for crop in body["crops"]] == [crop["id"] for crop in saved["crops"]]
+    assert [crop["score"] for crop in body["crops"]] == [crop["score"] for crop in saved["crops"]]
     assert body["location"] == saved["location"]  # the farm the data is really for
 
 
@@ -167,6 +169,22 @@ def test_exact_demo_coordinates_are_instant_contract_valid_and_offline(
     assert body["provenance"] == service.recommend(lat, lon)["provenance"]
     assert time.perf_counter() - started < 0.5
     assert calls == []
+
+
+@pytest.mark.parametrize("farm", config.DEMO_FARMS)
+def test_exact_demo_crop_details_are_contract_valid_and_offline(
+    monkeypatch: pytest.MonkeyPatch, farm: str
+) -> None:
+    monkeypatch.setattr(config, "DEMO_MODE", True)
+    for name in ("lookup_county", "get_soil", "get_daily_weather", "load_market"):
+        monkeypatch.setattr(service, name, lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError(name)))
+    monkeypatch.setattr(fawn, "nearest_station", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("FAWN")))
+    lat, lon = config.DEMO_FARMS[farm]
+    for crop_id in service.load_crops():
+        detail = service.crop_detail(crop_id, lat, lon)
+        assert detail is not None
+        validated = CropDetail.model_validate(detail)
+        assert validated.id == crop_id
 
 
 def test_arbitrary_florida_coordinates_keep_live_behavior(demo: pytest.MonkeyPatch) -> None:

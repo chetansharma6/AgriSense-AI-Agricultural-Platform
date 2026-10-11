@@ -9,12 +9,10 @@ for the same spot skip all I/O and scoring.
 import copy
 import json
 import logging
-import weakref
 import threading
 import time
 from collections import OrderedDict
 from concurrent.futures import Future, ThreadPoolExecutor, wait
-from concurrent.futures.thread import _threads_queues, _worker
 from functools import lru_cache
 from typing import Any, Callable, TypeVar
 
@@ -36,34 +34,17 @@ log = logging.getLogger(__name__)
 RESPONSE_CACHE_SIZE = 256
 RESPONSE_CACHE_TTL_S = 3600.0
 MAX_CONCURRENT_RECOMMENDATIONS = 8
+MAX_CONCURRENT_PROVIDER_WORK = 8
 FACTOR_COUNT = 6
 _response_cache: OrderedDict[tuple[float, float], tuple[float, dict[str, Any]]] = OrderedDict()
 _response_cache_lock = threading.Lock()
 _recommendation_slots = threading.BoundedSemaphore(MAX_CONCURRENT_RECOMMENDATIONS)
-
-
-class _DaemonThreadPoolExecutor(ThreadPoolExecutor):
-    """Executor whose abandoned deadline workers cannot hold up process exit."""
-
-    def _adjust_thread_count(self) -> None:
-        if self._idle_semaphore.acquire(timeout=0):
-            return
-
-        def weakref_cb(_, queue=self._work_queue) -> None:
-            queue.put(None)
-
-        if len(self._threads) < self._max_workers:
-            name = f"{self._thread_name_prefix or self}_{len(self._threads)}"
-            thread = threading.Thread(
-                name=name,
-                target=_worker,
-                args=(weakref.ref(self, weakref_cb), self._work_queue,
-                      self._initializer, self._initargs),
-                daemon=True,
-            )
-            thread.start()
-            self._threads.add(thread)
-            _threads_queues[thread] = self._work_queue
+# A single fixed pool bounds active provider work even when callers time out.
+# Pending jobs are cancelled below; running HTTP calls retain their own provider
+# timeout, but cannot create additional threads or executor instances.
+_provider_pool = ThreadPoolExecutor(
+    max_workers=MAX_CONCURRENT_PROVIDER_WORK, thread_name_prefix="provider"
+)
 
 SOIL_FIELDS = ("soil_ph", "organic_matter_pct", "sand_pct", "clay_pct", "texture", "drainage")
 CLIMATE_FIELDS = ("annual_precip_mm", "frost_free_days", "last_spring_frost", "first_fall_frost",
@@ -173,22 +154,25 @@ def _build_with_deadline(lat: float, lon: float, acres: float | None = None) -> 
 
 def _bounded_fetches(fetches: dict[str, Callable[[], Any]], timeout_s: float,
                     warnings: list[str], failed: list[str]) -> dict[str, Any | None]:
-    """Fetch independent providers without letting one occupy the request."""
-    pool = _DaemonThreadPoolExecutor(max_workers=len(fetches), thread_name_prefix="bounded_source")
+    """Fetch providers within one request budget using the fixed worker pool.
+
+    A timeout returns a partial response immediately. Work that has not begun
+    is cancelled; already-running provider calls are bounded by their own HTTP
+    timeout and share this fixed-size pool, so timeout traffic cannot create an
+    unbounded number of threads or detached executors.
+    """
     futures: dict[str, Future[Any]] = {
-        name: pool.submit(_attempt, fetch, name, warnings, failed)
+        name: _provider_pool.submit(_attempt, fetch, name, warnings, failed)
         for name, fetch in fetches.items()
     }
     done, pending = wait(futures.values(), timeout=max(timeout_s, 0.0))
     for name, future in futures.items():
         if future in pending:
+            future.cancel()
             failed.append(name)
             warnings.append(f"{name} timed out; related values are null")
     results = {name: (future.result() if future in done else None)
                for name, future in futures.items()}
-    # A timed-out provider may still be inside an upstream HTTP call. Do not
-    # wait for it and do not reuse its worker for another request.
-    pool.shutdown(wait=False, cancel_futures=True)
     return results
 
 
