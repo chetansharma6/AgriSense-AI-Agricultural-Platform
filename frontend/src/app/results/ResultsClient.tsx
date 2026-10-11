@@ -83,7 +83,8 @@ export default function ResultsClient() {
     </section>
   );
   if (!state.data) return withTitle(<ResultsSkeleton slow={slow} />);
-  const crops = [...(state.data.crops ?? [])].sort((a, b) => (b.score ?? -1) - (a.score ?? -1) || (a.name ?? "").localeCompare(b.name ?? ""));
+  const response = state.data;
+  const crops = [...(response.crops ?? [])].sort((a, b) => (b.score ?? -1) - (a.score ?? -1) || (a.name ?? "").localeCompare(b.name ?? ""));
   const ranked = crops.map((crop, i) => ({ crop, rank: i + 1 }));
   const matching = ranked.filter(({ crop }) => {
     const coolSeason = /fall|winter|spring/i.test(crop.season_label ?? "");
@@ -100,8 +101,9 @@ export default function ResultsClient() {
   const otherCrops = matching.filter(({ rank }) => rank > 3);
   return withTitle(
     <div>
+      {ranked[0] ? <div className="mb-6"><CropCard crop={ranked[0].crop} rank={1} lat={lat} lon={lon} acres={acres} place={place} featured provenance={response.provenance} confidence={response.confidence} /></div> : <p className="mb-6">No crop recommendations are available for this location.</p>}
       <p className="mb-5 text-lg leading-relaxed">{resultsSummary(crops)}</p>
-      <DataStatusChips provenance={state.data.provenance} confidence={state.data.confidence} />
+      <DataStatusChips provenance={response.provenance} confidence={response.confidence} />
       <p className="mb-5 text-sm leading-relaxed">{acres === undefined ? "Land size was not provided. Rankings reflect local growing conditions; acreage affects practical suitability and recommendation confidence." : "Land size influences these rankings: field commodities on undersized lots are capped at 40; smaller commercial plantings at 74. Garden-bed crops can fit small lots. These planning rules do not guarantee profitability."}</p>
       <LandSummary response={state.data} place={params.get("place")?.trim() || undefined} />
       <p className="mt-3 text-xs leading-relaxed text-soil">Climate: NASA POWER 2016–2025 · Soil: USDA NRCS SSURGO · Harvests: USDA NASS</p>
@@ -125,14 +127,14 @@ export default function ResultsClient() {
           {bestFits.length > 0 && <section className="mt-10" aria-labelledby="best-fits-title">
             <h2 id="best-fits-title" className="mb-5 text-2xl font-semibold">Best fits for this spot</h2>
             <div className="grid gap-4 lg:grid-cols-3">
-              {bestFits.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} place={place} acres={acres} />)}
+              {bestFits.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} place={place} acres={acres} provenance={response.provenance} confidence={response.confidence} />)}
             </div>
           </section>}
           {otherCrops.length > 0 && (
             <section className="mt-10" aria-labelledby="other-crops-title">
               <h2 id="other-crops-title" className="mb-5 text-2xl font-semibold">Other crops</h2>
               <div className="space-y-3">
-                {otherCrops.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} place={place} acres={acres} compact />)}
+                {otherCrops.map(({ crop, rank }) => <CropCard key={crop.id ?? rank} crop={crop} rank={rank} lat={lat} lon={lon} place={place} acres={acres} compact provenance={response.provenance} confidence={response.confidence} />)}
               </div>
             </section>
           )}

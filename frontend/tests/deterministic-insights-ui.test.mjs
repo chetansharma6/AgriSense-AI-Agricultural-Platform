@@ -23,7 +23,7 @@ test("crop detail leads with deterministic guidance and tolerates missing option
 
 test("top cards explain rank before an optional AI report can load", () => {
   const card = read("src/components/CropCard.tsx");
-  for (const field of ["Why it ranks here", "Strongest signals", "First action", "Watch:", "rank <= 3"]) {
+  for (const field of ["Why this crop", "Main consideration", "First action", "View growing plan", "rank <= 3", "<details"]) {
     assert.match(card, new RegExp(field.replace(/[.?[\]]/g, "\\$&")));
   }
   const report = read("src/components/AiReport.tsx");
