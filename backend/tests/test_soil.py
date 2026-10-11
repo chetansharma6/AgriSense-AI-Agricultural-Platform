@@ -82,6 +82,18 @@ def test_nearby_failure_preserves_valid_on_site_fields(monkeypatch: pytest.Monke
     assert not writes  # Retry optional enrichment after a temporary failure.
 
 
+def test_partial_cache_does_not_bypass_nearby_enrichment(monkeypatch) -> None:
+    cached = {"soil_ph": None, "organic_matter_pct": 1., "sand_pct": 94., "clay_pct": 3.,
+              "texture": "sand", "drainage": "Well drained", "mukey": "123", "source": soil.SOURCE}
+    nearby = {**cached, "soil_ph": 6.2, "source": soil.SOURCE + " (nearby survey, about 1.5 km away)"}
+    monkeypatch.setattr(soil, "read_cache", lambda *_: cached)
+    monkeypatch.setattr(soil, "get_mukey", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("Refetched cached soil")))
+    monkeypatch.setattr(soil, "_nearby_soil", lambda *_args, **_kwargs: nearby)
+    result = soil.get_soil(27.945, -82.4583)
+    assert result["soil_ph"] == 6.2
+    assert "nearby survey" in result["source"]
+
+
 @pytest.mark.parametrize("mukey", ["1' OR '1'='1", "１２３", "bad", ""])
 def test_upstream_map_unit_keys_cannot_become_sql(monkeypatch, mukey) -> None:
     payload = {"Table": [["mukey"], [mukey]]}

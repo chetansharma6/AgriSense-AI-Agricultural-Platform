@@ -137,19 +137,20 @@ def get_soil(lat: float, lon: float, *, deadline: float | None = None) -> Soil:
     """Top-30-cm soil properties at a point. Raises SoilNotFound."""
     params = {"lat": round(lat, 4), "lon": round(lon, 4)}
     cached = read_cache("soil", params, _valid_soil)
-    if cached:
+    if cached and cached["soil_ph"] is not None and cached["drainage"] is not None:
         return cached
 
     # SoilNotFound is not cached, so a point is never stuck as "no soil".
-    try:
-        mukey = get_mukey(params["lat"], params["lon"], deadline=deadline)
-    except SoilNotFound:
-        mukey = None
-    soil = None
+    soil = cached
     cacheable = True
-    if mukey is not None:
-        rows = [_to_numbers(row) for row in sda_query(_HORIZON_SQL.format(mukey=mukey), deadline=deadline)]
-        soil = summarize_soil(rows, mukey)
+    if soil is None:
+        try:
+            mukey = get_mukey(params["lat"], params["lon"], deadline=deadline)
+        except SoilNotFound:
+            mukey = None
+        if mukey is not None:
+            rows = [_to_numbers(row) for row in sda_query(_HORIZON_SQL.format(mukey=mukey), deadline=deadline)]
+            soil = summarize_soil(rows, mukey)
     if soil is None or soil["soil_ph"] is None or soil["drainage"] is None:
         try:
             nearby = _nearby_soil(params["lat"], params["lon"], deadline=deadline)

@@ -47,12 +47,12 @@ report route uses its local fallback. Production debug mode is not enabled.
 
 | Factor | Weight | 100 when |
 |---|---|---|
-| soil_ph | 0.15 | pH inside the crop's ideal range; falls linearly to 0 at its hard limit (`ph_min`/`ph_max`) |
-| drainage | 0.15 | drainage class inside the crop's range (-25 per class); muck is 90 for muck crops, 30 otherwise |
+| soil_ph | 0.20 | pH inside the crop's ideal range; falls linearly to 0 at its hard limit (`ph_min`/`ph_max`) |
+| drainage | 0.15 | drainage class inside the crop's range (-25 per class); muck is 90 for muck crops, 15 otherwise |
 | season_temp | 0.20 | mean temperature in the growing window inside the ideal range; falls linearly to 0 at `temp_min_c`/`temp_max_c` |
-| frost_risk | 0.15 | freeze days in the window at or below the crop's limit (-10 per extra day) |
+| frost_risk | 0.15 | weighted freeze days in the window at or below the crop's limit (light freezes count half; -10 per extra day) |
 | rainfall | 0.10 | window rainfall inside the range (-1 per % outside) |
-| local_history | 0.25 | 5,000+ acres in the county at the latest Census (log scale from 60 at 1 acre; 75 if withheld; 30 if not grown) |
+| local_history | 0.20 | 5,000+ acres in the county at the latest Census (log scale from 60 at 1 acre; 75 if withheld; 30 if not grown) |
 
 Climate factors are scored for each Florida growing window of the crop and
 the best window is reported as `season_label`.
