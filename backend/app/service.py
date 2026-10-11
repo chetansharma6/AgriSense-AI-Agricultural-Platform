@@ -44,6 +44,12 @@ _provider_pool = ThreadPoolExecutor(max_workers=MAX_CONCURRENT_PROVIDER_WORK,
                                     thread_name_prefix="provider")
 _inflight: dict[tuple[float, float], Future[tuple[dict[str, Any], bool]]] = {}
 _inflight_lock = threading.Lock()
+# A single fixed pool bounds active provider work even when callers time out.
+# Pending jobs are cancelled below; running HTTP calls retain their own provider
+# timeout, but cannot create additional threads or executor instances.
+_provider_pool = ThreadPoolExecutor(
+    max_workers=MAX_CONCURRENT_PROVIDER_WORK, thread_name_prefix="provider"
+)
 
 SOIL_FIELDS = ("soil_ph", "organic_matter_pct", "sand_pct", "clay_pct", "texture", "drainage")
 CLIMATE_FIELDS = ("annual_precip_mm", "frost_free_days", "last_spring_frost", "first_fall_frost",
@@ -213,11 +219,21 @@ def _bounded_fetches(fetches: dict[str, Callable[..., Any]], deadline: float,
     """Fetch providers on a fixed global worker pool until one absolute deadline."""
     futures: dict[str, Future[Any]] = {
         name: _provider_pool.submit(_attempt, lambda f=fetch: _call_with_deadline(f, deadline), name, warnings, failed)
+    """Fetch providers within one request budget using the fixed worker pool.
+
+    A timeout returns a partial response immediately. Work that has not begun
+    is cancelled; already-running provider calls are bounded by their own HTTP
+    timeout and share this fixed-size pool, so timeout traffic cannot create an
+    unbounded number of threads or detached executors.
+    """
+    futures: dict[str, Future[Any]] = {
+        name: _provider_pool.submit(_attempt, fetch, name, warnings, failed)
         for name, fetch in fetches.items()
     }
     done, pending = wait(futures.values(), timeout=max(0.0, deadline - time.perf_counter()))
     for name, future in futures.items():
         if future in pending:
+            future.cancel()
             failed.append(name)
             warnings.append(f"{name} timed out; related values are null")
     results = {name: (future.result() if future in done else None)

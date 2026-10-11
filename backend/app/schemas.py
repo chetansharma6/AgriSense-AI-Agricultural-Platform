@@ -201,3 +201,41 @@ class CropDetail(CropResult):
     scoring: ScoringRules
     provenance: Provenance | None = None
     confidence: Confidence | None = None
+
+
+# Saved demo JSON is a source fixture, not a serialized public response. The
+# service decorates it with current scale, provenance, confidence, action-plan,
+# nutrient, water, and management fields before serving it through the API.
+class RawDemoCropResult(Strict):
+    id: str
+    name: str
+    score: int | None
+    season_label: str
+    factors: Factors
+    factor_details: FactorDetails
+    avg_yield: YieldInfo | None
+    price: PriceRange | None
+    limited_by: list[str]
+    flags: list[str]
+
+
+class RawDemoRecommend(Strict):
+    location: Location
+    conditions: Conditions
+    crops: list[RawDemoCropResult]
+    warnings: list[str]
+    scoring: ScoringRules
+
+
+class RawDemoCropDetail(RawDemoCropResult):
+    requirements: dict[str, Any]
+    general_guidance: str
+    extension_links: list[ExtensionLink]
+    conditions: Conditions
+    location: Location
+    scoring: ScoringRules
+
+
+class RawDemoFixture(Strict):
+    recommend: RawDemoRecommend
+    crops: dict[str, RawDemoCropDetail]
