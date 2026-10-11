@@ -8,7 +8,7 @@ import pytest
 
 from app.config import DATA_DIR, DEMO_FARMS
 from app.crops import load_crops
-from app.schemas import CropDetail, RecommendResponse
+from app.schemas import RawDemoFixture
 
 
 def _assert_finite(value: object, path: str = "response") -> None:
@@ -46,16 +46,15 @@ def _assert_response_invariants(response: dict) -> None:
 
 
 @pytest.mark.parametrize("farm", DEMO_FARMS)
-def test_demo_sample_matches_contract(farm: str) -> None:
+def test_raw_demo_fixture_matches_its_source_contract(farm: str) -> None:
     sample = json.loads((DATA_DIR / "demo" / f"{farm}.json").read_text())
-    assert set(sample) == {"recommend", "crops"}
-    recommend = RecommendResponse.model_validate(sample["recommend"])
+    fixture = RawDemoFixture.model_validate(sample)
+    recommend = fixture.recommend
     assert (recommend.location.lat, recommend.location.lon) == DEMO_FARMS[farm]
-    assert set(sample["crops"]) == set(load_crops()) == {crop.id for crop in recommend.crops}
-    for crop_id, detail in sample["crops"].items():
-        validated = CropDetail.model_validate(detail)
-        assert validated.id == crop_id
-        for link in validated.extension_links:
+    assert set(fixture.crops) == set(load_crops()) == {crop.id for crop in recommend.crops}
+    for crop_id, detail in fixture.crops.items():
+        assert detail.id == crop_id
+        for link in detail.extension_links:
             parsed = urlparse(link.url)
             assert parsed.scheme == "https"
             assert parsed.netloc

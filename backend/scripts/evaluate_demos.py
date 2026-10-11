@@ -13,6 +13,7 @@ from typing import Any
 from unittest.mock import patch
 
 from app import config, service
+from app.schemas import CropDetail, RawDemoFixture, RecommendResponse
 
 EXPECTED_CROPS = 13
 MAX_LATENCY_MS = 1_000.0
@@ -51,6 +52,11 @@ def _evaluate(name: str, response: dict[str, Any], repeated: dict[str, Any],
     bad_numbers = _bad_numbers(response)
     deterministic = response == repeated
 
+    try:
+        RecommendResponse.model_validate(response)
+    except Exception as error:
+        errors.append(f"{name}: public recommendation contract invalid ({type(error).__name__})")
+
     if latency_ms >= MAX_LATENCY_MS:
         errors.append(f"{name}: latency {latency_ms:.1f} ms exceeds {MAX_LATENCY_MS:.0f} ms")
     if len(crops) != EXPECTED_CROPS:
@@ -75,6 +81,39 @@ def _evaluate(name: str, response: dict[str, Any], repeated: dict[str, Any],
     return report, errors
 
 
+def _evaluate_fixture(name: str) -> list[str]:
+    """Validate the committed raw source fixture before service decoration."""
+    path = config.DATA_DIR / "demo" / f"{name}.json"
+    try:
+        fixture = RawDemoFixture.model_validate(json.loads(path.read_text()))
+    except Exception as error:
+        return [f"{name}: raw fixture invalid ({type(error).__name__})"]
+    expected_ids = set(service.load_crops())
+    if {crop.id for crop in fixture.recommend.crops} != expected_ids:
+        return [f"{name}: raw fixture recommendation crop ids do not match committed crops"]
+    if set(fixture.crops) != expected_ids:
+        return [f"{name}: raw fixture detail crop ids do not match committed crops"]
+    return []
+
+
+def _evaluate_details(name: str, lat: float, lon: float) -> list[str]:
+    """Validate every API-equivalent detail response without provider access."""
+    errors: list[str] = []
+    for crop_id in service.load_crops():
+        try:
+            detail = service.crop_detail(crop_id, lat, lon)
+            if detail is None:
+                errors.append(f"{name}: detail missing for {crop_id}")
+                continue
+            CropDetail.model_validate(detail)
+            bad_numbers = _bad_numbers(detail, f"{name}.crops.{crop_id}")
+            if bad_numbers:
+                errors.append(f"{name}: detail NaN/infinity at {bad_numbers[0]}")
+        except Exception as error:
+            errors.append(f"{name}: detail {crop_id} invalid ({type(error).__name__})")
+    return errors
+
+
 def _forbid_network(*_args: Any, **_kwargs: Any) -> None:
     raise AssertionError("demo evaluation attempted an external provider call")
 
@@ -93,6 +132,7 @@ def run() -> tuple[dict[str, dict[str, Any]], list[str]]:
             stack.enter_context(patch.object(service.fawn, "daily_min_c", _forbid_network))
             for name, (lat, lon) in config.DEMO_FARMS.items():
                 try:
+                    errors.extend(_evaluate_fixture(name))
                     started = time.perf_counter()
                     response = service.recommend(lat, lon)
                     latency_ms = (time.perf_counter() - started) * 1_000
@@ -100,6 +140,7 @@ def run() -> tuple[dict[str, dict[str, Any]], list[str]]:
                     report, failures = _evaluate(name, response, repeated, latency_ms)
                     reports[name] = report
                     errors.extend(failures)
+                    errors.extend(_evaluate_details(name, lat, lon))
                 except Exception as error:
                     errors.append(f"{name}: evaluation failed ({type(error).__name__}: {error})")
     finally:
