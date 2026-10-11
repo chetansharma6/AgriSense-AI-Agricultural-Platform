@@ -2,7 +2,7 @@
 
 ![AgriSense home page with the Florida map and example locations](docs/screenshots/home-map.png)
 
-[Try the live app](https://agrisense-ai-cyan.vercel.app)
+[Try the live app](https://agrisense-ai-cyan.vercel.app/)
 
 AgriSense helps small and mid-scale Florida farmers decide what to plant by ranking 13 crops for a selected location. Each crop report includes an explainable suitability score, local yield and price history, growing guidance, and UF/IFAS Extension links.
 
