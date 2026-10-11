@@ -76,7 +76,9 @@ export default function LandSummary({ response, place }: { response: RecommendRe
           {!!confidence.available_factor_names?.length && <p className="mt-1"><span className="font-semibold">Available:</span> {confidence.available_factor_names.map(formatDisplayText).join(", ")}</p>}
           {!!confidence.missing_factor_names?.length && <p className="mt-1"><span className="font-semibold">Missing:</span> {confidence.missing_factor_names.map(formatDisplayText).join(", ")}</p>}
         </div>}
-        {sources.length > 0 && <ul className="mt-4 grid gap-3 sm:grid-cols-2" aria-label="Data sources">{sources.map((source) => {
+        {sources.length > 0 && <details className="mt-4 rounded-xl bg-sand p-4">
+          <summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold text-field">View detailed source provenance</summary>
+          <ul className="mt-2 grid gap-3 sm:grid-cols-2" aria-label="Data sources">{sources.map((source) => {
           const safeUrl = extensionUrl(source.url ?? null);
           return <li key={source.name} className="rounded-lg bg-sand p-4 text-sm">
             <p className="font-semibold">{safeUrl ? <a href={safeUrl} target="_blank" rel="noopener noreferrer" className="text-field underline underline-offset-4">{source.name}</a> : source.name}</p>
@@ -86,7 +88,8 @@ export default function LandSummary({ response, place }: { response: RecommendRe
             {source.detail && <p className="mt-1 text-ink/75">{formatDisplayText(source.detail)}</p>}
             {!!source.limitations?.length && <p className="mt-1 text-ink/75">Limits: {source.limitations.map(formatDisplayText).join("; ")}</p>}
           </li>;
-        })}</ul>}
+        })}</ul>
+        </details>}
       </section>}
     </div>
   );

@@ -27,6 +27,9 @@ export default function CropCard({ crop, rank, lat, lon, place, acres, compact =
   const low = factors.filter((factor) => factor.score !== null && factor.score < 60 && !top.some((item) => item.key === factor.key))
     .sort((a, b) => (a.score ?? 0) - (b.score ?? 0));
   const visibleFactors = [...top, ...low].slice(0, 4);
+  const why = top.map(({ key }) => factorLabel(key)).join(" · ") || "Available local factors";
+  const firstAction = crop.action_plan?.first_test ?? crop.action_plan?.check_before_planting;
+  const mainRisk = crop.risk_notes?.[0] ?? crop.flags?.[0];
   const content = (
     <article className={`card h-full rounded-xl border border-field/20 bg-white/60 ${compact ? "p-4 sm:p-5" : "p-5 sm:p-6"}`}>
       <div className="flex items-start justify-between gap-3">
@@ -41,6 +44,12 @@ export default function CropCard({ crop, rank, lat, lon, place, acres, compact =
         </div>
       </div>
       {crop.scale?.fit && <p className="mt-3 inline-block rounded-full bg-leaf/20 px-3 py-1 text-xs font-semibold" title={crop.scale.note ?? undefined}>{ { good: "Fits your size", small: "Tight for your size", too_small: "Needs more land" }[crop.scale.fit]}</p>}
+      {rank <= 3 && <section className="mt-4 rounded-xl bg-mint p-3" aria-label={`Why ${crop.name ?? "this crop"} ranks highly`}>
+        <p className="text-xs font-semibold uppercase tracking-wide text-soil">Why it ranks here</p>
+        <p className="mt-1 text-sm font-medium">Strongest signals: {why}</p>
+        {firstAction && <p className="mt-2 text-sm"><span className="font-semibold">First action:</span> {formatDisplayText(firstAction)}</p>}
+        {mainRisk && <p className="mt-2 text-sm"><span className="font-semibold">Watch:</span> {formatDisplayText(mainRisk)}</p>}
+      </section>}
       {crop.est_gross_value && <p className="mt-3 text-sm">Rough gross value: ${formatWhole(crop.est_gross_value.low)}–${formatWhole(crop.est_gross_value.high)} before costs</p>}
       <div className={`mt-5 grid gap-2 ${compact ? "sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3" : ""}`}>
         {visibleFactors.map(({ key, score }) => {
