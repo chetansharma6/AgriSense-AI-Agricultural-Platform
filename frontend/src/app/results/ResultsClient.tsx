@@ -110,7 +110,10 @@ export default function ResultsClient() {
       {ranked[0] ? <div className="mb-6"><CropCard crop={ranked[0].crop} rank={1} lat={lat} lon={lon} acres={acres} place={place} featured provenance={response.provenance} confidence={response.confidence} /></div> : <p className="mb-6">No crop recommendations are available for this location.</p>}
       <section className="results-overview" aria-label="Analysis overview"><p className="mb-5 text-lg leading-relaxed">{resultsSummary(crops)}</p>
       <p className="mb-5 text-sm leading-relaxed">{acres === undefined ? "Land size was not provided. Rankings reflect local growing conditions; acreage affects practical suitability and recommendation confidence." : "Land size influences these rankings: field commodities on undersized lots are capped at 40; smaller commercial plantings at 74. Garden-bed crops can fit small lots. These planning rules do not guarantee profitability."}</p>
-      </section>
+      <aside className="mb-5 rounded-xl border border-field/20 bg-mint p-4 sm:p-5" aria-labelledby="resource-planning-title">
+        <h2 id="resource-planning-title" className="font-semibold text-field">Plan for water, soil, and inputs</h2>
+        <p className="mt-2 text-sm leading-relaxed">Open a crop plan before planting to review its irrigation pressure, nutrient practices, soil-health steps, and the limits of the available data. These are planning prompts, not guarantees of water use or environmental impact.</p>
+      </aside></section>
       <LandSummary response={state.data} place={params.get("place")?.trim() || undefined} />
       <p className="mt-3 text-xs leading-relaxed text-soil">Climate: NASA POWER 2016–2025 · Soil: USDA NRCS SSURGO · Harvests: USDA NASS</p>
       <div className="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="Filter crops">
