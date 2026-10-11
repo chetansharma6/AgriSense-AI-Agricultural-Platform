@@ -1,8 +1,10 @@
 """Crop requirements table, loaded from backend/data/crops.json."""
 
 import json
+import math
 from functools import lru_cache
 from typing import Any
+from urllib.parse import urlparse
 
 from pydantic import BaseModel, model_validator
 
@@ -47,6 +49,39 @@ class ExtensionLink(BaseModel):
     title: str
     url: str
 
+    @model_validator(mode="after")
+    def _https_url(self) -> "ExtensionLink":
+        parsed = urlparse(self.url)
+        if parsed.scheme != "https" or not parsed.netloc:
+            raise ValueError("source URL must be an absolute HTTPS URL")
+        return self
+
+
+class CropEvidence(BaseModel):
+    """Audit metadata retained in crop data, not exposed in recommendation output."""
+
+    nutrient_status: str  # verified, conditional, or planning_assumption
+    nitrogen_recommendation_type: str  # fixed, range, conditional, or zero_n
+    nitrogen_note: str
+    source_verified: bool
+    recommended_range_lb_per_acre: tuple[float, float] | None = None
+
+    @model_validator(mode="after")
+    def _evidence_is_consistent(self) -> "CropEvidence":
+        if self.nutrient_status not in {"verified", "conditional", "planning_assumption"}:
+            raise ValueError("unknown nutrient evidence status")
+        if self.nitrogen_recommendation_type not in {"fixed", "range", "conditional", "zero_n"}:
+            raise ValueError("unknown nitrogen recommendation type")
+        if not self.nitrogen_note.strip():
+            raise ValueError("nitrogen evidence note is required")
+        if self.nitrogen_recommendation_type in {"range", "conditional"} and self.recommended_range_lb_per_acre is None:
+            raise ValueError("conditional nitrogen evidence needs a range")
+        if self.recommended_range_lb_per_acre is not None:
+            low, high = self.recommended_range_lb_per_acre
+            if not (math.isfinite(low) and math.isfinite(high) and 0 <= low <= high):
+                raise ValueError("nitrogen range must be finite and non-negative")
+        return self
+
 
 class Crop(BaseModel):
     """One crop's Florida requirements. Ranges are trapezoids: 100 inside the
@@ -79,6 +114,7 @@ class Crop(BaseModel):
     scale_note: str
     n_lb_per_acre: float | None
     nutrient_source: ExtensionLink
+    evidence: CropEvidence
 
     @model_validator(mode="after")
     def _check_ranges(self) -> "Crop":
@@ -100,15 +136,22 @@ class Crop(BaseModel):
             raise ValueError(f"{self.id}: max_freeze_days must be >= 0")
         if not 0 < self.small_acres <= self.min_practical_acres:
             raise ValueError(f"{self.id}: small_acres must be positive and <= min_practical_acres")
-        if self.n_lb_per_acre is not None and self.n_lb_per_acre < 0:
-            raise ValueError(f"{self.id}: n_lb_per_acre must be >= 0")
+        if self.n_lb_per_acre is not None and (not math.isfinite(self.n_lb_per_acre) or self.n_lb_per_acre < 0):
+            raise ValueError(f"{self.id}: n_lb_per_acre must be finite and >= 0")
+        nutrient_host = urlparse(self.nutrient_source.url).hostname
+        if nutrient_host not in {"edis.ifas.ufl.edu", "ask.ifas.ufl.edu"}:
+            raise ValueError(f"{self.id}: nutrient source must be a UF/IFAS URL")
+        yield_unit = self.nass.yield_desc.rsplit("MEASURED IN ", 1)[-1].removesuffix(" / ACRE").upper().rstrip("S")
+        price_unit = self.nass.price_desc.rsplit("MEASURED IN $ / ", 1)[-1].upper().rstrip("S")
+        if not yield_unit or yield_unit != price_unit:
+            raise ValueError(f"{self.id}: yield and price units are incompatible")
         if not self.fl_windows:
             raise ValueError(f"{self.id}: needs at least one Florida growing window")
         return self
 
     def requirements(self) -> dict[str, Any]:
         """Raw requirement fields (everything except guidance and links)."""
-        return self.model_dump(exclude={"general_guidance", "extension_links"})
+        return self.model_dump(exclude={"general_guidance", "extension_links", "evidence"})
 
 
 @lru_cache(maxsize=1)
