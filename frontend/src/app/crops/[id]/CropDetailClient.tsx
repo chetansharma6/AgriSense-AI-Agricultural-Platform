@@ -121,18 +121,27 @@ export default function CropDetailClient() {
   return (
     <div className="space-y-8">
       <div className="no-print flex flex-wrap items-center justify-between gap-3">{back}<button type="button" onClick={() => window.print()} className="min-h-11 rounded-lg border border-field bg-white/50 px-4 py-3 text-sm font-semibold text-field hover:bg-leaf/15">Download report</button></div>
-      <header className="page-heading card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6">
+      <header className="crop-hero page-heading card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
+            <p className="theme-eyebrow">Your growing plan</p>
             <h1 className="page-title">{crop.name ?? "Unnamed crop"}</h1>
+            <p className="hero-location">{place}</p>
             <p className="mt-2 text-soil">{crop.location?.county ? `${crop.location.county} County, Florida` : "County: No data"}</p>
             <p className="mt-2 text-sm">{crop.season_label ?? "Season: No data"}</p>
           </div>
-          <div className={`shrink-0 rounded-lg px-3 py-2 text-center ${tone ? badges[tone].style : "bg-sand text-soil"}`}>
-            <p className="text-3xl font-bold">{crop.score === null ? "—" : formatWhole(crop.score)}</p>
+          <div className={`score-badge shrink-0 rounded-lg px-3 py-2 text-center ${tone ? badges[tone].style : "bg-sand text-soil"}`}>
+            <p className="text-3xl font-bold">{crop.score === null ? "—" : formatWhole(crop.score)}<span className="text-sm font-medium"> /100</span></p>
             <p className="text-sm font-semibold">{tone ? badges[tone].label : "No data"}</p>
           </div>
         </div>
+        <p className="mt-4 text-sm text-soil">Suitability score · not certainty or a measure of data coverage</p>
+        <div className="hero-land-fit">
+          {landAcres !== undefined && <span>{landAcres.toLocaleString("en-US", { maximumFractionDigits: 20 })} acres</span>}
+          <span>{crop.scale?.fit ? { good: "Fits your land size", small: "Tight for your land size", too_small: "Usually needs more land" }[crop.scale.fit] : "Land-size fit unavailable"}</span>
+        </div>
+        {crop.scale?.note && <p className="mt-3 text-sm text-soil">{formatDisplayText(crop.scale.note)}</p>}
+        <p className="hero-introduction">Explore the conditions, growing steps and soil guidance behind this recommendation. Confirm field conditions before planting.</p>
         {!!crop.limited_by?.length && <p className="mt-3 inline-block rounded-full bg-clay/10 px-3 py-1 text-sm font-semibold text-clay">Score capped at {crop.scale?.fit === "too_small" ? Math.min(40, crop.scoring?.critical_cap ?? 45) : crop.scoring?.critical_cap ?? 45}. {limitedText(crop.limited_by)}</p>}
         <div className="mt-4"><DataStatusChips provenance={crop.provenance} confidence={crop.confidence} /></div>
       </header>
@@ -154,7 +163,7 @@ export default function CropDetailClient() {
         <h2 id="climate-risks" className="section-title">Climate risks to monitor</h2>
         <ul className="mt-3 list-disc space-y-2 pl-5">{crop.risk_notes.map((note, i) => <li key={i}>{formatDisplayText(note)}</li>)}</ul>
       </section>}
-      {crop.action_plan && <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="action-plan">
+      {crop.action_plan && <section className="growing-plan forest-panel card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="action-plan">
         <h2 id="action-plan" className="section-title">Your beginner action plan</h2>
         <ol className="mt-4 space-y-4">{[
           ["Check before planting", crop.action_plan.check_before_planting],
@@ -164,7 +173,7 @@ export default function CropDetailClient() {
         ].map(([label, value], i) => <li key={label} className="flex gap-3"><span className="font-semibold text-field">{i + 1}.</span><p><span className="font-semibold">{label}:</span> {formatDisplayText(value)}</p></li>)}</ol>
         {extensionUrl(crop.action_plan.uf_ifas_follow_up.url) && <a href={extensionUrl(crop.action_plan.uf_ifas_follow_up.url)!} target="_blank" rel="noopener noreferrer" className="mt-5 inline-flex min-h-11 items-center text-field underline underline-offset-4">5. Follow up with {crop.action_plan.uf_ifas_follow_up.title ?? "UF/IFAS Extension"}</a>}
       </section>}
-      <section aria-labelledby="growing-it">
+      <section className="growing-guidance card" aria-labelledby="growing-it">
         <h2 id="growing-it" className="section-title">Growing it</h2>
         <p className="mt-4 whitespace-pre-line leading-relaxed">{formatDisplayText(crop.general_guidance ?? "Growing guidance is unavailable.")}</p>
         <div className="mt-5 flex flex-wrap gap-3">{crop.extension_links?.map((link, i) => {
@@ -172,7 +181,7 @@ export default function CropDetailClient() {
           return url ? <a key={i} href={url} target="_blank" rel="noopener noreferrer" className="rounded-lg border border-field px-4 py-3 text-sm font-semibold text-field hover:bg-leaf/15">{formatGuideTitle(link.title)}</a> : null;
         })}</div>
       </section>
-      {crop.nutrient_plan && <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="feeding-soil">
+      {crop.nutrient_plan && <section className="nutrient-guidance card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="feeding-soil">
         <h2 id="feeding-soil" className="section-title">Feeding the soil</h2>
         {crop.nutrient_plan.lime_note && <p className="mt-4 leading-relaxed">{crop.nutrient_plan.lime_note}</p>}
         <p className="mt-4">Get a soil test before choosing fertilizer or lime.</p>

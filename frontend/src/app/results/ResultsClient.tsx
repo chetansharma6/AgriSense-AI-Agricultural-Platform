@@ -61,7 +61,13 @@ export default function ResultsClient() {
   const title = `${place}${acres !== undefined && Number.isFinite(acres) ? ` for ${acres.toLocaleString("en-US", { maximumFractionDigits: 20 })} acres` : ""}`;
   useEffect(() => { document.title = `${title} results · AgriSense`; }, [title]);
   function withTitle(content: ReactNode) {
-    return <><header className="page-heading mb-6"><p className="theme-eyebrow">Your land, local possibilities</p><h1 className="page-title">{title}</h1></header>{content}</>;
+    return <><header className="results-hero page-heading mb-8">
+      <p className="theme-eyebrow">Your land, understood</p>
+      <h1 className="page-title">{place}</h1>
+      {acres !== undefined && Number.isFinite(acres) && <p className="hero-acreage">{acres.toLocaleString("en-US", { maximumFractionDigits: 20 })} acres to explore</p>}
+      <p className="hero-introduction">Explore crops suited to your land, the conditions behind their rankings, and practical next steps for growing.</p>
+      <div className="hero-footer"><DataStatusChips provenance={current?.provenance} confidence={current?.confidence} /><Link href="/" className="analysis-cta">Start a new analysis <span aria-hidden="true">↗</span></Link></div>
+    </header>{content}</>;
   }
 
   if (!valid) return withTitle(
@@ -102,9 +108,9 @@ export default function ResultsClient() {
   return withTitle(
     <div>
       {ranked[0] ? <div className="mb-6"><CropCard crop={ranked[0].crop} rank={1} lat={lat} lon={lon} acres={acres} place={place} featured provenance={response.provenance} confidence={response.confidence} /></div> : <p className="mb-6">No crop recommendations are available for this location.</p>}
-      <p className="mb-5 text-lg leading-relaxed">{resultsSummary(crops)}</p>
-      <DataStatusChips provenance={response.provenance} confidence={response.confidence} />
+      <section className="results-overview" aria-label="Analysis overview"><p className="mb-5 text-lg leading-relaxed">{resultsSummary(crops)}</p>
       <p className="mb-5 text-sm leading-relaxed">{acres === undefined ? "Land size was not provided. Rankings reflect local growing conditions; acreage affects practical suitability and recommendation confidence." : "Land size influences these rankings: field commodities on undersized lots are capped at 40; smaller commercial plantings at 74. Garden-bed crops can fit small lots. These planning rules do not guarantee profitability."}</p>
+      </section>
       <LandSummary response={state.data} place={params.get("place")?.trim() || undefined} />
       <p className="mt-3 text-xs leading-relaxed text-soil">Climate: NASA POWER 2016–2025 · Soil: USDA NRCS SSURGO · Harvests: USDA NASS</p>
       <div className="mt-8 flex flex-wrap items-center gap-2" role="group" aria-label="Filter crops">

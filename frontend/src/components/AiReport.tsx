@@ -52,7 +52,7 @@ export default function AiReport({ crop, acres }: { crop: CropDetail; acres?: nu
   }, [crop, acres, attempt]);
 
   return (
-      <section className="card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="ai-summary-title" aria-busy={!result && !error}>
+      <section className="ai-insights card rounded-xl border border-field/15 bg-white/50 p-5 sm:p-6" aria-labelledby="ai-summary-title" aria-busy={!result && !error}>
         <h2 id="ai-summary-title" className="section-title">Summary of the data above</h2>
         {crop.provenance?.mode === "demo" && <p className="mt-3 text-sm text-soil">Based on saved demo data, not live measurements for your property.</p>}
         {error ? (

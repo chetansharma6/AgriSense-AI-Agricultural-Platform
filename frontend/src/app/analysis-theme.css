@@ -1,0 +1,98 @@
+/* Results and growing plans continue the homepage's editorial meadow theme.
+   Screen-only styling preserves the existing printable agricultural report. */
+@media screen {
+  #main-content:has(> .analysis-page) {
+    background:
+      radial-gradient(ellipse at 80% 14rem, #d7e5ce80, transparent 38rem),
+      linear-gradient(180deg, #faf9f3 0, #edf3e7 24rem, #a6bea380 48rem, #edf3e7 72rem, #faf9f3 90rem);
+  }
+  .theme-page.analysis-page { padding-top: clamp(2rem, 4vw, 3.5rem); }
+  .theme-page.analysis-page .results-hero.page-heading {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0 0 1.5rem;
+  }
+  .analysis-page .results-hero .page-title,
+  .analysis-page .crop-hero .page-title {
+    font-size: clamp(2.75rem, 5.5vw, 4.8rem);
+    line-height: 1.08;
+    letter-spacing: -.04em;
+    overflow-wrap: anywhere;
+  }
+  .analysis-page .hero-acreage, .analysis-page .hero-location { margin-top: .9rem; color: var(--color-field); font-size: 1.1rem; }
+  .analysis-page .hero-introduction { margin-top: 1.25rem; max-width: 55ch; color: #35503c; line-height: 1.8; }
+  .analysis-page .hero-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.5rem; margin-top: 1.5rem; }
+  .analysis-page .analysis-cta { display: inline-flex; align-items: center; justify-content: center; gap: 1.5rem; min-height: 48px; padding: .85rem 1.4rem; border-radius: 999px; background: var(--color-field); color: #f8f6ed; font-weight: 600; }
+  .analysis-page .analysis-cta:hover { background: #35644d; }
+  .theme-page.analysis-page .card { border-radius: 1.75rem; }
+  .theme-page.analysis-page .recommendation-card { background: #faf9f3ed; border-color: #a6bea3; }
+  .analysis-page .recommendation-card .crop-card-heading { flex-wrap: wrap; }
+  .theme-page.analysis-page .recommendation-card h3 { font-size: clamp(1.7rem, 3vw, 2.2rem); color: var(--color-field); }
+  .analysis-page .recommendation-card:not(.featured-recommendation):hover { border-color: #54745d; box-shadow: 0 12px 36px #244b3c12; }
+  .analysis-page .recommendation-card { transition: border-color 180ms, box-shadow 180ms; }
+  .analysis-page [aria-labelledby="other-crops-title"] .recommendation-card:nth-child(even) { background: #edf3e7d9; }
+  .theme-page.analysis-page .featured-recommendation {
+    background: #203d30;
+    color: #f8f6ed;
+    border: 1px solid #315845;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    box-shadow: 0 18px 60px #203d3014;
+  }
+  .theme-page.analysis-page .featured-recommendation h2 { color: #d6e4cd; font-family: var(--font-sans); font-size: .75rem; font-weight: 600; letter-spacing: .13em; text-transform: uppercase; margin-bottom: 1.25rem; }
+  .theme-page.analysis-page .featured-recommendation h3 { color: #f8f6ed; font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.08; }
+  .analysis-page .featured-recommendation .text-soil { color: #d4ded0; }
+  .analysis-page .featured-recommendation .score-badge.bg-field { background: #315845; border: 1px solid #68876c; }
+  .analysis-page .featured-recommendation .score-badge.bg-sand { color: var(--color-soil); }
+  .analysis-page .featured-recommendation .score-badge > p:first-child { font-size: 2.5rem; }
+  .analysis-page .featured-recommendation > dl { display: grid; gap: 1.5rem; margin: 1.75rem 0; }
+  .analysis-page .featured-recommendation > dl > div { margin: 0; }
+  .analysis-page .featured-recommendation dt { color: #d6e4cd; margin-bottom: .4rem; }
+  .theme-page.analysis-page .featured-recommendation .crop-plan-cta { background: #f8f6ed; color: #203d30; }
+  .theme-page.analysis-page .featured-recommendation .crop-plan-cta:hover { background: #d6e4cd; }
+  .analysis-page .featured-recommendation details { border-color: #68876c; }
+  .analysis-page .featured-recommendation summary:hover { background: #315845; }
+  .analysis-page .featured-recommendation .text-clay { color: var(--color-clay); background: #f8f6ed; }
+  .analysis-page .featured-recommendation :focus-visible { outline: 2px solid #d6e4cd; outline-offset: 4px; }
+  .analysis-page .results-overview { max-width: 75ch; padding: 1rem 0; }
+  .theme-page.analysis-page .land-summary { background: #edf3e7; border-color: #a6bea3; }
+  .theme-page.analysis-page .land-summary .card { background: #faf9f3; border-radius: 1rem; }
+  .theme-page.analysis-page .data-sources { background: #faf9f3e6; }
+  .theme-page.analysis-page .crop-hero { background: linear-gradient(120deg, #faf9f3ed, #d7e5ce); }
+  .analysis-page .crop-hero .score-badge { padding: 1rem 1.25rem; border-radius: 1rem; }
+  .analysis-page .hero-land-fit { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+  .analysis-page .hero-land-fit span { background: #faf9f3; color: var(--color-field); border: 1px solid #a6bea3; border-radius: 999px; padding: .35rem .85rem; font-size: .875rem; }
+  .theme-page.analysis-page .forest-panel { background: #203d30; color: #f8f6ed; border-color: #315845; padding: clamp(1.5rem, 3vw, 2.5rem); box-shadow: 0 18px 60px #203d3014; }
+  .analysis-page .forest-panel h2 { color: #f8f6ed; }
+  .analysis-page .forest-panel .text-field, .analysis-page .forest-panel a { color: #d6e4cd; }
+  .analysis-page .forest-panel ol { display: grid; gap: 1.25rem; }
+  .analysis-page .forest-panel ol > li { margin: 0; padding-top: 1.25rem; border-top: 1px solid #68876c; }
+  .analysis-page .forest-panel :focus-visible { outline-color: #d6e4cd; }
+  .theme-page.analysis-page .growing-guidance, .theme-page.analysis-page .nutrient-guidance { background: #faf9f3; border: 1px solid var(--color-border); }
+  .theme-page.analysis-page .fertilizer-section { background: #d7e5ce; border-color: #a6bea3; padding: clamp(1.25rem, 3vw, 2.5rem); }
+  .analysis-page .fertilizer-section .text-soil { color: #35503c; }
+  .theme-page.analysis-page .fertilizer-card { background: #faf9f3; border-color: #a6bea3; border-radius: 1.25rem; }
+  .analysis-page .fertilizer-card h3 { font-size: 1.6rem; }
+  .analysis-page .fertilizer-card > .flex:first-child { flex-wrap: wrap; }
+  .theme-page.analysis-page .ai-explain-button { background: #244b3c; color: #f8f6ed; padding: .75rem 1.25rem; border-radius: 999px; }
+  .theme-page.analysis-page .ai-explain-button:enabled:hover { background: #35644d; }
+  .theme-page.analysis-page #factor-chart,
+  .theme-page.analysis-page [aria-labelledby="track-record"] .card,
+  .theme-page.analysis-page [aria-labelledby="water-planning"],
+  .theme-page.analysis-page [aria-labelledby="soil-health"],
+  .theme-page.analysis-page [aria-labelledby="climate-risks"] { background: #faf9f3; }
+  .theme-page.analysis-page .ai-insights { background: #edf3e7; border-color: #a6bea3; }
+  @media (min-width: 768px) {
+    .analysis-page .featured-recommendation > dl { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .analysis-page .forest-panel ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 639px) {
+    .analysis-page .hero-footer { align-items: stretch; flex-direction: column; }
+    .analysis-page .hero-footer .analysis-cta { align-self: flex-start; }
+    .theme-page.analysis-page .featured-recommendation .crop-plan-cta { width: 100%; justify-content: center; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .analysis-page .recommendation-card { transition: none; }
+  }
+}
