@@ -78,6 +78,33 @@ def test_deadline_returns_partial_and_does_not_leave_work_queued() -> None:
     assert warnings == ["NASA POWER timed out; related values are null"]
 
 
+def test_dependent_market_starts_before_slow_weather_finishes() -> None:
+    weather_started = threading.Event()
+    market_started = threading.Event()
+
+    def weather() -> str:
+        weather_started.set()
+        assert market_started.wait(0.5)
+        return "weather"
+
+    def county() -> str:
+        assert weather_started.wait(0.5)
+        return "12057"
+
+    def market(fips: str) -> str:
+        market_started.set()
+        return fips
+
+    warnings: list[str] = []
+    failed: list[str] = []
+    result = service._bounded_fetches(
+        {"county": county, "weather": weather}, time.perf_counter() + 1,
+        warnings, failed, dependent={"market": ("county", market)},
+    )
+    assert result == {"county": "12057", "weather": "weather", "market": "12057"}
+    assert warnings == failed == []
+
+
 def test_no_private_concurrent_futures_internals() -> None:
     source = (Path(service.__file__).read_text())
     for private_name in ("from concurrent.futures.thread", "def _adjust_thread_count", "_threads_queues"):

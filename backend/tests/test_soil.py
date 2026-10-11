@@ -47,11 +47,25 @@ def test_get_soil_and_cache(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 def test_no_map_unit_raises_and_is_not_cached(monkeypatch: pytest.MonkeyPatch) -> None:
-    client = use(monkeypatch, ScriptedClient(FakeResponse({}), FakeResponse({})))
+    client = use(monkeypatch, ScriptedClient(*(FakeResponse({}) for _ in range(4))))
     for _ in range(2):
         with pytest.raises(soil.SoilNotFound):
             soil.get_soil(25.0, -80.0)
-    assert client.calls == 2
+    assert client.calls == 4
+
+
+def test_nearby_soil_fills_unmapped_urban_point(monkeypatch: pytest.MonkeyPatch) -> None:
+    nearby = {"Table": [["candidate", "mukey"], ["0", "1392058"]]}
+    horizons = {"Table": [
+        ["mukey", *HORIZONS["Table"][0]],
+        ["1392058", *HORIZONS["Table"][1]],
+    ]}
+    client = use(monkeypatch, ScriptedClient(FakeResponse({}), FakeResponse(nearby), FakeResponse(horizons)))
+    result = soil.get_soil(27.9506, -82.4572)
+    assert result["soil_ph"] == 5.8
+    assert result["drainage"] == "Very poorly drained"
+    assert "nearby survey" in result["source"]
+    assert client.calls == 3
 
 
 def test_retries_once_on_timeout_and_5xx(monkeypatch: pytest.MonkeyPatch) -> None:
