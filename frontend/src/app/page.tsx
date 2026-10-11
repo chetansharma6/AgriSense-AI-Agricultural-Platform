@@ -71,24 +71,24 @@ export default function Home() {
                 <div className={styles.photoCaption}><span aria-hidden="true">↗</span><div>Rooted in your location<small>Soil, climate & local harvest history</small></div></div>
               </div>
             </div>
-            <section id="land-analysis" aria-labelledby="analysis-title" className={`${styles.analysis} rounded-2xl p-5 sm:p-8`}>
-              <div className="grid min-w-0 items-center gap-8 lg:grid-cols-2 lg:gap-10">
+            <section id="land-analysis" aria-labelledby="analysis-title" className={styles.analysis}>
+              <div className={styles.analysisGrid}>
                 <div className="min-w-0">
-                  <p className={styles.eyebrow}>A little local knowledge goes a long way</p>
+                  <p className={styles.eyebrow}>Your next harvest starts here</p>
                   <h2 id="analysis-title" className={styles.analysisTitle}>Start with your land.</h2>
-                  <p className="mt-5 text-base leading-relaxed sm:text-lg">Pick a spot on the map. We check soil, climate and local harvest history, then rank 13 Florida crops by how well they fit.</p>
-                  <div className="mt-6 grid min-w-0 gap-4 sm:grid-cols-2">
-                    <LocationSearch selectedLabel={place} onSelect={(result) => {
+                  <p className={styles.analysisDescription}>Pick a spot on the map. We check soil, climate and local harvest history, then rank 13 Florida crops by how well they fit.</p>
+                  <div className={styles.landControls}>
+                    <div className={styles.locationSearch}><LocationSearch selectedLabel={place} onSelect={(result) => {
                       selectPoint(result.lat, result.lon);
                       setPlace(result.label);
-                    }} />
+                    }} /></div>
                     <label className="block text-sm font-semibold" htmlFor="acreage">How much land? (acres)
                       <input id="acreage" type="number" min="0.1" max="10000" step="any" inputMode="decimal" placeholder="Optional" value={acreage}
                         onChange={(event) => setAcreage(event.target.value)} aria-invalid={!validAcres} aria-describedby="acreage-help"
-                        className="mt-2 min-h-11 w-full min-w-0 rounded-lg border border-field/25 bg-white px-3 py-2.5 focus:outline-2 focus:outline-field" />
+                        className={styles.landInput} />
                     </label>
                   </div>
-                  <p id="acreage-help" className="mt-2 text-sm" aria-live="polite">{validAcres ? 'Optional: type 0.1–10,000 usable growing acres. Land size adjusts rankings and advice.' : 'Enter a number from 0.1 to 10,000 acres, or leave blank.'}</p>
+                  <p id="acreage-help" className={`${styles.acreageHelp} mt-2 text-sm`} aria-live="polite">{validAcres ? 'Optional: type 0.1–10,000 usable growing acres. Land size adjusts rankings and advice.' : 'Enter a number from 0.1 to 10,000 acres, or leave blank.'}</p>
                   {acres !== undefined && validAcres && acres < 1 && <p className="mt-3 text-sm leading-relaxed">Small lots favor crops suited to garden beds. Check spacing and usable growing area with <a href="https://gardeningsolutions.ifas.ufl.edu/" target="_blank" rel="noopener noreferrer" className="underline underline-offset-4">UF/IFAS gardening guides.</a></p>}
                   <form onSubmit={analyze} className="mt-5">
                     <h2 className="text-xl font-semibold">Try a demo farm</h2>
@@ -97,14 +97,14 @@ export default function Home() {
                         const selected = latitude === demo.lat.toFixed(4) && longitude === demo.lon.toFixed(4);
                         return (
                           <button key={demo.name} type="button" onClick={() => selectPoint(demo.lat, demo.lon)} aria-pressed={selected}
-                            className={`rounded-lg border p-3 min-h-11 text-left transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field ${selected ? "border-field bg-leaf/20 text-ink" : "border-field/20 bg-sand text-ink hover:border-field hover:bg-leaf/15"}`}>
+                            className={styles.demoCard}>
                             <span className="block text-sm font-semibold">{demo.name}</span>
-                            <span className="mt-1 block text-sm text-ink">{demo.caption}</span>
+                            <span className={styles.demoCaption}>{demo.caption}</span>
                           </button>
                         );
                       })}
                     </div>
-                    <details className="mt-6">
+                    <details className={styles.coordinates}>
                       <summary className="min-h-11 cursor-pointer py-3 text-sm font-semibold">Enter coordinates instead</summary>
                       <fieldset className="mt-2">
                         <legend className="text-sm font-semibold">Or enter coordinates</legend>
@@ -114,21 +114,21 @@ export default function Home() {
                               {label}
                               <input type="number" step="any" inputMode="decimal" value={input} onChange={(event) => { update(event.target.value); setPlace(""); }}
                                 placeholder={label === 'Latitude' ? '27.8000' : '-83.0000'} aria-describedby="location-message" aria-invalid={complete && !valid}
-                                className="mt-2 w-full min-w-0 rounded-lg border border-field/25 bg-white px-3 min-h-11 py-2.5 focus:border-field focus:outline-2 focus:outline-field" />
+                                className={styles.landInput} />
                             </label>
                           ))}
                         </div>
                       </fieldset>
                     </details>
-                    <p id="location-message" aria-live="polite" className={`mt-3 text-sm ${complete && !valid ? 'font-semibold text-ink' : 'text-ink'}`}>
+                    <p id="location-message" aria-live="polite" className={styles.locationMessage}>
                       {complete && !valid ? 'Location must be in Florida: latitude 24.3–31.1, longitude −87.7–−79.9.' : 'Choose a location in Florida to analyze your land.'}
                     </p>
-                    <button type="submit" disabled={!valid || !validAcres} className="mt-5 min-h-11 w-full rounded-lg bg-field px-5 py-3 font-semibold text-white transition-colors enabled:hover:bg-field/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-field disabled:cursor-not-allowed disabled:opacity-55">Analyze my land</button>
+                    <button type="submit" disabled={!valid || !validAcres} className={styles.analyzeButton}>Analyze my land <span aria-hidden="true">↗</span></button>
                   </form>
                 </div>
                 <section className={`${styles.mapPanel} min-w-0`} aria-label="Farm location map">
-                  <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><h3 className="text-field">Your Florida starting point</h3><span className={styles.mapBadge}>Select a spot</span></div>
-                  <div className="overflow-hidden rounded-xl border border-field/20">
+                  <div className="mb-4 flex flex-wrap items-center justify-between gap-2"><h3 className={styles.mapTitle}>Your Florida starting point</h3><span className={styles.mapBadge}>Select a spot</span></div>
+                  <div className={styles.mapFrame}>
                     <MapLoader value={value} onChange={selectPoint} demoPins={demos} />
                   </div>
                   <p className="mt-3 text-sm">Click the map or choose a demo farm to get started.</p>
