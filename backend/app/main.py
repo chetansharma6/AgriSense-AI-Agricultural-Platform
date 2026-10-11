@@ -31,7 +31,7 @@ TOO_SLOW = "Data sources are slow right now. Try again in a moment, or pick a de
 
 
 @app.get("/api/health")
-def health() -> dict[str, str]:
+async def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
@@ -58,7 +58,8 @@ def get_crop(crop_id: str, lat: float = Query(...), lon: float = Query(...), acr
         raise HTTPException(status_code=400, detail=NOT_IN_FLORIDA) from None
     except SourcesTooSlow:
         raise HTTPException(status_code=503, detail=TOO_SLOW) from None
-    assert detail is not None
+    if detail is None:
+        raise HTTPException(status_code=404, detail="Unknown crop")
     return detail
 
 

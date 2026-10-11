@@ -7,7 +7,9 @@ import httpx
 from app.clients import nass
 from tests.fakes import FakeClient
 
-ROWS = [{"Value": "4,100"}]
+ROWS = [{"Value": "4,100", "short_desc": "PEANUTS - YIELD, MEASURED IN LB / ACRE",
+         "statisticcat_desc": "YIELD", "domain_desc": "TOTAL", "agg_level_desc": "STATE",
+         "reference_period_desc": "YEAR", "year": "2024"}]
 
 
 def test_query_hits_network_once_then_uses_cache(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -18,9 +20,7 @@ def test_query_hits_network_once_then_uses_cache(monkeypatch: pytest.MonkeyPatch
     params = {"commodity_desc": "PEANUTS", "state_alpha": "FL"}
     assert nass.query(params) == ROWS
     assert nass.query(params) == ROWS
-    # This deliberately partial fixture is usable by this unit test but is not
-    # admissible as a future market-cache row.
-    assert fake.calls == 2
+    assert fake.calls == 1
 
 
 def test_cache_never_contains_key(isolated_cache: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -73,3 +73,21 @@ def test_transport_errors_do_not_expose_credentials(monkeypatch: pytest.MonkeyPa
         nass.query({"commodity_desc": "PEANUTS"})
     assert "secret-key" not in str(raised.value)
     assert "NASS" in str(raised.value)
+
+
+@pytest.mark.parametrize("payload", [{}, {"error": "unavailable"}, {"data": [{"Value": "1"}]}, {"data": [None]}])
+def test_invalid_live_rows_cannot_be_reported_as_absent_crops(monkeypatch, payload) -> None:
+    monkeypatch.setattr(nass, "nass_api_key", lambda: "test-key")
+    monkeypatch.setattr(nass, "http", lambda: FakeClient(payload))
+    with pytest.raises(nass.NassError, match="malformed"):
+        nass.query({"state_alpha": "FL"})
+
+
+def test_error_body_cannot_echo_an_unlabeled_secret(monkeypatch) -> None:
+    monkeypatch.setattr(nass, "nass_api_key", lambda: "sensitive-secret")
+    fake = FakeClient({"error": "credential sensitive-secret was rejected"})
+    fake.status_code = 500
+    monkeypatch.setattr(nass, "http", lambda: fake)
+    with pytest.raises(nass.NassError) as raised:
+        nass.query({"state_alpha": "FL"})
+    assert "sensitive-secret" not in str(raised.value)

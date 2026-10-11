@@ -1,6 +1,7 @@
 """App settings, loaded once from environment variables and backend/.env."""
 
 import os
+import math
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -13,18 +14,21 @@ CACHE_DIR = DATA_DIR / "cache"
 load_dotenv(BACKEND_DIR / ".env")
 
 NASS_API_KEY = os.getenv("NASS_API_KEY", "").strip()
+# Historical county acreage, yields, and prices already ship in data/processed.
+# Use that bounded, reproducible export unless an operator requests live NASS.
+NASS_USE_SNAPSHOT = os.getenv("NASS_USE_SNAPSHOT", "true").strip().lower() in {"1", "true", "yes"}
 
-# DEMO_MODE=true puts a deadline on every recommendation so a live demo never
-# hangs: if the data sources take longer than DEMO_DEADLINE_S (or one fails),
-# a point within DEMO_FALLBACK_KM of a demo farm gets that farm's saved
-# response from data/demo, and any other point gets a quick 503.
+# DEMO_MODE=true serves saved, explicitly labelled data within 25 km of the
+# official demo farms. Other points retain the bounded live/partial path.
 DEMO_MODE = os.getenv("DEMO_MODE", "false").strip().lower() in {"1", "true", "yes"}
+
+
 def _positive_float(name: str, default: float) -> float:
     try:
         value = float(os.getenv(name, str(default)))
     except ValueError:
         return default
-    return value if value > 0 else default
+    return value if math.isfinite(value) and value > 0 else default
 
 
 # One wall-clock budget for every recommendation.  DEMO_DEADLINE_S remains a

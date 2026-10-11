@@ -59,7 +59,8 @@ def _valid_fawn(value: object) -> bool:
         return False
     values = value.get("min_c")
     expected = (datetime.strptime(END, "%Y%m%d").date() - datetime.strptime(START, "%Y%m%d").date()).days + 1
-    return (isinstance(values, list) and len(values) == expected and all(
+    return (isinstance(values, list) and len(values) == expected
+            and any(item is not None for item in values) and all(
         item is None or (isinstance(item, (int, float)) and not isinstance(item, bool)
                          and math.isfinite(item) and -60 <= item <= 60)
         for item in values
@@ -91,6 +92,8 @@ def daily_min_c(station_id: str, *, deadline: float | None = None) -> pd.Series:
     if cached is None:
         mins = _download(station_id) if deadline is None else _download(station_id, deadline=deadline)
         cached = _encode(mins)
+        if not _valid_fawn(cached):
+            raise FawnError("FAWN daily minimums are empty or invalid")
         write_cache("fawn", params, cached, _valid_fawn)
     return _decode(cached)
 
@@ -124,8 +127,10 @@ def parse_report(text: str) -> dict[date, float]:
             if int(row["N (# obs)"]) < COMPLETE_DAY_OBS:
                 continue
             day = datetime.strptime(row["Period"], "%d %b %Y").date()
-            mins[day] = round((float(row["2m T min (F)"]) - 32) * 5 / 9, 2)
-        except (KeyError, ValueError):
+            minimum = (float(row["2m T min (F)"]) - 32) * 5 / 9
+            if math.isfinite(minimum) and -60 <= minimum <= 60:
+                mins[day] = round(minimum, 2)
+        except (KeyError, ValueError, TypeError):
             continue  # blank or partial row
     return mins
 

@@ -1,4 +1,5 @@
 import pandas as pd
+import pytest
 
 from app.climate import season_stats, summarize
 
@@ -67,3 +68,33 @@ def test_season_stats_counts_hard_freezes_separately() -> None:
     # Three complete Januaries (2021-2023); only 2022 has freezes.
     assert stats.freeze_days == 1.0
     assert stats.hard_freeze_days == 2 / 3
+
+
+@pytest.mark.parametrize("column", ["t_mean_c", "t_min_c", "precip_mm"])
+def test_missing_observations_do_not_create_good_season_scores(column: str) -> None:
+    frame = weather()
+    frame[column] = float("nan")
+    assert season_stats(frame, "01-01", "01-31") is None
+
+
+def test_missing_rain_and_minimums_are_not_zero_or_frost_free() -> None:
+    frame = weather()
+    frame[["precip_mm", "t_min_c"]] = float("nan")
+    summary = summarize(frame)
+    assert summary["annual_precip_mm"] is None
+    assert summary["frost_free_days"] is None
+    assert all(month["freeze_days"] is None and month["precip_mm"] is None
+               for month in summary["monthly"])
+
+
+def test_partial_year_and_empty_weather_return_null_summary() -> None:
+    for frame in (weather().iloc[:100], weather().iloc[:0]):
+        summary = summarize(frame)
+        assert summary["annual_precip_mm"] is None
+        assert summary["frost_free_days"] is None
+        assert summary["monthly"] == []
+
+
+def test_a_missing_calendar_day_cannot_be_a_complete_season() -> None:
+    frame = weather().drop(["2021-01-15", "2022-01-15", "2023-01-15"])
+    assert season_stats(frame, "01-01", "01-31") is None

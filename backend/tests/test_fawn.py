@@ -1,6 +1,7 @@
 from datetime import date
 
 import pandas as pd
+import pytest
 
 from app.clients import fawn
 
@@ -36,3 +37,16 @@ def test_daily_min_cache_round_trip(monkeypatch, tmp_path) -> None:
     assert result.index[0] == pd.Timestamp("2016-01-01")
     assert result.loc["2016-01-01"] == -2.5
     assert written["min_c"][0] == -2.5
+
+
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), -1000.0])
+def test_live_fawn_invalid_values_never_reach_scoring(monkeypatch, value) -> None:
+    monkeypatch.setattr(fawn, "_download", lambda *_: {date(2016, 1, 1): value})
+    with pytest.raises(fawn.FawnError):
+        fawn.daily_min_c("270")
+
+
+def test_empty_fawn_report_is_not_successful_live_data(monkeypatch) -> None:
+    monkeypatch.setattr(fawn, "_download", lambda *_: {})
+    with pytest.raises(fawn.FawnError):
+        fawn.daily_min_c("270")

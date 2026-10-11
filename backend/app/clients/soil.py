@@ -110,9 +110,15 @@ def sda_query(sql: str, *, deadline: float | None = None) -> list[dict[str, str 
 def parse_table(payload: dict[str, Any]) -> list[dict[str, str | None]]:
     """JSON+COLUMNNAME: the first row of "Table" is column names, the rest data."""
     table = payload.get("Table") or []
+    if not isinstance(table, list):
+        raise SoilMalformed("SSURGO table is not a list")
     if len(table) < 2:
         return []
     columns = table[0]
+    if not isinstance(columns, list) or not all(isinstance(column, str) for column in columns):
+        raise SoilMalformed("SSURGO columns are malformed")
+    if any(not isinstance(row, list) or len(row) != len(columns) for row in table[1:]):
+        raise SoilMalformed("SSURGO row is malformed")
     return [dict(zip(columns, row)) for row in table[1:]]
 
 
@@ -121,32 +127,48 @@ def get_mukey(lat: float, lon: float, *, deadline: float | None = None) -> str:
     rows = sda_query(_MUKEY_SQL.format(lat=lat, lon=lon), deadline=deadline)
     if not rows:
         raise SoilNotFound("No soil map unit at this point (water or urban area?)")
-    return str(rows[0]["mukey"])
+    mukey = str(rows[0].get("mukey", ""))
+    if not mukey.isascii() or not mukey.isdigit():
+        raise SoilMalformed("SSURGO map unit key is invalid")
+    return mukey
 
 
 def get_soil(lat: float, lon: float, *, deadline: float | None = None) -> Soil:
     """Top-30-cm soil properties at a point. Raises SoilNotFound."""
     params = {"lat": round(lat, 4), "lon": round(lon, 4)}
     cached = read_cache("soil", params, _valid_soil)
-    if cached:
+    if cached and cached["soil_ph"] is not None and cached["drainage"] is not None:
         return cached
 
     # SoilNotFound is not cached, so a point is never stuck as "no soil".
-    try:
-        mukey = get_mukey(params["lat"], params["lon"], deadline=deadline)
-    except SoilNotFound:
-        mukey = None
-    soil = None
-    if mukey is not None:
-        rows = [_to_numbers(row) for row in sda_query(_HORIZON_SQL.format(mukey=mukey), deadline=deadline)]
-        soil = summarize_soil(rows, mukey)
+    soil = cached
+    cacheable = True
+    if soil is None:
+        try:
+            mukey = get_mukey(params["lat"], params["lon"], deadline=deadline)
+        except SoilNotFound:
+            mukey = None
+        if mukey is not None:
+            rows = [_to_numbers(row) for row in sda_query(_HORIZON_SQL.format(mukey=mukey), deadline=deadline)]
+            soil = summarize_soil(rows, mukey)
     if soil is None or soil["soil_ph"] is None or soil["drainage"] is None:
-        nearby = _nearby_soil(params["lat"], params["lon"], deadline=deadline)
+        try:
+            nearby = _nearby_soil(params["lat"], params["lon"], deadline=deadline)
+        except (httpx.HTTPError, SoilServiceDown, SoilMalformed, KeyError, TypeError, ValueError, IndexError):
+            if soil is None:
+                raise
+            # Nearby enrichment is optional. Preserve the usable on-site
+            # fields if its additional query fails or runs out of time.
+            nearby = None
+            cacheable = False
         if nearby is not None:
             soil = nearby
     if soil is None:
         raise SoilNotFound("No mapped soil at this point or within 3 km")
-    write_cache("soil", params, soil, _valid_soil)
+    if not _valid_soil(soil):
+        raise SoilMalformed("SSURGO soil values are invalid")
+    if cacheable:
+        write_cache("soil", params, soil, _valid_soil)
     return soil
 
 
@@ -169,10 +191,14 @@ def _nearby_soil(lat: float, lon: float, *, deadline: float | None) -> Soil | No
         for index, (candidate_lat, candidate_lon, _) in enumerate(candidates)
     )
     matches = sda_query(sql, deadline=deadline)
+    if any(not str(row.get("candidate", "")).isascii()
+           or not str(row.get("candidate", "")).isdigit()
+           or int(row["candidate"]) >= len(candidates) for row in matches):
+        raise SoilMalformed("SSURGO nearby candidate is invalid")
     keys = list(dict.fromkeys(str(row["mukey"]) for row in matches if row.get("mukey")))
     if not keys:
         return None
-    quoted_keys = ", ".join(f"'{key}'" for key in keys if key.isdigit())
+    quoted_keys = ", ".join(f"'{key}'" for key in keys if key.isascii() and key.isdigit())
     if not quoted_keys:
         return None
     rows = [_to_numbers(row) for row in sda_query(

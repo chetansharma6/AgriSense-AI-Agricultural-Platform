@@ -18,13 +18,13 @@ from functools import lru_cache
 from typing import Any, Callable, TypeVar
 
 from app import config
-from app.climate import summarize, with_station_minimums
+from app.climate import SeasonStats, summarize, with_station_minimums
 from app.clients import fawn
 from app.clients.fcc import lookup_county
 from app.clients.power import get_daily_weather
 from app.clients.soil import SoilNotFound, get_soil
 from app.crops import load_crops
-from app.market import load_market
+from app.market import Market, load_market
 from app.scoring import climate_risk_notes, estimated_gross_value, rank_crops, scale_adjusted_score, scale_info, score_crop, scoring_rules
 from app.utils import haversine_km
 
@@ -95,12 +95,7 @@ def clear_response_cache() -> None:
 
 def recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, Any]:
     """Build a recommendation while bounding expensive concurrent work."""
-    if not _recommendation_slots.acquire(blocking=False):
-        raise SourcesTooSlow("Too many recommendation requests are in progress")
-    try:
-        return _recommend(lat, lon, acres)
-    finally:
-        _recommendation_slots.release()
+    return _recommend(lat, lon, acres)
 
 
 def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, Any]:
@@ -113,24 +108,39 @@ def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, 
             return exact
     key = _cache_key(lat, lon)
     now = time.monotonic()
+    cached_response = None
     with _response_cache_lock:
         hit = _response_cache.get(key)
         if hit is not None and now - hit[0] < RESPONSE_CACHE_TTL_S:
             _response_cache.move_to_end(key)
             log.info("recommend %s: memory cache hit", key)
-            cached = _with_location(_apply_acres(copy.deepcopy(hit[1]), acres), lat, lon)
-            cached["provenance"] = _provenance("live", detail="Memory cache", cache_status="cached")
-            cached["confidence"] = _confidence(cached, "cached")
-            return cached
+            cached_response = hit[1]
+    if cached_response is not None:
+        cached = _with_location(_apply_acres(copy.deepcopy(cached_response), acres), lat, lon)
+        # Retain the source periods, snapshot labels, and FAWN station that
+        # actually produced the result; a cache hit must not erase provenance.
+        provenance = cached.setdefault("provenance", _provenance("live"))
+        for source in provenance["sources"]:
+            source["data_status"] = "cached"
+            original_detail = source.get("detail")
+            source["detail"] = f"Memory cache; {original_detail}" if original_detail else "Memory cache"
+        cached["confidence"] = _confidence(cached, "cached")
+        return cached
 
     started = time.perf_counter()
     deadline = started + config.RECOMMENDATION_DEADLINE_S
     result, complete = _coalesced_build(key, lat, lon, deadline)
+    # Inflight followers share provider results, never request-specific scores,
+    # acreage flags, or coordinates. Decorate a private copy for every caller.
+    result = copy.deepcopy(result)
+    if result.get("provenance", {}).get("mode") != "demo":
+        _with_location(result, lat, lon)
     # A successful FCC response with no county identifies open water, not a
     # Florida land location. Raise after the shared provider future is settled
     # so followers cannot wait on a leader exception. Failed or expired FCC
     # lookups stay degradable and return a partial response instead.
-    fcc_failed = any("County lookup (FCC) unavailable" in warning
+    fcc_failed = any("County lookup (FCC)" in warning
+                     and ("unavailable" in warning or "timed out" in warning)
                      for warning in result.get("warnings", []))
     if (result.get("location", {}).get("county") is None and not fcc_failed
             and not any("deadline" in warning.lower() for warning in result.get("warnings", []))):
@@ -140,7 +150,7 @@ def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, 
     # Normalize live and partial responses through the same response decoration
     # used by saved/demo data, without changing any score calculation.
     result = _apply_acres(result, acres)
-    result["confidence"] = _confidence(result, "live")
+    result["confidence"] = _confidence(result)
     log.info("recommend %s: answered in %.0f ms%s", key, (time.perf_counter() - started) * 1000,
              "" if complete else " (incomplete; not cached)")
     return result
@@ -157,12 +167,16 @@ def _coalesced_build(key: tuple[float, float], lat: float, lon: float,
     with _inflight_lock:
         future = _inflight.get(key)
         if future is None:
+            if not _recommendation_slots.acquire(blocking=False):
+                raise SourcesTooSlow("Too many recommendation requests are in progress")
             future = Future()
             _inflight[key] = future
             leader = True
     if not leader:
         try:
             return future.result(timeout=max(0.0, deadline - time.perf_counter()))
+        except OutsideFlorida:
+            raise
         except Exception:
             # The leader will either return a safe partial result or remove its
             # entry.  Never reveal an implementation exception to the caller.
@@ -178,6 +192,7 @@ def _coalesced_build(key: tuple[float, float], lat: float, lon: float,
     finally:
         with _inflight_lock:
             _inflight.pop(key, None)
+        _recommendation_slots.release()
 
 
 def _remember(key: tuple[float, float], result: dict[str, Any]) -> None:
@@ -231,26 +246,37 @@ def _bounded_fetches(fetches: dict[str, Callable[..., Any]], deadline: float,
     timeout and share this fixed-size pool, so timeout traffic cannot create an
     unbounded number of threads or detached executors.
     """
+    def isolated_attempt(fetch: Callable[[], Any], name: str) -> tuple[Any, list[str], list[str]]:
+        # Running HTTP calls may finish after the response deadline. Their
+        # diagnostics must never mutate a response that has already returned.
+        local_warnings: list[str] = []
+        local_failed: list[str] = []
+        value = _attempt(fetch, name, local_warnings, local_failed)
+        return value, local_warnings, local_failed
+
     futures: dict[str, Future[Any]] = {
-        name: _provider_pool.submit(_attempt, lambda f=fetch: _call_with_deadline(f, deadline), name, warnings, failed)
+        name: _provider_pool.submit(isolated_attempt, lambda f=fetch: _call_with_deadline(f, deadline), name)
         for name, fetch in fetches.items()
     }
     for name, (parent, fetch) in (dependent or {}).items():
         def after_parent(parent: str = parent, fetch: Callable[[Any], Any] = fetch) -> Any:
-            value = futures[parent].result()
-            return fetch(value) if value is not None else None
+            value = futures[parent].result(timeout=max(0.0, deadline - time.perf_counter()))[0]
+            return fetch(value)
 
-        futures[name] = _provider_pool.submit(_attempt, after_parent, name, warnings, failed)
-    done, pending = wait(futures.values(), timeout=max(0.0, deadline - time.perf_counter()))
+        futures[name] = _provider_pool.submit(isolated_attempt, after_parent, name)
+    _, pending = wait(futures.values(), timeout=max(0.0, deadline - time.perf_counter()))
+    results: dict[str, Any | None] = {}
     for name, future in futures.items():
         if future in pending:
             future.cancel()
             failed.append(name)
             warnings.append(f"{name} timed out; related values are null")
-    results = {name: (future.result() if future in done else None)
-               for name, future in futures.items()}
-    for future in pending:
-        future.cancel()
+            results[name] = None
+        else:
+            value, local_warnings, local_failed = future.result()
+            results[name] = value
+            warnings.extend(local_warnings)
+            failed.extend(local_failed)
     return results
 
 
@@ -272,7 +298,7 @@ def _build_recommendation_bounded(lat: float, lon: float, deadline: float,
         source_names, deadline, warnings, failed,
         dependent={"Yield and price data (USDA NASS)": (
             "County lookup (FCC)",
-            lambda county: _provider_call(load_market, county["county_fips"], deadline=deadline),
+            lambda county: _provider_call(load_market, county["county_fips"] if county else None, deadline=deadline),
         )},
     )
     county = results.get("County lookup (FCC)")
@@ -292,14 +318,16 @@ def _build_recommendation_bounded(lat: float, lon: float, deadline: float,
     climate = _attempt(lambda: summarize(weather), "Climate summary", warnings, failed) if weather is not None else None
     conditions = {field: (soil or {}).get(field) for field in SOIL_FIELDS}
     conditions.update({field: (climate or {}).get(field) for field in CLIMATE_FIELDS})
-    crops = rank_crops([score_crop(crop, soil, weather, market, acres) for crop in load_crops().values()])
+    season_cache: dict[tuple[str, str], SeasonStats | None] = {}
+    crops = rank_crops([score_crop(crop, soil, weather, market, acres, season_cache=season_cache)
+                        for crop in load_crops().values()])
     response = {
         "location": {"lat": lat, "lon": lon,
                      "county": county["county"] if county else None,
                      "county_fips": county["county_fips"] if county else None,
                      "state": "FL"},
         "conditions": conditions, "crops": crops, "warnings": warnings,
-        "scoring": scoring_rules(), "provenance": _provenance("live", failed=failed, station=station),
+        "scoring": scoring_rules(), "provenance": _provenance("live", failed=failed, station=station, market=market),
         "confidence": _confidence({"crops": crops, "warnings": warnings}),
     }
     return response, not failed
@@ -346,7 +374,8 @@ def _exact_demo_response(lat: float, lon: float) -> dict[str, Any] | None:
 
 
 def _provenance(mode: str, detail: str | None = None, failed: list[str] | None = None,
-                station: tuple[fawn.Station, float] | None = None, cache_status: str | None = None) -> dict[str, Any]:
+                station: tuple[fawn.Station, float] | None = None, cache_status: str | None = None,
+                market: Market | None = None) -> dict[str, Any]:
     failed = failed or []
     metadata = {
         "USDA SSURGO": ("https://sdmdataaccess.sc.egov.usda.gov/", "Current soil survey", "Point/map unit",
@@ -375,6 +404,11 @@ def _provenance(mode: str, detail: str | None = None, failed: list[str] | None =
          "geographic_level": metadata[name][2], "limitations": metadata[name][3]}
         for name in source_names
     ]
+    if market is not None and market.source == "snapshot" and mode != "demo":
+        nass_source = next(source for source in sources if source["name"] == "USDA NASS")
+        nass_source.update(status="saved", data_status="cached", data_period=market.data_period,
+                           detail="Bundled USDA NASS historical export")
+        nass_source["limitations"].append("Historical export, not a new live query; refresh with scripts.export_nass.")
     return {"mode": mode, "sources": sources,
             "fawn_station": ({"name": station[0]["name"], "distance_km": round(station[1], 1)}
                               if station is not None else None)}

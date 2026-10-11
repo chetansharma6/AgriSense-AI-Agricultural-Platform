@@ -1,19 +1,26 @@
 """Local production history, yields and prices from NASS Quick Stats.
 
-Uses five kinds of query, each cached on disk: state yields and state prices
-(shared by every location), and county area harvested, county area bearing and
-county yields (one of each per county). No query is made per crop.
+Uses the committed historical USDA export by default, without network calls.
+NASS_USE_SNAPSHOT=false selects five disk-cached Quick Stats queries instead:
+state yields/prices and county harvested/bearing acreage/yields. Missing or
+invalid exports also fall back to that live path. No query is made per crop.
 """
 
 from dataclasses import dataclass
+import csv
+import logging
+from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
+from app import config
 from app.clients import nass
 from app.crops import Crop
 
 FIRST_YEAR = "2014"
 RECENT_YEARS = 5
 ANNUAL_PERIODS = {"YEAR", "MARKETING YEAR"}
+log = logging.getLogger(__name__)
 
 
 @dataclass
@@ -32,12 +39,19 @@ class Market:
     county_rows: list[dict[str, Any]] | None  # area harvested; None if county unknown
     state_rows: list[dict[str, Any]]
     county_yield_rows: list[dict[str, Any]]
+    source: str = "live"
+    data_period: str = ""
 
 
 def load_market(county_fips: str | None, *, deadline: float | None = None) -> Market:
     """Fetch (or read cached) NASS data for Florida and the county.
     Queries share the caller's absolute deadline and run in this provider
     worker, so recommendation requests cannot create nested worker pools."""
+    if config.NASS_USE_SNAPSHOT:
+        try:
+            return _snapshot_market(county_fips)
+        except (OSError, ValueError, KeyError, csv.Error):
+            log.warning("Bundled NASS export unavailable or invalid; trying live NASS")
     state_rows = _state_query("YIELD", deadline) + _state_query("PRICE RECEIVED", deadline)
     if not county_fips:
         return Market(None, state_rows, [])
@@ -47,6 +61,36 @@ def load_market(county_fips: str | None, *, deadline: float | None = None) -> Ma
     bearing = _county_query(county_ansi, "AREA BEARING", "2012", deadline)
     county_yield = _county_query(county_ansi, "YIELD", FIRST_YEAR, deadline)
     return Market(harvested + bearing, state_rows, county_yield)
+
+
+@lru_cache(maxsize=4)
+def _snapshot_rows(path: Path) -> tuple[dict[str, Any], ...]:
+    """Decode the committed exporter format into ordinary Quick Stats rows."""
+    with path.open(newline="") as file:
+        rows = [
+            {"short_desc": row["short_desc"], "year": row["year"], "Value": row["value_raw"],
+             "statisticcat_desc": row["statistic"], "domain_desc": "TOTAL",
+             "agg_level_desc": row["level"].upper(), "county_fips": row["county_fips"],
+             "reference_period_desc": "MARKETING YEAR" if row["statistic"] == "PRICE RECEIVED" else "YEAR"}
+            for row in csv.DictReader(file)
+        ]
+    if not rows or not nass._valid_rows(rows):
+        raise ValueError("Invalid NASS export")
+    return tuple(rows)
+
+
+def _snapshot_market(county_fips: str | None) -> Market:
+    directory = config.DATA_DIR / "processed"
+    state_rows = [*_snapshot_rows(directory / "nass_yield_state.csv"),
+                  *_snapshot_rows(directory / "nass_price_state.csv")]
+    acreage = _snapshot_rows(directory / "nass_acres_county.csv")
+    yields = _snapshot_rows(directory / "nass_yield_county.csv")
+    all_years = [int(row["year"]) for row in (*state_rows, *acreage, *yields)]
+    return Market(
+        [row for row in acreage if row["county_fips"] == county_fips] if county_fips else None,
+        state_rows, [row for row in yields if row["county_fips"] == county_fips],
+        source="snapshot", data_period=f"{min(all_years)}-{max(all_years)}; recent five reported years used for averages",
+    )
 
 
 def county_acreage(market: Market, crop: Crop) -> CountyAcreage | None:
