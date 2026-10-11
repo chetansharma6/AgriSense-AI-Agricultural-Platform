@@ -47,12 +47,12 @@ def lookup_county(lat: float, lon: float, *, deadline: float | None = None) -> C
                               timeout=timeout_for(deadline, TIMEOUT_S))
         response.raise_for_status()
         payload = response.json()
-        results = payload.get("results", [])
+        results = payload["results"]
         if not isinstance(results, list):
             raise TypeError("results is not a list")
     except httpx.TimeoutException:
         raise FccTimeout("FCC request timed out") from None
-    except (httpx.HTTPError, TypeError, ValueError, AttributeError) as error:
+    except (httpx.HTTPError, TypeError, ValueError, AttributeError, KeyError) as error:
         raise FccError(f"FCC response unavailable ({type(error).__name__})") from None
     county: County | dict = {}
     if results:
@@ -62,5 +62,7 @@ def lookup_county(lat: float, lon: float, *, deadline: float | None = None) -> C
                       "county_fips": first["county_fips"], "state": first["state_code"]}
         except (KeyError, AttributeError, TypeError):
             raise FccError("FCC response malformed") from None
+        if not _valid_county(county):
+            raise FccError("FCC response malformed")
     write_cache("fcc", params, county, _valid_county)
     return county or None

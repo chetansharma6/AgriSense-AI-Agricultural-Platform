@@ -16,23 +16,29 @@ echo "NASS_API_KEY=your_key" > .env   # free key from quickstats.nass.usda.gov
 `CORS_ORIGINS` (comma-separated, in `.env`) sets which browser origins may call
 the API; the default is `http://localhost:3000`. Set this explicitly in Render
 to the exact Vercel production URL, for example
-`https://agrisense.vercel.app`. Do not use `*`, a `*.vercel.app` wildcard, or
+`https://agrisense-ai-cyan.vercel.app`. Do not use `*`, a `*.vercel.app` wildcard, or
 preview URLs unless each exact preview origin is intentionally added.
 
 ## Deployment settings
 
-Render requires `NASS_API_KEY` as a secret and should use `DEMO_MODE=true` for
-the bounded demo fallback. Set `CORS_ORIGINS` to the exact public Vercel URL.
+Set `DEMO_MODE=true` for the labelled demo fallback and `CORS_ORIGINS` to the
+exact public Vercel URL. Market history defaults to the committed USDA NASS
+CSV exports (`NASS_USE_SNAPSHOT=true`), eliminating five cold network requests.
+Their actual year range and historical/cached status appear in provenance.
+To query live NASS instead, set `NASS_USE_SNAPSHOT=false` and configure
+`NASS_API_KEY` as a secret. Missing/invalid exports also try the live path.
 Vercel requires the server-side `ANTHROPIC_API_KEY` only for the optional report
 route; `ANTHROPIC_MODEL` is optional. Never prefix these secrets with
 `NEXT_PUBLIC_`, commit `.env` files, or expose them in browser code. Missing
-keys degrade safely: NASS data becomes unavailable with a warning and the
+keys degrade safely: live NASS data becomes unavailable with a warning and the
 report route uses its local fallback. Production debug mode is not enabled.
 
 ## How a recommendation is built
 
-1. County (FCC), soil (USDA SSURGO) and 2015-2024 daily weather (NASA POWER)
-   are fetched in parallel; NASS county and state data follow.
+1. County (FCC), soil (USDA SSURGO), 2016-2025 daily weather (NASA POWER), and
+   a nearby FAWN station's minimum temperatures are fetched in parallel.
+   County market history starts as soon as FCC completes, without waiting
+   for soil or weather. Historical market exports are loaded locally.
 2. Every source is cached as JSON in `data/cache/`, so each location hits
    each API once. Cached data for the four demo farms is committed, so the
    demo works offline.
@@ -51,14 +57,30 @@ report route uses its local fallback. Production debug mode is not enabled.
 Climate factors are scored for each Florida growing window of the crop and
 the best window is reported as `season_label`.
 
-A source that fails never fails the request: its values are null and a
-message is added to `warnings`.
+A source that fails produces null values and a warning instead of a server
+error. Live provider fetching has a six-second budget by default, configurable
+with `RECOMMENDATION_DEADLINE_S`; scoring/serialization adds some CPU time.
+At most eight distinct live builds run concurrently. Repeated requests for
+the same point share provider work, but each gets isolated acreage/coordinates.
+Memory-cache and saved-demo hits remain available while live builds are full;
+new uncached locations receive a controlled 503 when overloaded. Health checks
+do not wait for a worker thread. Missing daily rain/minimum observations are
+not treated as zero rainfall or frost-free days.
 
 Crop-detail responses also expose beginner-facing water, soil-health, and
 rotation guidance. Water status is derived from the same committed crop
 rainfall thresholds and selected-window factor flags used by scoring; it does
 not add forecasts or alter suitability formulas. Soil-health steps and rotation
 notes come from committed crop guidance and link back to UF/IFAS.
+
+## Performance verification
+
+Run `python -m scripts.benchmark_backend` for a repeatable, network-free
+benchmark with controlled provider delays. `--mode live --samples 1` checks
+Tampa against the real APIs with an empty temporary disk cache and an empty
+response cache, then checks a memory hit. Timings include scoring and should
+not be confused with hosting startup time or a production latency guarantee.
+The benchmark validates the response contract and stable scores on repeat.
 
 The judging narrative is: AgriSense does not ask an AI model to guess what a
 farmer should plant. It gathers public agricultural data, applies visible

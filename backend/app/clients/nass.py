@@ -88,8 +88,8 @@ def query(params: dict[str, Any], invalid_means_empty: bool = False,
     if response.status_code == 200:
         try:
             payload = response.json()
-            data = payload.get("data", [])
-            if not isinstance(data, list):
+            data = payload["data"]
+            if not _valid_rows(data):
                 raise TypeError("data is not a list")
             rows: list[dict[str, Any]] = [
                 {field: row[field] for field in KEEP_FIELDS if field in row}
@@ -101,7 +101,10 @@ def query(params: dict[str, Any], invalid_means_empty: bool = False,
         rows = []
     else:
         # Never raise httpx's own error: its message contains the URL and key.
-        raise NassError(f"NASS request failed ({response.status_code}): {_safe_error(response.text)}")
+        # An upstream error can echo the API key even without a "key=" label.
+        # Report only a recognized diagnosis, never arbitrary provider text.
+        reason = "invalid query" if "invalid query" in response.text.lower() else "provider error"
+        raise NassError(f"NASS request failed ({response.status_code}): {reason}")
 
     write_cache("nass", params, rows, _valid_rows)
     return rows

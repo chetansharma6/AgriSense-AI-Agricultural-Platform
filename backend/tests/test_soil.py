@@ -68,6 +68,37 @@ def test_nearby_soil_fills_unmapped_urban_point(monkeypatch: pytest.MonkeyPatch)
     assert client.calls == 3
 
 
+def test_nearby_failure_preserves_valid_on_site_fields(monkeypatch: pytest.MonkeyPatch) -> None:
+    partial = {"Table": [HORIZONS["Table"][0], [*HORIZONS["Table"][1]]]}
+    partial["Table"][1][7] = None
+    use(monkeypatch, ScriptedClient(FakeResponse(MUKEY), FakeResponse(partial)))
+    monkeypatch.setattr(soil, "_nearby_soil", lambda *_args, **_kwargs: (_ for _ in ()).throw(httpx.ReadTimeout("slow")))
+    writes = []
+    monkeypatch.setattr(soil, "write_cache", lambda *_args: writes.append(1))
+    result = soil.get_soil(27.945, -82.4583)
+    assert result["soil_ph"] is None
+    assert result["drainage"] == "Very poorly drained"
+    assert result["sand_pct"] == 94.0
+    assert not writes  # Retry optional enrichment after a temporary failure.
+
+
+@pytest.mark.parametrize("mukey", ["1' OR '1'='1", "１２３", "bad", ""])
+def test_upstream_map_unit_keys_cannot_become_sql(monkeypatch, mukey) -> None:
+    payload = {"Table": [["mukey"], [mukey]]}
+    client = use(monkeypatch, ScriptedClient(FakeResponse(payload)))
+    with pytest.raises(soil.SoilMalformed):
+        soil.get_soil(27.945, -82.4583)
+    assert client.calls == 1  # No horizon query may contain the untrusted key.
+
+
+@pytest.mark.parametrize("candidate", ["-1", "100", "not-a-number"])
+def test_nearby_candidate_indices_are_checked(monkeypatch, candidate) -> None:
+    payload = {"Table": [["candidate", "mukey"], [candidate, "1392058"]]}
+    use(monkeypatch, ScriptedClient(FakeResponse(payload)))
+    with pytest.raises(soil.SoilMalformed):
+        soil._nearby_soil(27.945, -82.4583, deadline=None)
+
+
 def test_retries_once_on_timeout_and_5xx(monkeypatch: pytest.MonkeyPatch) -> None:
     use(monkeypatch, ScriptedClient(httpx.ReadTimeout("slow"), FakeResponse(MUKEY)))
     assert soil.get_mukey(29.71, -81.50) == "1392058"

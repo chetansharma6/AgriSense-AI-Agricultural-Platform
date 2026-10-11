@@ -13,6 +13,12 @@ PARAMETER = {
 }
 
 
+@pytest.fixture(autouse=True)
+def short_window(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(power, "START", "20240101")
+    monkeypatch.setattr(power, "END", "20240102")
+
+
 def test_daily_weather_frame_and_cache(monkeypatch: pytest.MonkeyPatch) -> None:
     fake = FakeClient({"properties": {"parameter": PARAMETER}})
     monkeypatch.setattr(power, "http", lambda: fake)
@@ -24,9 +30,7 @@ def test_daily_weather_frame_and_cache(monkeypatch: pytest.MonkeyPatch) -> None:
     assert math.isnan(frame.loc["2024-01-02", "t_mean_c"])
 
     power.get_daily_weather(29.74, -81.53)  # rounds to the same 0.1 degree cell
-    # The intentionally tiny test payload is not a complete ten-year cache
-    # entry, so it is served but never admitted to disk.
-    assert fake.calls == 2
+    assert fake.calls == 1
 
 
 def test_retries_once_on_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -50,3 +54,23 @@ def test_empty_or_malformed_response_is_classified(monkeypatch: pytest.MonkeyPat
     monkeypatch.setattr(power, "http", lambda: FakeClient(payload))
     with pytest.raises(power.PowerError):
         power.get_daily_weather(29.71, -81.50)
+
+
+@pytest.mark.parametrize("corruption", ["missing_parameter", "missing_day", "wrong_day", "nonfinite", "text_value"])
+def test_live_incomplete_or_invalid_weather_is_rejected(monkeypatch, corruption: str) -> None:
+    import copy
+
+    data = copy.deepcopy(PARAMETER)
+    if corruption == "missing_parameter":
+        del data["T2M_MIN"]
+    elif corruption == "missing_day":
+        del data["T2M_MIN"]["20240102"]
+    elif corruption == "wrong_day":
+        data["T2M_MIN"]["20241301"] = data["T2M_MIN"].pop("20240102")
+    elif corruption == "nonfinite":
+        data["T2M_MIN"]["20240102"] = float("inf")
+    else:
+        data["T2M_MIN"]["20240102"] = "bad"
+    monkeypatch.setattr(power, "http", lambda: FakeClient({"properties": {"parameter": data}}))
+    with pytest.raises(power.PowerError, match="malformed"):
+        power.get_daily_weather(27.945, -82.4583)

@@ -44,6 +44,9 @@ def test_county_acreage_latest_census() -> None:
 
 def test_load_market_runs_all_queries(monkeypatch) -> None:
     from app import market as market_module
+    from app import config
+
+    monkeypatch.setattr(config, "NASS_USE_SNAPSHOT", False)
 
     seen = []
 
@@ -60,6 +63,29 @@ def test_load_market_runs_all_queries(monkeypatch) -> None:
     assert len(market.county_rows) == 2
 
     assert market_module.load_market(None).county_rows is None
+
+
+def test_snapshot_market_is_complete_without_api_requests(monkeypatch) -> None:
+    from app import config, market as market_module
+
+    monkeypatch.setattr(config, "NASS_USE_SNAPSHOT", True)
+    monkeypatch.setattr(market_module.nass, "query", lambda *_args, **_kwargs: (_ for _ in ()).throw(AssertionError("network")))
+    market = market_module.load_market("12109")
+    assert market.source == "snapshot"
+    assert market.data_period.startswith("2012-")
+    assert county_acreage(market, POTATO).grown
+    assert average_yield(market, POTATO)["value"] > 0
+    assert price_range(market, POTATO)["low"] > 0
+    assert market_module.load_market(None).county_rows is None
+
+
+def test_missing_snapshot_falls_back_to_live_market(monkeypatch, tmp_path) -> None:
+    from app import config, market as market_module
+
+    monkeypatch.setattr(config, "NASS_USE_SNAPSHOT", True)
+    monkeypatch.setattr(config, "DATA_DIR", tmp_path)
+    monkeypatch.setattr(market_module.nass, "query", lambda *_args, **_kwargs: [])
+    assert market_module.load_market("12109").source == "live"
 
 
 def test_prices_rounded_to_cents() -> None:

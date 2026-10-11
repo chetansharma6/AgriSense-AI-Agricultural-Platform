@@ -82,8 +82,8 @@ def relative_range_score(value: float, low: float, high: float) -> int:
 
 
 def is_missing(value: float | None) -> bool:
-    """None or NaN (NASA POWER and SSURGO gaps arrive as NaN)."""
-    return value is None or math.isnan(value)
+    """Missing or non-finite observations never contribute a score."""
+    return value is None or not math.isfinite(value)
 
 
 def score_ph(crop: Crop, ph: float | None) -> Factor:
@@ -203,24 +203,35 @@ def weighted_score(factors: dict[str, int | None], names: tuple[str, ...] | None
     return round(sum(weight * value for weight, value in present) / total)
 
 
-def best_window(crop: Crop, weather: pd.DataFrame | None) -> tuple[GrowingWindow, dict[str, Factor]]:
+def best_window(crop: Crop, weather: pd.DataFrame | None,
+                season_cache: dict[tuple[str, str], SeasonStats | None] | None = None) -> tuple[GrowingWindow, dict[str, Factor]]:
     """The growing window with the highest climate sub-score."""
     best: tuple[int, GrowingWindow, dict[str, Factor]] | None = None
     for window in crop.fl_windows:
-        stats = season_stats(weather, window.start, window.end) if weather is not None else None
+        key = window.start, window.end
+        if weather is None:
+            stats = None
+        elif season_cache is None:
+            stats = season_stats(weather, *key)
+        else:
+            if key not in season_cache:
+                season_cache[key] = season_stats(weather, *key)
+            stats = season_cache[key]
         climate = score_climate(crop, stats)
         subscore = weighted_score({name: f[0] for name, f in climate.items()}, CLIMATE_FACTORS) or 0
         if best is None or subscore > best[0]:
             best = (subscore, window, climate)
-    assert best is not None, f"{crop.id} has no growing windows"
+    if best is None:
+        raise ValueError(f"{crop.id} has no growing windows")
     return best[1], best[2]
 
 
 def score_crop(crop: Crop, soil: dict[str, Any] | None, weather: pd.DataFrame | None,
-               market: Market | None, acres: float | None = None) -> dict[str, Any]:
+               market: Market | None, acres: float | None = None, *,
+               season_cache: dict[tuple[str, str], SeasonStats | None] | None = None) -> dict[str, Any]:
     """The API crop object for one crop."""
     soil = soil or {}
-    window, climate = best_window(crop, weather)
+    window, climate = best_window(crop, weather, season_cache)
     factors: dict[str, Factor] = {
         "soil_ph": score_ph(crop, soil.get("soil_ph")),
         "drainage": score_drainage(crop, soil.get("drainage"), soil.get("texture")),

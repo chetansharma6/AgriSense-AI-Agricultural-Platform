@@ -9,7 +9,8 @@ import httpx
 import pandas as pd
 import time
 import math
-from datetime import datetime
+from datetime import datetime, timedelta
+from functools import lru_cache
 
 from app.cache import read_cache, write_cache
 from app.clients.http import http, timeout_for
@@ -24,21 +25,23 @@ class PowerError(RuntimeError):
     """NASA POWER returned an HTTP, empty, or malformed response."""
 
 
+@lru_cache(maxsize=4)
+def _expected_days(start: str, end: str) -> frozenset[str]:
+    first = datetime.strptime(start, "%Y%m%d")
+    count = (datetime.strptime(end, "%Y%m%d") - first).days + 1
+    return frozenset((first + timedelta(days=i)).strftime("%Y%m%d") for i in range(count))
+
+
 def _valid_series(value: object) -> bool:
     """Accept only complete, finite daily parameter maps for the fixed window."""
     if not isinstance(value, dict) or set(value) != set(PARAMETERS):
         return False
-    expected = (datetime.strptime(END, "%Y%m%d") - datetime.strptime(START, "%Y%m%d")).days + 1
+    expected = _expected_days(START, END)
     for series in value.values():
-        if not isinstance(series, dict) or len(series) != expected:
+        if not isinstance(series, dict) or series.keys() != expected:
             return False
-        for day, number in series.items():
-            try:
-                parsed = datetime.strptime(day, "%Y%m%d")
-            except (TypeError, ValueError):
-                return False
-            if not (datetime.strptime(START, "%Y%m%d") <= parsed <= datetime.strptime(END, "%Y%m%d")
-                    and isinstance(number, (int, float)) and not isinstance(number, bool)
+        for number in series.values():
+            if not (isinstance(number, (int, float)) and not isinstance(number, bool)
                     and math.isfinite(number)):
                 return False
     return True
@@ -90,8 +93,8 @@ def _fetch(params: dict, *, deadline: float | None = None) -> dict[str, dict[str
         try:
             response.raise_for_status()
             parameters = response.json()["properties"]["parameter"]
-            if not isinstance(parameters, dict) or not parameters:
-                raise ValueError("parameter data is empty")
+            if not _valid_series(parameters):
+                raise ValueError("parameter data is incomplete or invalid")
             return parameters
         except httpx.HTTPStatusError:
             raise PowerError(f"NASA POWER HTTP {response.status_code}") from None

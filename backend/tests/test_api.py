@@ -156,23 +156,35 @@ def test_concurrent_recommendations_are_bounded(monkeypatch: pytest.MonkeyPatch)
     entered = 0
     peak = 0
     lock = threading.Lock()
+    full = threading.Event()
+    release = threading.Event()
 
-    def slow_build(lat: float, lon: float, acres: float | None = None) -> tuple[dict[str, Any], bool]:
+    def slow_build(lat: float, lon: float, deadline: float) -> tuple[dict[str, Any], bool]:
         nonlocal entered, peak
         with lock:
             entered += 1
             peak = max(peak, entered)
-        time.sleep(0.02)
+            if entered == service.MAX_CONCURRENT_RECOMMENDATIONS:
+                full.set()
+        assert release.wait(2)
         with lock:
             entered -= 1
-        return {"location": {"lat": lat, "lon": lon}}, True
+        result = service._deadline_response(lat, lon, "test")
+        result["location"].update(county="St. Johns", county_fips="12109")
+        return result, False
 
-    monkeypatch.setattr(service, "_build_recommendation", slow_build)
+    monkeypatch.setattr(service, "_build_recommendation_bounded", slow_build)
     service.clear_response_cache()
     with ThreadPoolExecutor(max_workers=service.MAX_CONCURRENT_RECOMMENDATIONS + 4) as pool:
-        results = list(pool.map(_recommend_for_test, range(service.MAX_CONCURRENT_RECOMMENDATIONS + 4)))
-    assert peak <= service.MAX_CONCURRENT_RECOMMENDATIONS
-    assert "busy" in results
+        active = [pool.submit(_recommend_for_test, index) for index in range(service.MAX_CONCURRENT_RECOMMENDATIONS)]
+        try:
+            assert full.wait(1)
+            excess = [pool.submit(_recommend_for_test, index) for index in range(8, 12)]
+            assert [future.result(timeout=1) for future in excess] == ["busy"] * 4
+        finally:
+            release.set()
+        assert [future.result(timeout=1) for future in active] == ["ok"] * 8
+    assert peak == service.MAX_CONCURRENT_RECOMMENDATIONS
 
 
 def _recommend_for_test(index: int) -> str:

@@ -11,9 +11,11 @@ print the demo farms.
 
 from dataclasses import dataclass
 from datetime import date
+import math
 from typing import Any
 
 import pandas as pd
+import numpy as np
 
 from app.clients.power import get_daily_weather
 
@@ -48,10 +50,15 @@ def with_station_minimums(weather: pd.DataFrame, station_min_c: pd.Series) -> pd
 
 def season_stats(weather: pd.DataFrame, start: str, end: str) -> SeasonStats | None:
     """Average a growing window over every complete season in the data."""
+    if weather.empty:
+        return None
+    if not weather.index.is_monotonic_increasing:
+        weather = weather.sort_index()
     start_m, start_d = _parse_md(start)
     end_m, end_d = _parse_md(end)
     crosses_year = (end_m, end_d) < (start_m, start_d)
     first, last = weather.index.min().date(), weather.index.max().date()
+    observations = weather[["t_mean_c", "t_min_c", "precip_mm"]].to_numpy(dtype=float)
 
     temps, freezes, hard_freezes, rains, lengths = [], [], [], [], []
     for year in range(first.year, last.year + 1):
@@ -59,20 +66,28 @@ def season_stats(weather: pd.DataFrame, start: str, end: str) -> SeasonStats | N
         season_end = date(year + 1 if crosses_year else year, end_m, end_d)
         if season_start < first or season_end > last:
             continue
-        days = weather.loc[str(season_start):str(season_end)]
-        temps.append(days["t_mean_c"].mean())
-        freezes.append(int((days["t_min_c"] <= FREEZE_C).sum()))
-        hard_freezes.append(int((days["t_min_c"] <= HARD_FREEZE_C).sum()))
-        rains.append(days["precip_mm"].sum())
+        lower = weather.index.searchsorted(pd.Timestamp(season_start))
+        upper = weather.index.searchsorted(pd.Timestamp(season_end), side="right")
+        days = observations[lower:upper]
+        # A missing minimum is not evidence of a frost-free day, and a
+        # missing rain observation is not zero rainfall. Use only complete
+        # seasons rather than silently awarding scores from missing data.
+        if (len(days) != (season_end - season_start).days + 1
+                or not np.isfinite(days).all()):
+            continue
+        temps.append(days[:, 0].mean())
+        freezes.append(int((days[:, 1] <= FREEZE_C).sum()))
+        hard_freezes.append(int((days[:, 1] <= HARD_FREEZE_C).sum()))
+        rains.append(days[:, 2].sum())
         lengths.append(len(days))
     if not temps:
         return None
     return SeasonStats(
-        mean_temp_c=float(pd.Series(temps).mean()),
-        freeze_days=float(pd.Series(freezes).mean()),
-        precip_mm=float(pd.Series(rains).mean()),
-        months=float(pd.Series(lengths).mean()) / 30.44,
-        hard_freeze_days=float(pd.Series(hard_freezes).mean()),
+        mean_temp_c=float(np.mean(temps)),
+        freeze_days=float(np.mean(freezes)),
+        precip_mm=float(np.mean(rains)),
+        months=float(np.mean(lengths)) / 30.44,
+        hard_freeze_days=float(np.mean(hard_freezes)),
     )
 
 
@@ -85,10 +100,13 @@ def get_climate(lat: float, lon: float) -> dict[str, Any]:
 def summarize(weather: pd.DataFrame) -> dict[str, Any]:
     """Monthly normals plus the climate fields of the API 'conditions' object."""
     years = weather[weather.index.year.isin(_complete_years(weather))]
-    yearly_precip = years["precip_mm"].groupby(years.index.year).sum()
+    yearly_precip = years["precip_mm"].groupby(years.index.year).apply(
+        lambda values: values.sum(min_count=len(values)))
 
     spring, fall, frost_free = [], [], []
     for year, days in years.groupby(years.index.year):
+        if days["t_min_c"].isna().any():
+            continue
         freezes = days.index[days["t_min_c"] <= FREEZE_C]
         spring_freezes = freezes[freezes.month < 7]
         fall_freezes = freezes[freezes.month >= 7]
@@ -110,7 +128,7 @@ def summarize(weather: pd.DataFrame) -> dict[str, Any]:
     return {
         "monthly": monthly_normals(years),
         "annual_precip_mm": _round(yearly_precip.mean()),
-        "frost_free_days": _round(sum(frost_free) / len(frost_free)),
+        "frost_free_days": _round(sum(frost_free) / len(frost_free)) if frost_free else None,
         "last_spring_frost": _typical_date(spring, len(frost_free)),
         "first_fall_frost": _typical_date(fall, len(frost_free)),
         "avg_summer_high_c": _round(summer["t_max_c"].mean()),
@@ -124,8 +142,9 @@ def monthly_normals(weather: pd.DataFrame) -> list[dict[str, Any]]:
     of rain and of freeze days across years."""
     by_month_year = weather.groupby([weather.index.month, weather.index.year])
     totals = pd.DataFrame({
-        "precip_mm": by_month_year["precip_mm"].sum(),
-        "freeze_days": by_month_year["t_min_c"].apply(lambda t: int((t <= FREEZE_C).sum())),
+        "precip_mm": by_month_year["precip_mm"].apply(lambda t: t.sum(min_count=len(t))),
+        "freeze_days": by_month_year["t_min_c"].apply(
+            lambda t: float("nan") if t.isna().any() else int((t <= FREEZE_C).sum())),
     }).groupby(level=0).mean()
     means = weather.groupby(weather.index.month)[["t_max_c", "t_min_c", "t_mean_c"]].mean()
     return [
@@ -142,17 +161,18 @@ def monthly_normals(weather: pd.DataFrame) -> list[dict[str, Any]]:
 
 
 def _round(value: float) -> float | None:
-    return None if pd.isna(value) else round(float(value), 1)
+    return None if not math.isfinite(value) else round(float(value), 1)
 
 
 def _complete_years(weather: pd.DataFrame) -> list[int]:
     counts = weather.groupby(weather.index.year).size()
-    return [int(year) for year, n in counts.items() if n >= 365]
+    return [int(year) for year, n in counts.items()
+            if n == (date(int(year) + 1, 1, 1) - date(int(year), 1, 1)).days]
 
 
 def _typical_date(dates: list[pd.Timestamp], n_years: int) -> str | None:
     """Median MM-DD of frost dates, or None if frost occurs in under half the years."""
-    if len(dates) * 2 < n_years:
+    if not dates or len(dates) * 2 < n_years:
         return None
     # Day of year relative to Jul 1 keeps Dec and Jan dates in order.
     offsets = sorted((d - pd.Timestamp(d.year, 7, 1)).days % 365 for d in dates)
