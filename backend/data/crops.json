@@ -71,7 +71,8 @@
     "needs_review": false,
     "min_practical_acres": 100, "small_acres": 25,
     "scale_note": "Large row-crop acreage spreads specialized planting, harvesting, and drying equipment costs.",
-    "n_lb_per_acre": 0, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"}
+    "n_lb_per_acre": 0, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"},
+    "evidence": {"nutrient_status": "verified", "nitrogen_recommendation_type": "zero_n", "nitrogen_note": "SS163 Table 2 lists peanuts at 0 lb N/A; this is a zero-N recommendation, not a missing value.", "source_verified": true}
   },
   {
     "id": "cotton",
@@ -142,7 +143,8 @@
     "needs_review": true,
     "min_practical_acres": 500, "small_acres": 100,
     "scale_note": "Large row-crop acreage spreads specialized equipment and supports reliable gin and market access.",
-    "n_lb_per_acre": 60, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"}
+    "n_lb_per_acre": 60, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"},
+    "evidence": {"nutrient_status": "verified", "nitrogen_recommendation_type": "fixed", "nitrogen_note": "SS163 Table 2 lists cotton at 60 lb N/A.", "source_verified": true}
   },
   {
     "id": "field_corn",
@@ -211,7 +213,8 @@
     "needs_review": true,
     "min_practical_acres": 100, "small_acres": 25,
     "scale_note": "Large row-crop acreage spreads planting, harvest, and grain-handling equipment costs.",
-    "n_lb_per_acre": 180, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"}
+    "n_lb_per_acre": 180, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"},
+    "evidence": {"nutrient_status": "conditional", "nitrogen_recommendation_type": "conditional", "nitrogen_note": "SS163 Table 2 varies corn N by irrigation and population; 180 lb N/A is one listed case, not a universal rate.", "source_verified": true, "recommended_range_lb_per_acre": [120, 240]}
   },
   {
     "id": "soybean",
@@ -281,7 +284,8 @@
     "needs_review": true,
     "min_practical_acres": 100, "small_acres": 25,
     "scale_note": "Large row-crop acreage spreads planting, harvest, and grain-handling equipment costs.",
-    "n_lb_per_acre": 0, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"}
+    "n_lb_per_acre": 0, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"},
+    "evidence": {"nutrient_status": "verified", "nitrogen_recommendation_type": "zero_n", "nitrogen_note": "SS163 Table 2 lists soybeans at 0 lb N/A; this is a zero-N recommendation, not a missing value.", "source_verified": true}
   },
   {
     "id": "sugarcane",
@@ -357,7 +361,8 @@
     "needs_review": true,
     "min_practical_acres": 500, "small_acres": 100,
     "scale_note": "Sugarcane requires large acreage, specialized harvest equipment, and practical access to a nearby mill and contracts.",
-    "n_lb_per_acre": 160, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"}
+    "n_lb_per_acre": 160, "nutrient_source": {"title": "UF/IFAS Standardized Fertilization Recommendations for Agronomic Crops", "url": "https://edis.ifas.ufl.edu/publication/SS163"},
+    "evidence": {"nutrient_status": "planning_assumption", "nitrogen_recommendation_type": "conditional", "nitrogen_note": "SS163 documents 90 lb N/A for sugarcane for syrup, not commercial sugarcane; 160 lb N/A remains a planning assumption pending crop-specific UF/IFAS evidence.", "source_verified": true, "recommended_range_lb_per_acre": [90, 160]}
   },
   {
     "id": "tomato",
@@ -440,7 +445,8 @@
     "needs_review": true,
     "min_practical_acres": 5, "small_acres": 1,
     "scale_note": "Vegetable acreage can be smaller, but packing, labor, cooling, and buyer contracts still favor commercial blocks.",
-    "n_lb_per_acre": 200, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
+    "n_lb_per_acre": 200, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"},
+    "evidence": {"nutrient_status": "verified", "nitrogen_recommendation_type": "fixed", "nitrogen_note": "CV002 Table 3 lists tomato at 200 lb N/A per cropping season on mineral soils.", "source_verified": true}
   },
   {
     "id": "watermelon",
@@ -510,7 +516,8 @@
     "needs_review": true,
     "min_practical_acres": 5, "small_acres": 1,
     "scale_note": "Vegetable acreage can be smaller, but plasticulture, labor, packing, and buyer contracts still favor commercial blocks.",
-    "n_lb_per_acre": 150, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
+    "n_lb_per_acre": 150, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"},
+    "evidence": {"nutrient_status": "verified", "nitrogen_recommendation_type": "fixed", "nitrogen_note": "CV002 Table 3 lists watermelon at 150 lb N/A per cropping season on mineral soils.", "source_verified": true}
   },
   {
     "id": "strawberry",
@@ -570,7 +577,8 @@
     "needs_review": true,
     "min_practical_acres": 1, "small_acres": 0.25,
     "scale_note": "Strawberries can be grown on small blocks, but beds, transplants, labor, cooling, and contracts are substantial fixed costs.",
-    "n_lb_per_acre": 150, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
+    "n_lb_per_acre": 150, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"},
+    "evidence": {"nutrient_status": "verified", "nitrogen_recommendation_type": "fixed", "nitrogen_note": "CV002 Table 3 lists strawberry at 150 lb N/A per cropping season on mineral soils.", "source_verified": true}
   },
   {
     "id": "potato",
@@ -640,7 +648,8 @@
     "needs_review": true,
     "min_practical_acres": 5, "small_acres": 1,
     "scale_note": "Vegetable acreage can be smaller, but specialized harvest, grading, packing, and buyer access favor commercial blocks.",
-    "n_lb_per_acre": 150, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
+    "n_lb_per_acre": 150, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"},
+    "evidence": {"nutrient_status": "conditional", "nitrogen_recommendation_type": "conditional", "nitrogen_note": "CV002 Table 3c varies potato N by total-yield goal; 150 lb N/A is a planning midpoint, not a listed universal rate.", "source_verified": true, "recommended_range_lb_per_acre": [67, 250]}
   },
   {
     "id": "sweet_corn",
@@ -721,7 +730,8 @@
     "needs_review": true,
     "min_practical_acres": 5, "small_acres": 1,
     "scale_note": "Vegetable acreage can be smaller, but harvest, packing, and buyer contracts still favor commercial blocks.",
-    "n_lb_per_acre": 180, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
+    "n_lb_per_acre": 180, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"},
+    "evidence": {"nutrient_status": "planning_assumption", "nitrogen_recommendation_type": "conditional", "nitrogen_note": "CV002 does not list sweet corn; 180 lb N/A remains a planning assumption pending a crop-specific UF/IFAS source.", "source_verified": true, "recommended_range_lb_per_acre": [180, 180]}
   },
   {
     "id": "snap_bean",
@@ -800,7 +810,8 @@
     "needs_review": true,
     "min_practical_acres": 2, "small_acres": 0.5,
     "scale_note": "Specialty vegetable acreage can be small, though harvest labor, packing, and reliable buyer access remain important.",
-    "n_lb_per_acre": 120, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
+    "n_lb_per_acre": 100, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"},
+    "evidence": {"nutrient_status": "verified", "nitrogen_recommendation_type": "fixed", "nitrogen_note": "CV002 Table 3 lists snap bean at 100 lb N/A per cropping season on mineral soils.", "source_verified": true}
   },
   {
     "id": "bell_pepper",
@@ -883,7 +894,8 @@
     "needs_review": true,
     "min_practical_acres": 2, "small_acres": 0.5,
     "scale_note": "Specialty vegetable acreage can be small, though harvest labor, packing, and reliable buyer access remain important.",
-    "n_lb_per_acre": 150, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
+    "n_lb_per_acre": 200, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"},
+    "evidence": {"nutrient_status": "verified", "nitrogen_recommendation_type": "fixed", "nitrogen_note": "CV002 Table 3 lists bell pepper at 200 lb N/A per cropping season on mineral soils.", "source_verified": true}
   },
   {
     "id": "cabbage",
@@ -943,6 +955,7 @@
     "needs_review": true,
     "min_practical_acres": 2, "small_acres": 0.5,
     "scale_note": "Specialty vegetable acreage can be small, though harvest labor, packing, and reliable buyer access remain important.",
-    "n_lb_per_acre": 170, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"}
+    "n_lb_per_acre": 170, "nutrient_source": {"title": "UF/IFAS Standardized Nutrient Recommendations for Vegetable Crop Production in Florida", "url": "https://edis.ifas.ufl.edu/publication/CV002"},
+    "evidence": {"nutrient_status": "conditional", "nitrogen_recommendation_type": "conditional", "nitrogen_note": "CV002 Tables 3a and 3b vary cabbage N by spacing, population, and production system; 170 lb N/A remains a planning value.", "source_verified": true, "recommended_range_lb_per_acre": [143, 451]}
   }
 ]

@@ -19,7 +19,9 @@ def make_crop(**overrides: Any) -> Crop:
     """A small fake crop with round numbers, independent of crops.json."""
     raw = {
         "id": "fake", "name": "Fake", "nass_commodity": "FAKE", "nass_class": None,
-        "nass": {"acres_descs": ["FAKE - ACRES HARVESTED"], "yield_desc": "y", "price_desc": "p"},
+        "nass": {"acres_descs": ["FAKE - ACRES HARVESTED"],
+                 "yield_desc": "FAKE - YIELD, MEASURED IN LB / ACRE",
+                 "price_desc": "FAKE - PRICE RECEIVED, MEASURED IN $ / LB"},
         "fl_windows": [
             {"label": "Winter: plant Jan", "start": "01-01", "end": "03-31", "months": [1, 2, 3]},
             {"label": "Summer: plant Jun", "start": "06-01", "end": "08-31", "months": [6, 7, 8]},
@@ -32,6 +34,8 @@ def make_crop(**overrides: Any) -> Crop:
         "min_practical_acres": 10, "small_acres": 2, "scale_note": "Equipment and market access matter.",
         "n_lb_per_acre": 100,
         "nutrient_source": {"title": "Test source", "url": "https://edis.ifas.ufl.edu/"},
+        "evidence": {"nutrient_status": "verified", "nitrogen_recommendation_type": "fixed",
+                     "nitrogen_note": "Test evidence.", "source_verified": True},
     }
     return Crop.model_validate({**raw, **overrides})
 
