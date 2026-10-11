@@ -2,6 +2,7 @@
 
 import json
 import time
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any
 
 import pytest
@@ -103,8 +104,16 @@ def test_incomplete_far_response_is_retried_not_cached(demo: pytest.MonkeyPatch)
         raise TimeoutError("soil down")
 
     demo.setattr(service, "get_soil", broken_soil)
-    service.recommend(**ORLANDO)
-    service.recommend(**ORLANDO)
+    # Other deadline tests intentionally leave slow provider calls running in
+    # the shared production pool. Use a test-local bounded pool so this test
+    # verifies cache admission rather than inheriting unrelated work.
+    pool = ThreadPoolExecutor(max_workers=service.MAX_CONCURRENT_PROVIDER_WORK)
+    demo.setattr(service, "_provider_pool", pool)
+    try:
+        service.recommend(**ORLANDO)
+        service.recommend(**ORLANDO)
+    finally:
+        pool.shutdown(wait=True, cancel_futures=True)
     assert calls == 2
 
 

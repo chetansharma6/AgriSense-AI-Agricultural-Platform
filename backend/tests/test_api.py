@@ -146,7 +146,9 @@ def test_oversized_crop_path_is_rejected() -> None:
 def test_unique_coordinates_do_not_grow_response_cache(sources: dict[str, Any]) -> None:
     service.clear_response_cache()
     for index in range(service.RESPONSE_CACHE_SIZE + 20):
-        service.recommend(28.0 + index / 100000, -81.5)
+        # Cache coordinates are rounded to four decimals, so these must differ
+        # by at least one ten-thousandth to exercise eviction rather than hits.
+        service.recommend(28.0 + index / 10000, -81.5)
     assert len(service._response_cache) == service.RESPONSE_CACHE_SIZE
 
 

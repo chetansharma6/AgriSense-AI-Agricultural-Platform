@@ -128,6 +128,15 @@ def _recommend(lat: float, lon: float, acres: float | None = None) -> dict[str, 
     started = time.perf_counter()
     deadline = started + config.RECOMMENDATION_DEADLINE_S
     result, complete = _coalesced_build(key, lat, lon, deadline)
+    # A successful FCC response with no county identifies open water, not a
+    # Florida land location. Raise after the shared provider future is settled
+    # so followers cannot wait on a leader exception. Failed or expired FCC
+    # lookups stay degradable and return a partial response instead.
+    fcc_failed = any("County lookup (FCC) unavailable" in warning
+                     for warning in result.get("warnings", []))
+    if (result.get("location", {}).get("county") is None and not fcc_failed
+            and not any("deadline" in warning.lower() for warning in result.get("warnings", []))):
+        raise OutsideFlorida
     if complete:
         _remember(key, result)  # Cache location scores before request-specific land-size caps.
     # Normalize live and partial responses through the same response decoration
