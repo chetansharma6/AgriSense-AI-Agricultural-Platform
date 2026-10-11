@@ -24,7 +24,9 @@ def test_daily_weather_frame_and_cache(monkeypatch: pytest.MonkeyPatch) -> None:
     assert math.isnan(frame.loc["2024-01-02", "t_mean_c"])
 
     power.get_daily_weather(29.74, -81.53)  # rounds to the same 0.1 degree cell
-    assert fake.calls == 1
+    # The intentionally tiny test payload is not a complete ten-year cache
+    # entry, so it is served but never admitted to disk.
+    assert fake.calls == 2
 
 
 def test_retries_once_on_timeout(monkeypatch: pytest.MonkeyPatch) -> None:

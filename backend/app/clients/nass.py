@@ -5,6 +5,7 @@ name), so each distinct query hits NASS once.
 """
 
 import re
+import math
 from typing import Any
 
 import httpx
@@ -17,7 +18,32 @@ NASS_URL = "https://quickstats.nass.usda.gov/api/api_GET/"
 
 
 def _valid_rows(value: Any) -> bool:
-    return isinstance(value, list) and all(isinstance(row, dict) for row in value)
+    """NASS rows must retain the fields consumed by market aggregation."""
+    required = {"short_desc", "statisticcat_desc", "domain_desc", "agg_level_desc",
+                "reference_period_desc", "year", "Value"}
+    if not isinstance(value, list):
+        return False
+    for row in value:
+        if not isinstance(row, dict) or not required.issubset(row):
+            return False
+        if not all(isinstance(row[key], str) and row[key].strip()
+                   for key in required - {"year"}):
+            return False
+        try:
+            year = int(row["year"])
+        except (TypeError, ValueError):
+            return False
+        if not 1900 <= year <= 2100:
+            return False
+        # Value can be a documented withheld marker, but never a non-finite number.
+        cleaned = row["Value"].replace(",", "").strip()
+        if cleaned and cleaned[0] != "(":
+            try:
+                if not math.isfinite(float(cleaned)):
+                    return False
+            except ValueError:
+                return False
+    return True
 
 
 # Quick Stats rows have ~40 fields; only these are kept (and cached).
@@ -77,7 +103,7 @@ def query(params: dict[str, Any], invalid_means_empty: bool = False,
         # Never raise httpx's own error: its message contains the URL and key.
         raise NassError(f"NASS request failed ({response.status_code}): {_safe_error(response.text)}")
 
-    write_cache("nass", params, rows)
+    write_cache("nass", params, rows, _valid_rows)
     return rows
 
 

@@ -28,7 +28,7 @@ def test_nearest_station_uses_distance_limit(monkeypatch) -> None:
 def test_daily_min_cache_round_trip(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(fawn, "read_cache", lambda namespace, params, validator=None: None)
     written = {}
-    monkeypatch.setattr(fawn, "write_cache", lambda namespace, params, data: written.update(data))
+    monkeypatch.setattr(fawn, "write_cache", lambda namespace, params, data, *args: written.update(data))
     monkeypatch.setattr(fawn, "_download", lambda station_id: {date(2016, 1, 1): -2.5})
 
     result = fawn.daily_min_c("270")

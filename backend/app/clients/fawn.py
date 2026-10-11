@@ -17,6 +17,7 @@ pre-fetches every station so the app never waits on FAWN.
 import csv
 import io
 import json
+import math
 from datetime import date, datetime, timedelta
 from functools import lru_cache
 from typing import Any, TypedDict
@@ -54,7 +55,15 @@ class FawnTimeout(FawnError):
 
 
 def _valid_fawn(value: object) -> bool:
-    return isinstance(value, dict) and isinstance(value.get("start"), str) and isinstance(value.get("min_c"), list)
+    if not isinstance(value, dict) or value.get("start") != datetime.strptime(START, "%Y%m%d").date().isoformat():
+        return False
+    values = value.get("min_c")
+    expected = (datetime.strptime(END, "%Y%m%d").date() - datetime.strptime(START, "%Y%m%d").date()).days + 1
+    return (isinstance(values, list) and len(values) == expected and all(
+        item is None or (isinstance(item, (int, float)) and not isinstance(item, bool)
+                         and math.isfinite(item) and -60 <= item <= 60)
+        for item in values
+    ))
 
 
 @lru_cache(maxsize=1)
@@ -82,7 +91,7 @@ def daily_min_c(station_id: str, *, deadline: float | None = None) -> pd.Series:
     if cached is None:
         mins = _download(station_id) if deadline is None else _download(station_id, deadline=deadline)
         cached = _encode(mins)
-        write_cache("fawn", params, cached)
+        write_cache("fawn", params, cached, _valid_fawn)
     return _decode(cached)
 
 
